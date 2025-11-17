@@ -596,7 +596,7 @@
             
             <div class="comparison-card">
                 <div class="comparison-title">Number of Individuals (N)</div>
-                <p>If you eat chicken daily, you consume ~150 chickens per year. If you eat beef daily, maybe 1-2 cows. Even if chicken minds are "simpler," the numbers can overwhelm the difference.</p>
+                <p>If you eat chicken daily, you consume 1 chicken per meal. If you eat beef daily, you consume 0.0025 cows per meal (1 cow ≈ 400 meals). Even if chicken minds are "simpler," the numbers can overwhelm the difference.</p>
             </div>
         </div>
         
@@ -610,13 +610,13 @@
         
         <div class="formula">
 <div style="font-size: 1.4em; margin-bottom: 1.5rem; color: #6ee7b7; line-height: 1.6;">
-H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(I × T)</span> × <span style="color: #6ee7b7;">(α·L + β·D_process + δ·D_deprivation)</span>
+H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(I × T)</span> × <span style="color: #6ee7b7;">(α·L + β·D_process + δ·D_deprivation)</span>
 </div>
 
 <div style="margin-bottom: 1.5rem;">
 <div style="padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px; margin-bottom: 0.8rem;">
 <strong style="color: #fbbf24;">How many minds?</strong> <span style="color: #cbd5e1;">N^γ</span>
-<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Number of individuals consumed, with γ controlling whether harm scales linearly or not</div>
+<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Number of individuals consumed per meal, with γ controlling whether harm scales linearly or not</div>
 </div>
 
 <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px; margin-bottom: 0.8rem;">
@@ -633,7 +633,8 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
 <details style="cursor: pointer; color: #94a3b8;">
 <summary style="font-size: 0.95rem; margin-bottom: 0.5rem; cursor: pointer;">▸ See all parameter definitions</summary>
 <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: 0.9rem; margin-top: 1rem; padding-left: 1rem;">
-<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per 100 meals</span>
+<strong>H</strong> <span style="color: #cbd5e1;">Total moral harm per meal</span>
+<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per meal</span>
 <strong>γ</strong> <span style="color: #cbd5e1;">Aggregation exponent (1.0 = linear, &lt;1.0 = diminishing, &gt;1.0 = accelerating)</span>
 <strong>I</strong> <span style="color: #cbd5e1;">Intensity of valenced experience (0–1)</span>
 <strong>T</strong> <span style="color: #cbd5e1;">Temporal depth: memory, anticipation, integration (0–1)</span>
@@ -758,7 +759,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
             <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ How Uncertainty Bands Work</summary>
             <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Click "Show Uncertainty" to see ranges around each H<sub>100</sub> estimate. These aren't pulled from thin air—they reflect genuine epistemic uncertainty about the parameters:</p>
+                <p>Click "Show Uncertainty" to see ranges around each H estimate. These aren't pulled from thin air—they reflect genuine epistemic uncertainty about the parameters:</p>
                 
                 <p style="margin-top: 1rem;"><strong>For I and T:</strong> We provide low/mid/high estimates based on uncertainty in neuroscience. For example, shrimp I could plausibly be 0.38 (minimal integration) to 0.58 (surprisingly rich nociception). The ranges reflect where empirical evidence is ambiguous.</p>
                 
@@ -777,15 +778,15 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <div class="comparison-grid">
             <div class="comparison-card">
                 <div class="comparison-title">Within Chicken: 34% Improvement</div>
-                <p><strong>Industrial:</strong> H<sub>100</sub> = 1.95<br>
-                <strong>Pasture:</strong> H<sub>100</sub> = 1.28</p>
+                <p><strong>Industrial:</strong> H = 1.95<br>
+                <strong>Pasture:</strong> H = 1.28</p>
                 <p style="margin-top: 1em; color: #64748b;">Sourcing reduces L by ~55%, which translates to 34% better. Meaningful, but N=1 still dominates.</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">Chicken → Beef: 81% Improvement</div>
-                <p><strong>Industrial Chicken:</strong> H<sub>100</sub> = 1.95<br>
-                <strong>Grass-Fed Beef:</strong> H<sub>100</sub> = 0.37</p>
+                <p><strong>Industrial Chicken:</strong> H = 1.95<br>
+                <strong>Grass-Fed Beef:</strong> H = 0.37</p>
                 <p style="margin-top: 1em; color: #64748b;">Species change drops N from 1 to 0.25. This overwhelms all other factors.</p>
             </div>
         </div>
@@ -793,15 +794,15 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <div class="comparison-grid">
             <div class="comparison-card">
                 <div class="comparison-title">Within Beef: 26% Improvement</div>
-                <p><strong>Feedlot:</strong> H<sub>100</sub> = 0.50<br>
-                <strong>Grass-Fed:</strong> H<sub>100</sub> = 0.37</p>
+                <p><strong>Feedlot:</strong> H = 0.50<br>
+                <strong>Grass-Fed:</strong> H = 0.37</p>
                 <p style="margin-top: 1em; color: #64748b;">Same L reduction as chicken (~55%), same proportional improvement (~26%).</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">But Both Beat All Poultry</div>
-                <p><strong>Feedlot Beef:</strong> H<sub>100</sub> = 0.50<br>
-                <strong>Pasture Chicken:</strong> H<sub>100</sub> = 1.28</p>
+                <p><strong>Feedlot Beef:</strong> H = 0.50<br>
+                <strong>Pasture Chicken:</strong> H = 1.28</p>
                 <p style="margin-top: 1em; color: #64748b;">Even the worst beef beats the best chicken. N=0.25 is that powerful.</p>
             </div>
         </div>
@@ -923,7 +924,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <div id="detail-panel" class="detail-panel" style="display: none;">
             <div class="detail-header">
                 <div class="detail-title" id="detail-species-name">Wild Salmon</div>
-                <div class="detail-score">H<sub>100</sub> = <span id="detail-h100">0.58</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;">[0.3 - 1.2]</span></div>
+                <div class="detail-score">H = <span id="detail-h">0.58</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;">[0.3 - 1.2]</span></div>
             </div>
             
             <p style="color: #94a3b8; margin-bottom: 1.5rem;">Group: <span id="detail-group" style="color: #6ee7b7; font-weight: 600;">Seafood</span></p>
@@ -992,32 +993,32 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <div class="warning-box">
             <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is 5× Worse Than Industrial Chicken</h3>
             <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume them in high quantities (N=15 vs N=1). They also die horrifically—often boiled alive. The numbers overwhelm the difference in conscious capacity.</p>
-            <p>Shrimp: <strong>H<sub>100</sub> = 10.13</strong> vs Industrial Chicken: <strong>H<sub>100</sub> = 1.95</strong></p>
+            <p>Shrimp: <strong>H = 10.13</strong> vs Industrial Chicken: <strong>H = 1.95</strong></p>
             <p>This is the consequence of the kill-count multiplier.</p>
         </div>
         
         <div class="warning-box">
             <h3 style="margin-top: 0; color: #f87171;">2. Industrial Pork is the Worst Mammal Product</h3>
             <p>Pigs have the richest conscious lives of any farmed animal (I×T = 0.81), terrible industrial conditions (L=2.4), and you eat 2 pigs per 100 meals. This combination is devastating.</p>
-            <p>Industrial Pork: <strong>H<sub>100</sub> = 6.78</strong> — worse than industrial chicken by 3.5×</p>
+            <p>Industrial Pork: <strong>H = 6.78</strong> — worse than industrial chicken by 3.5×</p>
             <p>If you eat pork, sourcing matters more than for any other mammal.</p>
         </div>
         
         <div class="insight-box">
             <h3 style="margin-top: 0; color: #6ee7b7;">3. Beef Beats All Poultry—Even Pasture-Raised Chicken</h3>
-            <p>Cows have the highest experience quality of farmed animals (I×T = 0.68), but you only consume 0.25 cows per 100 meals. This absolutely dominates the calculation. Even feedlot beef (H<sub>100</sub> = 0.50) beats duck (H<sub>100</sub> = 0.84), and grass-fed beef (H<sub>100</sub> = 0.37) beats pasture chicken (H<sub>100</sub> = 1.28).</p>
+            <p>Cows have the highest experience quality of farmed animals (I×T = 0.68), but you only consume 0.0025 cows per meal (1 cow ≈ 400 meals). This absolutely dominates the calculation. Even feedlot beef (H = 0.50) beats duck (H = 0.84), and grass-fed beef (H = 0.37) beats pasture chicken (H = 1.28).</p>
             <p>The "eat smaller animals" heuristic completely fails. <strong>Kill count is the dominant factor once conscious capacity crosses a threshold.</strong></p>
         </div>
         
         <div class="insight-box">
             <h3 style="margin-top: 0; color: #6ee7b7;">4. Wild-Caught Large Fish Are the Lowest-Harm Animal Foods</h3>
-            <p>Tuna (H<sub>100</sub> = 0.21) and wild salmon (H<sub>100</sub> = 0.31) beat even grass-fed beef. They have moderate experience quality, relatively natural lives, low kill counts, and despite painful deaths, the overall calculation favors them.</p>
+            <p>Tuna (H = 0.21) and wild salmon (H = 0.31) beat even grass-fed beef. They have moderate experience quality, relatively natural lives, low kill counts, and despite painful deaths, the overall calculation favors them.</p>
             <p><strong>If you eat animals and want to minimize harm, wild-caught large fish should be your default.</strong></p>
         </div>
 
         <div class="insight-box">
             <h3 style="margin-top: 0; color: #6ee7b7;">5. Animal Products Are Negligible Compared to Meat</h3>
-            <p>Eggs and dairy have H<sub>100</sub> scores of 0.01-0.03—roughly 100× better than eating chicken, 15× better than beef. The N values (0.004-0.015) are so tiny that even terrible conditions for laying hens barely register in the per-meal calculation.</p>
+            <p>Eggs and dairy have H scores of 0.01-0.03—roughly 100× better than eating chicken, 15× better than beef. The N values (0.004-0.015) are so tiny that even terrible conditions for laying hens barely register in the per-meal calculation.</p>
             <p>This doesn't mean the hens don't suffer—they absolutely do. But the harm-per-meal is vastly lower than eating the animals directly. <strong>If you're reducing harm but not going vegan, prioritizing products over meat is extremely high-leverage.</strong></p>
         </div>
 
@@ -1058,7 +1059,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         </div>
 
         <div class="insight-box">
-            <strong style="color: #6ee7b7;">Net assessment:</strong> The model's rankings are informed by welfare research but not circular—the I, T, and L parameters come from empirical data, while H<sub>100</sub> emerges from the multiplicative structure. Where the model surprises (beef beats chicken, shrimp is catastrophic, products are negligible), the surprises follow from explicit parameters you can inspect. The main uncertainty is γ (aggregation), which is tunable.
+            <strong style="color: #6ee7b7;">Net assessment:</strong> The model's rankings are informed by welfare research but not circular—the I, T, and L parameters come from empirical data, while H emerges from the multiplicative structure. Where the model surprises (beef beats chicken, shrimp is catastrophic, products are negligible), the surprises follow from explicit parameters you can inspect. The main uncertainty is γ (aggregation), which is tunable.
         </div>
         
         <h2>Full Data: All Species Evaluated</h2>
@@ -1068,14 +1069,14 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             <thead>
                 <tr>
                     <th>Species</th>
-                    <th>H<sub>100</sub></th>
+                    <th>H</th>
                     <th>Range</th>
                     <th>I</th>
                     <th>T</th>
                     <th>L</th>
                     <th>D_proc</th>
                     <th>D_depr</th>
-                    <th>N</th>
+                    <th>N (per meal)</th>
                     <th>Verdict</th>
                 </tr>
             </thead>
@@ -1641,7 +1642,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             return omega_phys * data.L_phys + omega_psych * data.L_psych + omega_social * data.L_social;
         }
         
-        function calculateH100(data, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, useRange = false) {
+        function calculateH(data, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, useRange = false) {
             const results = data.map(d => {
                 const L = calculateL(d, omega_phys, omega_psych, omega_social);
                 
@@ -1651,31 +1652,31 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                     const T_vals = [d.T_low, d.T, d.T_high];
                     const N_vals = [d.N_low, d.N, d.N_high];
                     
-                    const H100_low = Math.pow(N_vals[0], gamma) * I_vals[0] * T_vals[0] * 
+                    const H_low = Math.pow(N_vals[0], gamma) * I_vals[0] * T_vals[0] * 
                         (alpha * L * 0.8 + beta * d.D_process * 0.8 + delta * d.D_deprivation * 0.8);
-                    const H100_central = Math.pow(N_vals[1], gamma) * I_vals[1] * T_vals[1] * 
+                    const H_central = Math.pow(N_vals[1], gamma) * I_vals[1] * T_vals[1] * 
                         (alpha * L + beta * d.D_process + delta * d.D_deprivation);
-                    const H100_high = Math.pow(N_vals[2], gamma) * I_vals[2] * T_vals[2] * 
+                    const H_high = Math.pow(N_vals[2], gamma) * I_vals[2] * T_vals[2] * 
                         (alpha * L * 1.2 + beta * d.D_process * 1.2 + delta * d.D_deprivation * 1.2);
                     
                     return {
                         ...d,
                         L: L,
-                        H100: H100_central,
-                        H100_low: H100_low,
-                        H100_high: H100_high
+                        H: H_central,
+                        H_low: H_low,
+                        H_high: H_high
                     };
                 } else {
-                    const H100 = Math.pow(d.N, gamma) * d.I * d.T * 
+                    const H = Math.pow(d.N, gamma) * d.I * d.T * 
                         (alpha * L + beta * d.D_process + delta * d.D_deprivation);
                     
                     return {
                         ...d,
                         L: L,
-                        H100: H100
+                        H: H
                     };
                 }
-            }).sort((a, b) => b.H100 - a.H100);
+            }).sort((a, b) => b.H - a.H);
             
             return results;
         }
@@ -1702,7 +1703,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             document.getElementById('omega-psych-value').textContent = omega_psych.toFixed(1);
             document.getElementById('omega-social-value').textContent = omega_social.toFixed(1);
             
-            const results = calculateH100(speciesData, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, showUncertainty);
+            const results = calculateH(speciesData, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, showUncertainty);
             const filtered = getFilteredData(results);
             
             updateChart(filtered);
@@ -1737,7 +1738,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 },
                 title: {
                     display: true,
-                    text: 'H₁₀₀ (log scale)',
+                    text: 'H (log scale)',
                     color: '#94a3b8'
                 }
             } : {
@@ -1747,20 +1748,20 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 },
                 title: {
                     display: true,
-                    text: 'H₁₀₀',
+                    text: 'H',
                     color: '#94a3b8'
                 }
             };
             
             const datasets = [{
                 label: 'Harm per 100 Meals',
-                data: data.map(d => d.H100),
+                data: data.map(d => d.H),
                 backgroundColor: data.map(d => {
-                    if (d.H100 > 10) return '#ef4444';
-                    if (d.H100 > 5) return '#f97316';
-                    if (d.H100 > 2) return '#f59e0b';
-                    if (d.H100 > 1) return '#eab308';
-                    if (d.H100 > 0.5) return '#84cc16';
+                    if (d.H > 10) return '#ef4444';
+                    if (d.H > 5) return '#f97316';
+                    if (d.H > 2) return '#f59e0b';
+                    if (d.H > 1) return '#eab308';
+                    if (d.H > 0.5) return '#84cc16';
                     return '#10b981';
                 }),
                 borderRadius: 8,
@@ -1770,14 +1771,14 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             if (showUncertainty) {
                 datasets.push({
                     label: 'Lower Bound',
-                    data: data.map(d => d.H100_low || d.H100 * 0.6),
+                    data: data.map(d => d.H_low || d.H * 0.6),
                     backgroundColor: 'rgba(148, 163, 184, 0.3)',
                     borderRadius: 8,
                     borderSkipped: false
                 });
                 datasets.push({
                     label: 'Upper Bound',
-                    data: data.map(d => d.H100_high || d.H100 * 1.4),
+                    data: data.map(d => d.H_high || d.H * 1.4),
                     backgroundColor: 'rgba(148, 163, 184, 0.3)',
                     borderRadius: 8,
                     borderSkipped: false
@@ -1812,15 +1813,15 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                             callbacks: {
                                 label: (context) => {
                                     if (context.datasetIndex === 0) {
-                                        return `H₁₀₀ = ${context.parsed.x.toFixed(2)}`;
+                                        return `H = ${context.parsed.x.toFixed(2)}`;
                                     }
                                     return '';
                                 },
                                 afterLabel: (context) => {
                                     if (context.datasetIndex === 0) {
                                         const d = data[context.dataIndex];
-                                        if (showUncertainty && d.H100_low && d.H100_high) {
-                                            return `Range: [${d.H100_low.toFixed(2)} - ${d.H100_high.toFixed(2)}]`;
+                                        if (showUncertainty && d.H_low && d.H_high) {
+                                            return `Range: [${d.H_low.toFixed(2)} - ${d.H_high.toFixed(2)}]`;
                                         }
                                     }
                                     return '';
@@ -1852,42 +1853,42 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             
             data.forEach((d, index) => {
                 let verdict = 'Moderate';
-                if (d.H100 >= 10) verdict = 'Catastrophic';
-                else if (d.H100 >= 5) verdict = 'Very High';
-                else if (d.H100 >= 2) verdict = 'High';
-                else if (d.H100 >= 1) verdict = 'Moderate-High';
-                else if (d.H100 >= 0.5) verdict = 'Moderate';
-                else if (d.H100 >= 0.2) verdict = 'Moderate-Low';
-                else if (d.H100 >= 0.05) verdict = 'Low';
+                if (d.H >= 10) verdict = 'Catastrophic';
+                else if (d.H >= 5) verdict = 'Very High';
+                else if (d.H >= 2) verdict = 'High';
+                else if (d.H >= 1) verdict = 'Moderate-High';
+                else if (d.H >= 0.5) verdict = 'Moderate';
+                else if (d.H >= 0.2) verdict = 'Moderate-Low';
+                else if (d.H >= 0.05) verdict = 'Low';
                 else verdict = 'Very Low';
                 
                 let bgColor;
-                if (d.H100 >= 10) {
+                if (d.H >= 10) {
                     bgColor = '#7f1d1d'; // Catastrophic - deep red
-                } else if (d.H100 >= 5) {
+                } else if (d.H >= 5) {
                     bgColor = '#991b1b'; // Very High - red
-                } else if (d.H100 >= 2) {
+                } else if (d.H >= 2) {
                     bgColor = '#9a3412'; // High - orange-red
-                } else if (d.H100 >= 1) {
+                } else if (d.H >= 1) {
                     bgColor = '#92400e'; // Moderate-High - orange
-                } else if (d.H100 >= 0.5) {
+                } else if (d.H >= 0.5) {
                     bgColor = '#854d0e'; // Moderate - yellow-orange
-                } else if (d.H100 >= 0.2) {
+                } else if (d.H >= 0.2) {
                     bgColor = '#713f12'; // Moderate-Low - darker yellow
-                } else if (d.H100 >= 0.05) {
+                } else if (d.H >= 0.05) {
                     bgColor = '#365314'; // Low - dark yellow-green
                 } else {
                     bgColor = '#14532d'; // Very Low - dark green
                 }
                 
-                const rangeStr = (d.H100_low && d.H100_high) ? 
-                    `[${d.H100_low.toFixed(2)} - ${d.H100_high.toFixed(2)}]` : 
+                const rangeStr = (d.H_low && d.H_high) ? 
+                    `[${d.H_low.toFixed(2)} - ${d.H_high.toFixed(2)}]` : 
                     '—';
                 
                 html += `
                     <tr style="background: ${bgColor};">
                         <td><strong>${d.species}</strong></td>
-                        <td><strong>${d.H100.toFixed(2)}</strong></td>
+                        <td><strong>${d.H.toFixed(2)}</strong></td>
                         <td style="font-size: 0.85em; color: #94a3b8;">${rangeStr}</td>
                         <td>${d.I.toFixed(2)}</td>
                         <td>${d.T.toFixed(2)}</td>
@@ -1906,11 +1907,11 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         function showDetailPanel(data) {
             document.getElementById('detail-panel').style.display = 'block';
             document.getElementById('detail-species-name').textContent = data.species;
-            document.getElementById('detail-h100').textContent = data.H100.toFixed(2);
+            document.getElementById('detail-h').textContent = data.H.toFixed(2);
             
-            if (data.H100_low && data.H100_high) {
+            if (data.H_low && data.H_high) {
                 document.getElementById('detail-range').textContent = 
-                    `[${data.H100_low.toFixed(2)} - ${data.H100_high.toFixed(2)}]`;
+                    `[${data.H_low.toFixed(2)} - ${data.H_high.toFixed(2)}]`;
             } else {
                 document.getElementById('detail-range').textContent = '';
             }
