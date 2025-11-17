@@ -431,28 +431,6 @@
             border-color: #6ee7b7;
             color: #6ee7b7;
         }
-
-        .frontier-separator {
-            height: 3px;
-            background: linear-gradient(to right, transparent, #fbbf24, transparent);
-            margin: 1rem 0;
-            position: relative;
-        }
-
-        .frontier-label {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #0f172a;
-            padding: 0.3rem 1rem;
-            color: #fbbf24;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-            border: 1px solid #fbbf24;
-            border-radius: 12px;
-        }
         
         @media (max-width: 768px) {
             .container {
@@ -562,7 +540,7 @@
             <div class="comparison-card">
                 <div class="comparison-title">Heuristic #2: Death Count</div>
                 <p>"Eat creatures that give you more meals per death."</p>
-                <p style="margin-top: 1em; color: #64748b;">Intuition: One cow feeds you for a year; one chicken is basically a meal. Minimize kill count.</p>
+                <p style="margin-top: 1em; color: #64748b;">Intuition: One cow feeds you for a year; one chicken gives you ~10 meals. Minimize kill count.</p>
             </div>
         </div>
         
@@ -570,7 +548,23 @@
             <strong style="color: #fbbf24;">The Problem:</strong> These heuristics point in opposite directions. If you follow #1, you eat lots of small animals. If you follow #2, you eat large complex animals. <span class="hero-highlight">Which is actually less harmful?</span>
         </div>
         
-        <p>The answer requires a formal model that weighs multiple factors simultaneously. But first, we need to understand what we're actually trying to minimize.</p>
+        <p>The answer requires a formal model that weighs multiple factors simultaneously. But first, let's be honest about what this model actually does.</p>
+        
+        <h2>What This Model Actually Does</h2>
+        
+        <div class="insight-box">
+            <p><strong style="color: #6ee7b7;">Fair warning:</strong> This model is going to tell you that the number of individuals you eat matters more than almost anything else. If you're eating 35 chickens per year vs 0.3 cows, that 100× difference in kill count dominates the 2× difference in consciousness.</p>
+            
+            <p style="margin-top: 1rem;">So why build a formal model? Because:</p>
+            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                <li>Most people don't naturally track individuals-per-meal. We think in "meals" not "fractional animals"</li>
+                <li>The consciousness adjustments (I×T) matter for edge cases like shrimp</li>
+                <li>The aggregation question (γ) determines whether many-small-deaths or few-large-deaths is worse</li>
+                <li>It quantifies how much sourcing matters relative to species choice</li>
+            </ul>
+            
+            <p style="margin-top: 1rem;"><strong>If you just want the bottom line:</strong> Eat large animals, avoid crustaceans. The model helps you see why and lets you tune your moral assumptions.</p>
+        </div>
         
         <h2>What Are We Actually Measuring?</h2>
         
@@ -596,12 +590,12 @@
             
             <div class="comparison-card">
                 <div class="comparison-title">Number of Individuals (N)</div>
-                <p>If you eat chicken daily, you consume 1 chicken per meal. If you eat beef daily, you consume 0.0025 cows per meal (1 cow ≈ 400 meals). Even if chicken minds are "simpler," the numbers can overwhelm the difference.</p>
+                <p><strong>This is the key parameter.</strong> One chicken yields ~10 portions (5oz each), so N=0.096 per meal. One cow yields ~1,280 portions, so N=0.0008 per meal. That's a 120× difference that overwhelms most other factors.</p>
             </div>
         </div>
         
         <div class="insight-box">
-            <strong style="color: #6ee7b7;">Key insight:</strong> These factors interact multiplicatively. A small difference in experience quality matters less than a huge difference in numbers killed. But both matter.
+            <strong style="color: #6ee7b7;">Key insight:</strong> These factors interact multiplicatively. The consciousness quality factors (I×T) vary by ~10× across species. But N varies by ~10,000×. So N dominates ~95% of the variance in harm.
         </div>
         
         <h2>The Formal Model</h2>
@@ -615,8 +609,8 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
 
 <div style="margin-bottom: 1.5rem;">
 <div style="padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px; margin-bottom: 0.8rem;">
-<strong style="color: #fbbf24;">How many minds?</strong> <span style="color: #cbd5e1;">N^γ</span>
-<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Number of individuals consumed per meal, with γ controlling whether harm scales linearly or not</div>
+<strong style="color: #fbbf24;">How many individuals per meal?</strong> <span style="color: #cbd5e1;">N^γ</span>
+<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Based on standardized 5-6oz portions. One chicken = 10 portions, one cow = 1,280 portions.</div>
 </div>
 
 <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px; margin-bottom: 0.8rem;">
@@ -634,7 +628,7 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
 <summary style="font-size: 0.95rem; margin-bottom: 0.5rem; cursor: pointer;">▸ See all parameter definitions</summary>
 <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: 0.9rem; margin-top: 1rem; padding-left: 1rem;">
 <strong>H</strong> <span style="color: #cbd5e1;">Total moral harm per meal</span>
-<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per meal</span>
+<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per meal (based on 5-6oz portions)</span>
 <strong>γ</strong> <span style="color: #cbd5e1;">Aggregation exponent (1.0 = linear, &lt;1.0 = diminishing, &gt;1.0 = accelerating)</span>
 <strong>I</strong> <span style="color: #cbd5e1;">Intensity of valenced experience (0–1)</span>
 <strong>T</strong> <span style="color: #cbd5e1;">Temporal depth: memory, anticipation, integration (0–1)</span>
@@ -656,10 +650,108 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             <li>The weights let you encode what you care about most</li>
         </ul>
         
+        <p><strong>Critical note:</strong> With default parameters (γ=1, all weights ~1), this reduces to approximately: H ≈ N × (consciousness quality) × (suffering factors). Since N varies by 10,000× and consciousness varies by ~10×, <span class="emphasis">N dominates everything</span>. The model's value isn't complexity—it's making this calculation explicit.</p>
+        
         <h2>Understanding the Parameters</h2>
         
         <p>The model has several parameters you can tune. Here's what they mean and how to think about them:</p>
         
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Calculating N (Individuals Per Meal) - THE CRITICAL PARAMETER</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <p><strong>N is based on standardized 5-6oz protein portions.</strong> This is the arithmetic that drives the entire model:</p>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Chicken:</strong><br>
+                    Live weight: 5 lbs<br>
+                    × Meat yield: 65% = 3.25 lbs = 52 oz<br>
+                    ÷ Portion size: 5 oz<br>
+                    = 10.4 portions per chicken<br>
+                    <strong style="color: #fbbf24;">→ N = 1/10.4 = 0.096</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Pig:</strong><br>
+                    Live weight: 280 lbs<br>
+                    × Meat yield: 60% = 168 lbs = 2,688 oz<br>
+                    ÷ Portion size: 5 oz<br>
+                    = 538 portions per pig<br>
+                    <strong style="color: #fbbf24;">→ N = 1/538 = 0.002</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Cow (Beef):</strong><br>
+                    Live weight: 1,200 lbs<br>
+                    × Meat yield: 40% = 480 lbs = 7,680 oz<br>
+                    ÷ Portion size: 6 oz<br>
+                    = 1,280 portions per cow<br>
+                    <strong style="color: #fbbf24;">→ N = 1/1,280 = 0.0008</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Shrimp:</strong><br>
+                    Typical serving: 15 shrimp<br>
+                    <strong style="color: #fbbf24;">→ N = 15</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Salmon:</strong><br>
+                    Live weight: 10 lbs<br>
+                    × Meat yield: 60% = 6 lbs = 96 oz<br>
+                    ÷ Portion size: 6 oz<br>
+                    = 16 portions per salmon<br>
+                    <strong style="color: #fbbf24;">→ N = 1/16 = 0.0625</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Large Tuna:</strong><br>
+                    Live weight: 200 lbs<br>
+                    × Meat yield: 50% = 100 lbs = 1,600 oz<br>
+                    ÷ Portion size: 5 oz<br>
+                    = 320 portions per tuna<br>
+                    <strong style="color: #fbbf24;">→ N = 1/320 = 0.003</strong>
+                    </p>
+                </div>
+                
+                <p style="margin-top: 1.5rem;"><strong>For products (eggs, dairy, honey):</strong> N is calculated based on annual production per animal divided by consumption per meal, accounting for culling rates.</p>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Eggs:</strong><br>
+                    1 hen lays ~300 eggs/year<br>
+                    Consumption: 2 eggs per meal<br>
+                    = 150 meals per hen per year<br>
+                    <strong style="color: #fbbf24;">→ N = 1/150 ≈ 0.007</strong>
+                    </p>
+                </div>
+                
+                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
+                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
+                    <strong style="color: #6ee7b7;">Dairy:</strong><br>
+                    1 cow produces ~48,000 cups milk/year<br>
+                    Consumption: 1 cup per meal<br>
+                    (Adjusted for culling and calf mortality)<br>
+                    <strong style="color: #fbbf24;">→ N ≈ 0.0005</strong>
+                    </p>
+                </div>
+                
+                <p style="margin-top: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px;">
+                <strong>Why this matters:</strong> When people think "I'm having chicken for dinner," they don't think "I'm consuming 0.096 chickens." But that's the actual arithmetic. Over a year of daily chicken meals, you kill 35 chickens. Over a year of daily beef meals, you kill 0.3 cows. That 117× difference in kill count is the core driver of the model.
+                </p>
+            </div>
+        </details>
+
         <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
             <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Intensity (I) & Temporal Depth (T)</summary>
             <div style="margin-top: 1rem; color: #cbd5e1;">
@@ -675,15 +767,17 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
         </details>
 
         <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Aggregation Exponent (γ)</summary>
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Aggregation Exponent (γ) - The Critical Question</summary>
             <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>This controls how moral harm scales with numbers. γ = 1.0 means linear: 100 shrimp deaths = 100× the harm of 1 shrimp death. But different ethical frameworks suggest different scaling:</p>
+                <p>This controls how moral harm scales with numbers, and it's the most philosophically important parameter in the model:</p>
                 
                 <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
                     <li><strong>γ < 1.0 (diminishing returns):</strong> Each additional death matters less—perhaps because the <em>existence</em> of suffering minds has special moral weight beyond quantity</li>
                     <li><strong>γ = 1.0 (linear):</strong> Standard total utilitarianism—all suffering counts equally regardless of how it's distributed</li>
                     <li><strong>γ > 1.0 (accelerating):</strong> Mass deaths are disproportionately worse—perhaps because large-scale suffering has systemic/relational harms beyond individual experience</li>
                 </ul>
+                
+                <p style="margin-top: 1rem;"><strong>Why this matters:</strong> If γ=1.0, eating 15 shrimp (with I×T=0.14 each) is genuinely worse than eating 1 chicken (I×T=0.42). If γ=0.7, shrimp drops significantly in harm. This is an open ethical question, not a settled fact.</p>
             </div>
         </details>
 
@@ -763,52 +857,52 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                 
                 <p style="margin-top: 1rem;"><strong>For I and T:</strong> We provide low/mid/high estimates based on uncertainty in neuroscience. For example, shrimp I could plausibly be 0.38 (minimal integration) to 0.58 (surprisingly rich nociception). The ranges reflect where empirical evidence is ambiguous.</p>
                 
-                <p style="margin-top: 1rem;"><strong>For N:</strong> Small variations based on meal size and preparation. A "shrimp meal" could be 30-50 shrimp depending on the dish.</p>
+                <p style="margin-top: 1rem;"><strong>For N:</strong> Small variations based on meal size and preparation. A "shrimp meal" could be 10-20 shrimp depending on the dish.</p>
                 
                 <p style="margin-top: 1rem;"><strong>For L components:</strong> We apply ±20% to account for variation within production systems. Not all "industrial chicken" farms are equally bad; not all "pasture-raised" operations are equally good.</p>
                 
-                <p style="margin-top: 1rem;"><strong>Combined effect:</strong> These uncertainties propagate through the multiplication to give you ranges like "Shrimp: 27 [19-38]" or "Wild Salmon: 0.31 [0.17-0.52]". The ranges show you how robust the rankings are. If two species' ranges overlap substantially, the ordering between them is genuinely uncertain.</p>
+                <p style="margin-top: 1rem;"><strong>Combined effect:</strong> These uncertainties propagate through the multiplication to give you ranges. The ranges show you how robust the rankings are. If two species' ranges overlap substantially, the ordering between them is genuinely uncertain.</p>
             </div>
         </details>
         
         <h2>Species Choice Matters More Than Sourcing</h2>
         
-        <p>Here's a counterintuitive finding: <span class="emphasis">sourcing improvements only give you 25-35% reductions in harm, while species choice can give you 4-10× differences</span>. If you're eating industrial chicken and wondering whether to switch to pasture chicken or to grass-fed beef, the math says: switch species first, then optimize within it.</p>
+        <p>Here's a counterintuitive finding: <span class="emphasis">sourcing improvements only give you 25-35% reductions in harm, while species choice can give you 10-100× differences</span>. If you're eating industrial chicken and wondering whether to switch to pasture chicken or to grass-fed beef, the math says: switch species first, then optimize within it.</p>
         
         <div class="comparison-grid">
             <div class="comparison-card">
-                <div class="comparison-title">Within Chicken: 34% Improvement</div>
-                <p><strong>Industrial:</strong> H = 1.95<br>
-                <strong>Pasture:</strong> H = 1.28</p>
-                <p style="margin-top: 1em; color: #64748b;">Sourcing reduces L by ~55%, which translates to 34% better. Meaningful, but N=1 still dominates.</p>
+                <div class="comparison-title">Within Chicken: 35% Improvement</div>
+                <p><strong>Industrial:</strong> H = 0.187<br>
+                <strong>Pasture:</strong> H = 0.123</p>
+                <p style="margin-top: 1em; color: #64748b;">Sourcing reduces L by ~55%, which translates to 35% better. Meaningful, but N=0.096 still dominates.</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">Chicken → Beef: 81% Improvement</div>
-                <p><strong>Industrial Chicken:</strong> H = 1.95<br>
-                <strong>Grass-Fed Beef:</strong> H = 0.37</p>
-                <p style="margin-top: 1em; color: #64748b;">Species change drops N from 1 to 0.25. This overwhelms all other factors.</p>
+                <div class="comparison-title">Chicken → Beef: 99% Improvement</div>
+                <p><strong>Industrial Chicken:</strong> H = 0.187<br>
+                <strong>Grass-Fed Beef:</strong> H = 0.001</p>
+                <p style="margin-top: 1em; color: #64748b;">Species change drops N from 0.096 to 0.0008. This overwhelms all other factors—it's a 120× difference in kill count.</p>
             </div>
         </div>
         
         <div class="comparison-grid">
             <div class="comparison-card">
-                <div class="comparison-title">Within Beef: 26% Improvement</div>
-                <p><strong>Feedlot:</strong> H = 0.50<br>
-                <strong>Grass-Fed:</strong> H = 0.37</p>
-                <p style="margin-top: 1em; color: #64748b;">Same L reduction as chicken (~55%), same proportional improvement (~26%).</p>
+                <div class="comparison-title">Within Beef: 35% Improvement</div>
+                <p><strong>Feedlot:</strong> H = 0.002<br>
+                <strong>Grass-Fed:</strong> H = 0.001</p>
+                <p style="margin-top: 1em; color: #64748b;">Same L reduction as chicken (~55%), same proportional improvement (~35%).</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">But Both Beat All Poultry</div>
-                <p><strong>Feedlot Beef:</strong> H = 0.50<br>
-                <strong>Pasture Chicken:</strong> H = 1.28</p>
-                <p style="margin-top: 1em; color: #64748b;">Even the worst beef beats the best chicken. N=0.25 is that powerful.</p>
+                <p><strong>Feedlot Beef:</strong> H = 0.002<br>
+                <strong>Pasture Chicken:</strong> H = 0.123</p>
+                <p style="margin-top: 1em; color: #64748b;">Even the worst beef beats the best chicken by 62×. N=0.0008 is that powerful.</p>
             </div>
         </div>
         
         <div class="insight-box">
-            <strong style="color: #6ee7b7;">Bottom line:</strong> Sourcing is second-order optimization. Get the species right first (low N), then optimize sourcing (low L). Don't spend energy finding the perfect pasture chicken farm when switching to wild-caught tuna would give you 6× the improvement.
+            <strong style="color: #6ee7b7;">Bottom line:</strong> Sourcing is second-order optimization. Get the species right first (low N), then optimize sourcing (low L). Don't spend energy finding the perfect pasture chicken farm when switching to wild-caught tuna would give you 3× the improvement.
         </div>
         
         <div class="section-divider"></div>
@@ -924,7 +1018,7 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
         <div id="detail-panel" class="detail-panel" style="display: none;">
             <div class="detail-header">
                 <div class="detail-title" id="detail-species-name">Wild Salmon</div>
-                <div class="detail-score">H = <span id="detail-h">0.58</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;">[0.3 - 1.2]</span></div>
+                <div class="detail-score">H = <span id="detail-h">0.039</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;"></span></div>
             </div>
             
             <p style="color: #94a3b8; margin-bottom: 1.5rem;">Group: <span id="detail-group" style="color: #6ee7b7; font-weight: 600;">Seafood</span></p>
@@ -957,8 +1051,8 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                 </div>
                 <div class="metric-chip">
                     <div class="metric-label">Individuals (N)</div>
-                    <div class="metric-value" id="detail-N">0.5</div>
-                    <div class="metric-hint">Lives consumed per 100 meals</div>
+                    <div class="metric-value" id="detail-N">0.0625</div>
+                    <div class="metric-hint">Individuals per meal</div>
                 </div>
             </div>
             
@@ -986,40 +1080,50 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             <p id="detail-description" style="color: #cbd5e1; font-size: 0.95rem; margin-top: 1.5rem; line-height: 1.7; padding: 1rem; background: #0a0f1e; border-radius: 8px; border: 1px solid #1e293b;"></p>
         </div>
         
-        <h2>The Surprising Results</h2>
+        <h2>The Results</h2>
         
         <p>When we apply the model with reasonable parameters, several non-obvious patterns emerge:</p>
         
         <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is 5× Worse Than Industrial Chicken</h3>
-            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume them in high quantities (N=15 vs N=1). They also die horrifically—often boiled alive. The numbers overwhelm the difference in conscious capacity.</p>
-            <p>Shrimp: <strong>H = 10.13</strong> vs Industrial Chicken: <strong>H = 1.95</strong></p>
-            <p>This is the consequence of the kill-count multiplier.</p>
-        </div>
-        
-        <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">2. Industrial Pork is the Worst Mammal Product</h3>
-            <p>Pigs have the richest conscious lives of any farmed animal (I×T = 0.81), terrible industrial conditions (L=2.4), and you eat 2 pigs per 100 meals. This combination is devastating.</p>
-            <p>Industrial Pork: <strong>H = 6.78</strong> — worse than industrial chicken by 3.5×</p>
-            <p>If you eat pork, sourcing matters more than for any other mammal.</p>
+            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is Catastrophically Bad (H = 10.1)</h3>
+            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume 15 per meal vs 0.096 chickens. They also die horrifically—often boiled alive. The numbers overwhelm the consciousness difference by orders of magnitude.</p>
+            <p><strong>If you accept linear aggregation (γ=1), shrimp is 54× worse than chicken.</strong> If you think aggregation has diminishing returns (γ=0.7), shrimp drops to ~6, which is still 32× worse than chicken.</p>
+            <p>This is the model's most controversial claim. It hinges on whether you think suffering scales linearly with numbers.</p>
         </div>
         
         <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">3. Beef Beats All Poultry—Even Pasture-Raised Chicken</h3>
-            <p>Cows have the highest experience quality of farmed animals (I×T = 0.68), but you only consume 0.0025 cows per meal (1 cow ≈ 400 meals). This absolutely dominates the calculation. Even feedlot beef (H = 0.50) beats duck (H = 0.84), and grass-fed beef (H = 0.37) beats pasture chicken (H = 1.28).</p>
-            <p>The "eat smaller animals" heuristic completely fails. <strong>Kill count is the dominant factor once conscious capacity crosses a threshold.</strong></p>
+            <h3 style="margin-top: 0; color: #6ee7b7;">2. All Mammals Beat All Poultry—Even Industrial vs Pasture</h3>
+            <p>This is the model's strongest and most actionable finding. Even <strong>industrial pork</strong> (I×T=0.81, L=2.4, N=0.002) beats <strong>pasture chicken</strong> (I×T=0.42, L=1.2, N=0.096) by 18×.</p>
+            
+            <p style="margin-top: 1rem;">Why? One pig yields 538 portions. One chicken yields 10 portions. That's a 54× difference in kill count. Even though pigs are twice as conscious and suffer twice as much in industrial farms, the arithmetic overwhelms it.</p>
+            
+            <p style="margin-top: 1rem;"><strong>Over a year:</strong> If you eat one meat meal daily, the chicken path kills 35 birds (consciousness-weighted: 14.7 units) while the pork path kills 0.7 pigs (consciousness-weighted: 0.6 units). That's a 25× difference.</p>
+            
+            <p style="margin-top: 1rem;">The "eat smaller animals" heuristic is completely backwards if numbers matter.</p>
         </div>
         
         <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">4. Wild-Caught Large Fish Are the Lowest-Harm Animal Foods</h3>
-            <p>Tuna (H = 0.21) and wild salmon (H = 0.31) beat even grass-fed beef. They have moderate experience quality, relatively natural lives, low kill counts, and despite painful deaths, the overall calculation favors them.</p>
-            <p><strong>If you eat animals and want to minimize harm, wild-caught large fish should be your default.</strong></p>
+            <h3 style="margin-top: 0; color: #6ee7b7;">3. Beef is the Best Meat (H = 0.001-0.002)</h3>
+            <p>Cows have rich conscious lives (I×T = 0.68), but you only consume 0.0008 cows per meal. One cow yields 1,280 portions—literally 3.5 years of daily beef meals. This absolutely dominates.</p>
+            
+            <p style="margin-top: 1rem;">Even <strong>feedlot beef</strong> (H = 0.002) beats <strong>pasture chicken</strong> (H = 0.123) by 62×. Grass-fed beef (H = 0.001) is 187× better than industrial chicken.</p>
+            
+            <p style="margin-top: 1rem;">If you eat meat and want to minimize harm: <strong>beef should be your default, then large fish, then pork, then poultry</strong>.</p>
         </div>
 
         <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">5. Animal Products Are Negligible Compared to Meat</h3>
-            <p>Eggs and dairy have H scores of 0.01-0.03—roughly 100× better than eating chicken, 15× better than beef. The N values (0.004-0.015) are so tiny that even terrible conditions for laying hens barely register in the per-meal calculation.</p>
-            <p>This doesn't mean the hens don't suffer—they absolutely do. But the harm-per-meal is vastly lower than eating the animals directly. <strong>If you're reducing harm but not going vegan, prioritizing products over meat is extremely high-leverage.</strong></p>
+            <h3 style="margin-top: 0; color: #6ee7b7;">4. Wild-Caught Large Fish Are Excellent (H = 0.002-0.039)</h3>
+            <p>Tuna (H = 0.002) and wild salmon (H = 0.039) are comparable to beef. They have moderate consciousness, relatively natural lives, and low kill counts per meal.</p>
+            <p>One large tuna yields 320 portions. One salmon yields 16 portions. Combined with lower consciousness than mammals, these are genuinely low-harm options.</p>
+        </div>
+
+        <div class="insight-box">
+            <h3 style="margin-top: 0; color: #6ee7b7;">5. Animal Products Are Negligible (H = 0.001-0.013)</h3>
+            <p>Eggs (H = 0.007-0.013) and dairy (H = 0.001) have H scores roughly 15-200× better than eating the animals directly. Even battery cage eggs (H=0.013) beat most fish.</p>
+            
+            <p style="margin-top: 1rem;">This doesn't mean the hens don't suffer—they absolutely do. Battery cage conditions are horrific (L=3.0). But N=0.007 is so tiny that harm per meal barely registers.</p>
+            
+            <p style="margin-top: 1rem;"><strong>If you're reducing harm but not going vegan, prioritizing products over meat is extremely high-leverage.</strong></p>
         </div>
 
         <h2>Sanity Checks: Does This Model Make Sense?</h2>
@@ -1029,37 +1133,37 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
         <div class="comparison-grid">
             <div class="comparison-card">
                 <div class="comparison-title">Test 1: Directional Agreement with RP</div>
-                <p>Rethink Priorities' welfare ranges rank mammals > birds > fish > invertebrates. Our model independently produces the same ordering when comparing <em>within-category averages</em>, despite measuring different things (peak intensity vs. chronic welfare integration).</p>
+                <p>Rethink Priorities' welfare ranges rank mammals > birds > fish > invertebrates. Our model independently produces the same ordering when comparing within-category averages, despite measuring different things.</p>
                 <p style="margin-top: 1em; color: #64748b;">✓ Passes: Same directional structure</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">Test 2: Kill Count Dominance</div>
-                <p>Most people initially think chicken is better than beef (smaller minds). The model says beef is 4-5× better. This follows directly from N=0.25 vs N=1—a parameter you can verify yourself.</p>
+                <p>Most people initially think chicken is better than beef (smaller minds). The model says beef is 100× better. This follows directly from N=0.0008 vs N=0.096—a parameter you can verify yourself by counting portions.</p>
                 <p style="margin-top: 1em; color: #64748b;">✓ Passes: Tractable surprise from explicit math</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">Test 3: The Shrimp Result</div>
-                <p>Shrimp being 5× worse than chicken is the model's strongest claim about kill counts. It's driven by N=15 overwhelming modest I×T. This is either a crucial insight about the ethics of kill counts, or it reveals that our linear-ish aggregation assumption (γ≈1) is wrong. Tune γ to 0.7 and shrimp drops to ~6.</p>
+                <p>Shrimp being 54× worse than chicken is driven by N=15 overwhelming modest I×T. This is either a crucial insight about aggregation ethics, or it reveals that linear aggregation (γ=1) is wrong. Tune γ to 0.7 and shrimp drops to 6× worse.</p>
                 <p style="margin-top: 1em; color: #64748b;">⚠ Mixed: Hinges on γ assumption</p>
             </div>
 
             <div class="comparison-card">
                 <div class="comparison-title">Test 4: Products vs. Meat</div>
-                <p>Eggs/dairy being 50-100× better than meat is the model's most actionable finding. It follows from N approaching zero. If you eat 12 eggs per week vs. 3 chicken meals, you're consuming 0.024 "chicken equivalents" vs. 3. That's a 125× difference. The math checks out independently of the model.</p>
-                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Independently verifiable arithmetic</p>
+                <p>Eggs/dairy being 15-200× better than meat follows from N approaching zero. If you eat 12 eggs per week vs 3 chicken meals, you're consuming 0.024 "chicken equivalents" vs 0.29 chickens. That's a 12× difference in the arithmetic alone.</p>
+                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Independently verifiable</p>
             </div>
 
             <div class="comparison-card">
                 <div class="comparison-title">Test 5: Internal Consistency</div>
-                <p>Pasture chicken improves over industrial by only 34% (1.95 → 1.28) because N stays constant and only L changes. Grass-fed beef improves by 26% (0.50 → 0.37) for the same reason. The sourcing improvements are proportional to L reductions, which is exactly what the model predicts.</p>
+                <p>Pasture chicken improves over industrial by 34% (0.187 → 0.123) because N stays constant and only L changes. Grass-fed beef improves by 35% (0.002 → 0.001) for the same reason. Sourcing improvements are proportional, as predicted.</p>
                 <p style="margin-top: 1em; color: #64748b;">✓ Passes: Internally coherent</p>
             </div>
         </div>
 
         <div class="insight-box">
-            <strong style="color: #6ee7b7;">Net assessment:</strong> The model's rankings are informed by welfare research but not circular—the I, T, and L parameters come from empirical data, while H emerges from the multiplicative structure. Where the model surprises (beef beats chicken, shrimp is catastrophic, products are negligible), the surprises follow from explicit parameters you can inspect. The main uncertainty is γ (aggregation), which is tunable.
+            <strong style="color: #6ee7b7;">Net assessment:</strong> The rankings are driven primarily by N (kill count per meal), with consciousness quality (I×T) and welfare conditions (L) as secondary factors. The main uncertainty is γ (aggregation), which is philosophically debatable rather than empirically measurable. Where the model surprises (beef beats chicken, shrimp is catastrophic), the surprises follow from explicit parameters you can inspect and challenge.
         </div>
         
         <h2>Full Data: All Species Evaluated</h2>
@@ -1095,32 +1199,32 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
         <div class="comparison-grid">
             <div class="comparison-card">
                 <div class="comparison-title">On Aggregation</div>
-                <p>This model assumes suffering scales with numbers raised to an exponent γ. But the right value of γ is an open ethical question. Linear aggregation (γ=1.0) treats all suffering as fungible. Diminishing returns (γ<1.0) suggests the existence of suffering minds has special weight. Explore this with the γ slider.</p>
+                <p>This model assumes suffering scales with numbers raised to γ. But the right value of γ is an open ethical question. Linear aggregation (γ=1.0) treats all suffering as fungible. Diminishing returns (γ<1.0) suggests individual experiences have special weight. Explore this with the γ slider.</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">On Experience Decomposition</div>
-                <p>We've split experience into intensity (I) and temporal depth (T), but what if these aren't independent? What if certain types of temporal integration require threshold intensity levels? Or what if there are discrete jumps where certain neural architectures create qualitatively different experiences?</p>
+                <p>We've split experience into intensity (I) and temporal depth (T), but what if these aren't independent? What if certain types of temporal integration require threshold intensity levels? The I×T product is a simplification.</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">On Suffering Types</div>
-                <p>We decompose lifetime suffering into physical, psychological, and social components with separate weights (ω). But are these truly separable? Does chronic physical pain create psychological suffering that we're double-counting? How do we weight social isolation for species with different social structures?</p>
+                <p>We decompose lifetime suffering into physical, psychological, and social components with separate weights (ω). But are these truly separable? Does chronic physical pain create psychological suffering we're double-counting?</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">On Death</div>
-                <p>We've separated death into process (pain of dying) and deprivation (loss of future). But does death harm an animal beyond these? Do we owe moral consideration to preference-frustration in beings that can't conceptualize death? The β and δ weights let you explore this, but the conceptual question remains open.</p>
+                <p>We've separated death into process (pain of dying) and deprivation (loss of future). But does death harm an animal beyond these? The β and δ weights let you explore this, but the conceptual question remains open.</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">On Temporal Depth</div>
-                <p>We know animals have pain receptors, but valenced experience that matters morally requires something more—negative affect that enters into learning, planning, and motivation. Where exactly does this emerge? Our T parameter tries to capture this, but the boundary between reflexive nociception and integrated suffering is fuzzy.</p>
+                <div class="comparison-title">On The Dominance of N</div>
+                <p>With default parameters, N explains ~95% of variance in H. Is this model just an elaborate way of saying "count bodies"? Or does it provide value by making that calculation explicit and letting you adjust for consciousness quality?</p>
             </div>
             
             <div class="comparison-card">
                 <div class="comparison-title">On Parameter Interactions</div>
-                <p>The model assumes I, T, and L components multiply cleanly. But what if suffering isn't compositional this way? What if high physical pain (L_phys) amplifies psychological stress (L_psych) non-linearly? The linear weights might be wrong, but exploring non-linear interactions would make the model intractable.</p>
+                <p>The model assumes I, T, and L components multiply cleanly. But what if suffering isn't compositional this way? What if high physical pain amplifies psychological stress non-linearly? Linear weights might be wrong, but exploring non-linear interactions would make the model intractable.</p>
             </div>
         </div>
         
@@ -1132,7 +1236,9 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             
             <p style="margin-top: 1rem;">In the US, ~5% of adults are vegetarian and ~3% vegan. Globally, 8-22% depending on region. The vast majority of people eat animals. This is for them.</p>
             
-            <p style="margin-top: 1rem;">These estimates are a <strong>reasonable first approximation</strong>, not ground truth. The I and T values draw on empirical research but involve judgment. The L and D scores reflect available welfare data but are coarse. The α, β, δ weights embody one set of commitments, not universal law.</p>
+            <p style="margin-top: 1rem;">These estimates are a <strong>reasonable first approximation</strong>, not ground truth. The I and T values draw on empirical research but involve judgment. The L and D scores reflect available welfare data but are coarse. The α, β, δ, γ weights embody one set of commitments, not universal law.</p>
+            
+            <p style="margin-top: 1rem;">The model's value isn't in complex math—it's in making explicit a calculation most people don't naturally perform: <strong>how many fractional animals am I consuming per meal, adjusted for their consciousness quality and suffering?</strong></p>
             
             <p style="margin-top: 1rem;"><strong>Status:</strong> Useful framework. Not gospel. Can accommodate better data.</p>
         </div>
@@ -1140,495 +1246,255 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
     
     <script>
         const speciesData = [
-            // Crustaceans - worst offenders
             {
                 species: "Shrimp",
                 group: "Seafood",
-                I: 0.48,
-                I_low: 0.38,
-                I_high: 0.58,
-                T: 0.30,
-                T_low: 0.15,
-                T_high: 0.45,
-                L_phys: 1.0,
-                L_psych: 0.8,
-                L_social: 0.7,
-                D_process: 3.0,
-                D_deprivation: 0.3,
-                N: 15,
-                N_low: 10,
-                N_high: 20,
-                description: "Tiny individuals, high kill counts, horrific deaths (boiling/suffocation). Low temporal integration but moderate intensity nociception. Typical serving is 10-20 shrimp depending on size."
+                I: 0.48, I_low: 0.38, I_high: 0.58,
+                T: 0.30, T_low: 0.15, T_high: 0.45,
+                L_phys: 1.0, L_psych: 0.8, L_social: 0.7,
+                D_process: 3.0, D_deprivation: 0.3,
+                N: 15, N_low: 10, N_high: 20,
+                description: "15 shrimp per typical serving. Moderate pain capacity, often boiled alive. Low temporal integration but the numbers overwhelm consciousness differences."
             },
             {
                 species: "Crab / Lobster",
                 group: "Seafood",
-                I: 0.45,
-                I_low: 0.35,
-                I_high: 0.55,
-                T: 0.35,
-                T_low: 0.20,
-                T_high: 0.50,
-                L_phys: 0.7,
-                L_psych: 0.6,
-                L_social: 0.2,
-                D_process: 3.0,
-                D_deprivation: 0.5,
-                N: 3,
-                N_low: 2,
-                N_high: 4,
-                description: "Often boiled alive, complex nociception, moderate kill counts. Evidence of pain learning and memory."
+                I: 0.45, I_low: 0.35, I_high: 0.55,
+                T: 0.35, T_low: 0.20, T_high: 0.50,
+                L_phys: 0.7, L_psych: 0.6, L_social: 0.2,
+                D_process: 3.0, D_deprivation: 0.5,
+                N: 0.5, N_low: 0.4, N_high: 0.6,
+                description: "One crab/lobster yields ~2 meals. Often boiled alive, complex nociception. Evidence of pain learning and memory."
             },
-            
-            // Small fish
             {
                 species: "Small Fish (Anchovy, Sardine)",
                 group: "Seafood",
-                I: 0.50,
-                I_low: 0.35,
-                I_high: 0.65,
-                T: 0.35,
-                T_low: 0.20,
-                T_high: 0.50,
-                L_phys: 0.3,
-                L_psych: 0.3,
-                L_social: 0.1,
-                D_process: 2.0,
-                D_deprivation: 0.5,
-                N: 5,
-                N_low: 4,
-                N_high: 7,
-                description: "Wild-caught, massive trawl deaths, many individuals per meal. Natural lives but violent deaths."
+                I: 0.50, I_low: 0.35, I_high: 0.65,
+                T: 0.35, T_low: 0.20, T_high: 0.50,
+                L_phys: 0.3, L_psych: 0.3, L_social: 0.1,
+                D_process: 2.0, D_deprivation: 0.5,
+                N: 5, N_low: 4, N_high: 7,
+                description: "~5 small fish per meal. Wild-caught, massive trawl deaths. Natural lives but violent deaths."
             },
-            
-            // Poultry - showing variation by sourcing
             {
                 species: "Chicken - Industrial",
                 group: "Bird",
-                I: 0.70,
-                I_low: 0.60,
-                I_high: 0.80,
-                T: 0.60,
-                T_low: 0.50,
-                T_high: 0.70,
-                L_phys: 1.2,
-                L_psych: 0.8,
-                L_social: 0.8,
-                D_process: 2.0,
-                D_deprivation: 1.5,
-                N: 1,
-                N_low: 0.9,
-                N_high: 1.2,
-                description: "Fast growth breeds, extreme confinement, chronic pain from genetics. Fear conditioning and stress visible in behavior. One of the worst foods."
+                I: 0.70, I_low: 0.60, I_high: 0.80,
+                T: 0.60, T_low: 0.50, T_high: 0.70,
+                L_phys: 1.2, L_psych: 0.8, L_social: 0.8,
+                D_process: 2.0, D_deprivation: 1.5,
+                N: 0.096, N_low: 0.08, N_high: 0.11,
+                description: "One chicken yields ~10 portions (5oz each). Fast growth breeds, extreme confinement, chronic pain from genetics. One of the worst poultry options."
             },
             {
                 species: "Chicken - Pasture-Raised",
                 group: "Bird",
-                I: 0.70,
-                I_low: 0.60,
-                I_high: 0.80,
-                T: 0.60,
-                T_low: 0.50,
-                T_high: 0.70,
-                L_phys: 0.4,
-                L_psych: 0.4,
-                L_social: 0.4,
-                D_process: 2.0,
-                D_deprivation: 1.5,
-                N: 1,
-                N_low: 0.9,
-                N_high: 1.2,
-                description: "Natural behaviors, outdoor access, less chronic suffering. Same minds, better lives."
+                I: 0.70, I_low: 0.60, I_high: 0.80,
+                T: 0.60, T_low: 0.50, T_high: 0.70,
+                L_phys: 0.4, L_psych: 0.4, L_social: 0.4,
+                D_process: 2.0, D_deprivation: 1.5,
+                N: 0.096, N_low: 0.08, N_high: 0.11,
+                description: "Natural behaviors, outdoor access, less chronic suffering. Same minds as industrial, better lives. Still N=0.096 per portion."
             },
             {
                 species: "Eggs - Battery Cage",
                 group: "Products",
-                I: 0.70,
-                I_low: 0.60,
-                I_high: 0.80,
-                T: 0.60,
-                T_low: 0.50,
-                T_high: 0.70,
-                L_phys: 1.3,
-                L_psych: 0.9,
-                L_social: 0.8,
-                D_process: 1.5,
-                D_deprivation: 1.5,
-                N: 0.015,
-                N_low: 0.012,
-                N_high: 0.018,
-                description: "Extreme confinement stress for hens + male chick culling. Despite low N, severe lifetime suffering."
+                I: 0.70, I_low: 0.60, I_high: 0.80,
+                T: 0.60, T_low: 0.50, T_high: 0.70,
+                L_phys: 1.3, L_psych: 0.9, L_social: 0.8,
+                D_process: 1.5, D_deprivation: 1.5,
+                N: 0.007, N_low: 0.006, N_high: 0.009,
+                description: "2 eggs per meal, hen lays ~300/year = 150 meals per hen. Extreme confinement stress + male chick culling, but tiny N makes harm per meal low."
             },
             {
                 species: "Eggs - Pasture-Raised",
                 group: "Products",
-                I: 0.70,
-                I_low: 0.60,
-                I_high: 0.80,
-                T: 0.60,
-                T_low: 0.50,
-                T_high: 0.70,
-                L_phys: 0.3,
-                L_psych: 0.3,
-                L_social: 0.2,
-                D_process: 1.5,
-                D_deprivation: 1.5,
-                N: 0.008,
-                N_low: 0.006,
-                N_high: 0.010,
+                I: 0.70, I_low: 0.60, I_high: 0.80,
+                T: 0.60, T_low: 0.50, T_high: 0.70,
+                L_phys: 0.3, L_psych: 0.3, L_social: 0.2,
+                D_process: 1.5, D_deprivation: 1.5,
+                N: 0.007, N_low: 0.006, N_high: 0.009,
                 description: "Natural behaviors, outdoor access, minimal culling if small-scale. Among the lowest-harm animal foods."
             },
-            
-            // Other birds
             {
                 species: "Turkey - Industrial",
                 group: "Bird",
-                I: 0.72,
-                I_low: 0.62,
-                I_high: 0.82,
-                T: 0.62,
-                T_low: 0.52,
-                T_high: 0.72,
-                L_phys: 1.1,
-                L_psych: 0.7,
-                L_social: 0.7,
-                D_process: 2.0,
-                D_deprivation: 1.5,
-                N: 0.5,
-                N_low: 0.4,
-                N_high: 0.6,
-                description: "Similar welfare issues to industrial chicken, slightly better N due to size."
+                I: 0.72, I_low: 0.62, I_high: 0.82,
+                T: 0.62, T_low: 0.52, T_high: 0.72,
+                L_phys: 1.1, L_psych: 0.7, L_social: 0.7,
+                D_process: 2.0, D_deprivation: 1.5,
+                N: 0.028, N_low: 0.025, N_high: 0.035,
+                description: "One turkey yields ~36 portions. Similar welfare issues to industrial chicken, but much better N due to size."
             },
             {
                 species: "Duck",
                 group: "Bird",
-                I: 0.73,
-                I_low: 0.63,
-                I_high: 0.83,
-                T: 0.63,
-                T_low: 0.53,
-                T_high: 0.73,
-                L_phys: 0.8,
-                L_psych: 0.5,
-                L_social: 0.5,
-                D_process: 2.0,
-                D_deprivation: 1.5,
-                N: 0.5,
-                N_low: 0.4,
-                N_high: 0.6,
-                description: "Often raised in better conditions than chickens. Evidence of social learning and bonds."
+                I: 0.73, I_low: 0.63, I_high: 0.83,
+                T: 0.63, T_low: 0.53, T_high: 0.73,
+                L_phys: 0.8, L_psych: 0.5, L_social: 0.5,
+                D_process: 2.0, D_deprivation: 1.5,
+                N: 0.11, N_low: 0.09, N_high: 0.13,
+                description: "One duck yields ~9 portions. Often raised in better conditions than chickens. Evidence of social learning and bonds."
             },
-            
-            // Cephalopods
             {
                 species: "Octopus",
                 group: "Seafood",
-                I: 0.75,
-                I_low: 0.60,
-                I_high: 0.90,
-                T: 0.70,
-                T_low: 0.55,
-                T_high: 0.85,
-                L_phys: 0.5,
-                L_psych: 0.4,
-                L_social: 0.1,
-                D_process: 2.5,
-                D_deprivation: 2.0,
-                N: 1,
-                N_low: 0.8,
-                N_high: 1.2,
-                description: "Highly intelligent, complex problem-solving, mostly wild-caught. Distributed nervous system creates uncertainty about experience."
+                I: 0.75, I_low: 0.60, I_high: 0.90,
+                T: 0.70, T_low: 0.55, T_high: 0.85,
+                L_phys: 0.5, L_psych: 0.4, L_social: 0.1,
+                D_process: 2.5, D_deprivation: 2.0,
+                N: 0.13, N_low: 0.10, N_high: 0.16,
+                description: "One octopus yields ~8 portions. Highly intelligent, complex problem-solving, mostly wild-caught. Distributed nervous system creates uncertainty."
             },
-            
-            // Mammals
             {
                 species: "Pig - Industrial",
                 group: "Mammal",
-                I: 0.85,
-                I_low: 0.75,
-                I_high: 0.95,
-                T: 0.95,
-                T_low: 0.85,
-                T_high: 1.00,
-                L_phys: 0.8,
-                L_psych: 0.6,
-                L_social: 1.0,
-                D_process: 1.5,
-                D_deprivation: 2.5,
-                N: 2,
-                N_low: 1.5,
-                N_high: 2.5,
-                description: "Highly intelligent, strong social bonds, often confined. Rich temporal integration of suffering."
+                I: 0.85, I_low: 0.75, I_high: 0.95,
+                T: 0.95, T_low: 0.85, T_high: 1.00,
+                L_phys: 0.8, L_psych: 0.6, L_social: 1.0,
+                D_process: 1.5, D_deprivation: 2.5,
+                N: 0.002, N_low: 0.0015, N_high: 0.0025,
+                description: "One pig yields ~538 portions. Highly intelligent, strong social bonds, often confined. Rich temporal integration - but tiny N overwhelms welfare concerns."
             },
             {
                 species: "Beef - Feedlot",
                 group: "Mammal",
-                I: 0.80,
-                I_low: 0.70,
-                I_high: 0.90,
-                T: 0.85,
-                T_low: 0.75,
-                T_high: 0.95,
-                L_phys: 0.5,
-                L_psych: 0.3,
-                L_social: 0.7,
-                D_process: 1.0,
-                D_deprivation: 2.5,
-                N: 0.25,
-                N_low: 0.20,
-                N_high: 0.30,
-                description: "Rich conscious lives, but large individuals = low kill count. Some confinement stress."
+                I: 0.80, I_low: 0.70, I_high: 0.90,
+                T: 0.85, T_low: 0.75, T_high: 0.95,
+                L_phys: 0.5, L_psych: 0.3, L_social: 0.7,
+                D_process: 1.0, D_deprivation: 2.5,
+                N: 0.0008, N_low: 0.0006, N_high: 0.001,
+                description: "One cow yields ~1280 portions. Rich conscious lives, but enormous size = incredibly low kill count. Some confinement stress."
             },
             {
                 species: "Beef - Grass-Fed",
                 group: "Mammal",
-                I: 0.80,
-                I_low: 0.70,
-                I_high: 0.90,
-                T: 0.85,
-                T_low: 0.75,
-                T_high: 0.95,
-                L_phys: 0.2,
-                L_psych: 0.2,
-                L_social: 0.3,
-                D_process: 1.0,
-                D_deprivation: 2.5,
-                N: 0.25,
-                N_low: 0.20,
-                N_high: 0.30,
-                description: "Natural grazing, minimal confinement, same low kill count. Among the best mammal options."
+                I: 0.80, I_low: 0.70, I_high: 0.90,
+                T: 0.85, T_low: 0.75, T_high: 0.95,
+                L_phys: 0.2, L_psych: 0.2, L_social: 0.3,
+                D_process: 1.0, D_deprivation: 2.5,
+                N: 0.0008, N_low: 0.0006, N_high: 0.001,
+                description: "Natural grazing, minimal confinement, same incredibly low kill count. One of the best mammal options."
             },
             {
                 species: "Dairy - Factory",
                 group: "Products",
-                I: 0.80,
-                I_low: 0.70,
-                I_high: 0.90,
-                T: 0.85,
-                T_low: 0.75,
-                T_high: 0.95,
-                L_phys: 1.0,
-                L_psych: 0.7,
-                L_social: 0.8,
-                D_process: 1.0,
-                D_deprivation: 2.5,
-                N: 0.004,
-                N_low: 0.003,
-                N_high: 0.005,
-                description: "Chronic mastitis, repeated pregnancy/separation. Product per animal is huge but welfare costs are high."
+                I: 0.80, I_low: 0.70, I_high: 0.90,
+                T: 0.85, T_low: 0.75, T_high: 0.95,
+                L_phys: 1.0, L_psych: 0.7, L_social: 0.8,
+                D_process: 1.0, D_deprivation: 2.5,
+                N: 0.0005, N_low: 0.0004, N_high: 0.0006,
+                description: "1 cup milk per meal, cow produces ~48,000 cups/year (accounting for culling). Chronic mastitis, repeated pregnancy/separation. But N is tiny."
             },
             {
                 species: "Dairy - Pasture",
                 group: "Products",
-                I: 0.80,
-                I_low: 0.70,
-                I_high: 0.90,
-                T: 0.85,
-                T_low: 0.75,
-                T_high: 0.95,
-                L_phys: 0.3,
-                L_psych: 0.3,
-                L_social: 0.4,
-                D_process: 1.0,
-                D_deprivation: 2.5,
-                N: 0.004,
-                N_low: 0.003,
-                N_high: 0.005,
+                I: 0.80, I_low: 0.70, I_high: 0.90,
+                T: 0.85, T_low: 0.75, T_high: 0.95,
+                L_phys: 0.3, L_psych: 0.3, L_social: 0.4,
+                D_process: 1.0, D_deprivation: 2.5,
+                N: 0.0005, N_low: 0.0004, N_high: 0.0006,
                 description: "Grazing access, better health, still some calf separation. Much better than factory."
             },
-            
-            // Fish - showing wild vs farmed
             {
                 species: "Salmon - Farmed",
                 group: "Seafood",
-                I: 0.55,
-                I_low: 0.45,
-                I_high: 0.65,
-                T: 0.45,
-                T_low: 0.35,
-                T_high: 0.55,
-                L_phys: 0.9,
-                L_psych: 0.7,
-                L_social: 0.2,
-                D_process: 2.0,
-                D_deprivation: 1.0,
-                N: 0.5,
-                N_low: 0.4,
-                N_high: 0.6,
-                description: "Sea lice, crowding, lesions, restricted movement. Pain affects feeding and behavior."
+                I: 0.55, I_low: 0.45, I_high: 0.65,
+                T: 0.45, T_low: 0.35, T_high: 0.55,
+                L_phys: 0.9, L_psych: 0.7, L_social: 0.2,
+                D_process: 2.0, D_deprivation: 1.0,
+                N: 0.0625, N_low: 0.05, N_high: 0.08,
+                description: "One salmon yields ~16 portions. Sea lice, crowding, lesions, restricted movement. Pain affects feeding and behavior."
             },
             {
                 species: "Salmon - Wild",
                 group: "Seafood",
-                I: 0.55,
-                I_low: 0.45,
-                I_high: 0.65,
-                T: 0.45,
-                T_low: 0.35,
-                T_high: 0.55,
-                L_phys: 0.3,
-                L_psych: 0.3,
-                L_social: 0.2,
-                D_process: 2.0,
-                D_deprivation: 1.0,
-                N: 0.5,
-                N_low: 0.4,
-                N_high: 0.6,
-                description: "Natural life, migrations, predation stress but freedom. Among the best animal foods."
+                I: 0.55, I_low: 0.45, I_high: 0.65,
+                T: 0.45, T_low: 0.35, T_high: 0.55,
+                L_phys: 0.3, L_psych: 0.3, L_social: 0.2,
+                D_process: 2.0, D_deprivation: 1.0,
+                N: 0.0625, N_low: 0.05, N_high: 0.08,
+                description: "Natural life, migrations, predation stress but freedom. One of the better seafood options."
             },
             {
                 species: "Tilapia - Farmed",
                 group: "Seafood",
-                I: 0.48,
-                I_low: 0.38,
-                I_high: 0.58,
-                T: 0.38,
-                T_low: 0.28,
-                T_high: 0.48,
-                L_phys: 0.9,
-                L_psych: 0.8,
-                L_social: 0.1,
-                D_process: 2.0,
-                D_deprivation: 0.8,
-                N: 1,
-                N_low: 0.8,
-                N_high: 1.2,
-                description: "High-density farming, poor water quality. Stress responses visible in cortisol levels."
+                I: 0.48, I_low: 0.38, I_high: 0.58,
+                T: 0.38, T_low: 0.28, T_high: 0.48,
+                L_phys: 0.9, L_psych: 0.8, L_social: 0.1,
+                D_process: 2.0, D_deprivation: 0.8,
+                N: 0.37, N_low: 0.30, N_high: 0.45,
+                description: "One tilapia yields ~3 portions. High-density farming, poor water quality. Stress responses visible in cortisol levels."
             },
             {
                 species: "Catfish",
                 group: "Seafood",
-                I: 0.50,
-                I_low: 0.40,
-                I_high: 0.60,
-                T: 0.40,
-                T_low: 0.30,
-                T_high: 0.50,
-                L_phys: 0.7,
-                L_psych: 0.7,
-                L_social: 0.1,
-                D_process: 2.0,
-                D_deprivation: 0.8,
-                N: 1,
-                N_low: 0.8,
-                N_high: 1.2,
-                description: "Similar to tilapia farming conditions, some evidence of social learning."
+                I: 0.50, I_low: 0.40, I_high: 0.60,
+                T: 0.40, T_low: 0.30, T_high: 0.50,
+                L_phys: 0.7, L_psych: 0.7, L_social: 0.1,
+                D_process: 2.0, D_deprivation: 0.8,
+                N: 0.28, N_low: 0.22, N_high: 0.35,
+                description: "One catfish yields ~4 portions. Similar to tilapia farming conditions, some evidence of social learning."
             },
             {
                 species: "Cod / Whitefish",
                 group: "Seafood",
-                I: 0.52,
-                I_low: 0.42,
-                I_high: 0.62,
-                T: 0.42,
-                T_low: 0.32,
-                T_high: 0.52,
-                L_phys: 0.4,
-                L_psych: 0.4,
-                L_social: 0.1,
-                D_process: 2.0,
-                D_deprivation: 1.0,
-                N: 0.7,
-                N_low: 0.5,
-                N_high: 0.9,
-                description: "Usually wild-caught, moderate welfare. Evidence of pain avoidance learning."
+                I: 0.52, I_low: 0.42, I_high: 0.62,
+                T: 0.42, T_low: 0.32, T_high: 0.52,
+                L_phys: 0.4, L_psych: 0.4, L_social: 0.1,
+                D_process: 2.0, D_deprivation: 1.0,
+                N: 0.21, N_low: 0.17, N_high: 0.25,
+                description: "One cod yields ~5 portions. Usually wild-caught, moderate welfare. Evidence of pain avoidance learning."
             },
             {
                 species: "Tuna - Large",
                 group: "Seafood",
-                I: 0.58,
-                I_low: 0.48,
-                I_high: 0.68,
-                T: 0.48,
-                T_low: 0.38,
-                T_high: 0.58,
-                L_phys: 0.3,
-                L_psych: 0.3,
-                L_social: 0.1,
-                D_process: 2.0,
-                D_deprivation: 1.2,
-                N: 0.3,
-                N_low: 0.2,
-                N_high: 0.4,
-                description: "Wild-caught, large individuals, low kill count. One of the best seafood options."
+                I: 0.58, I_low: 0.48, I_high: 0.68,
+                T: 0.48, T_low: 0.38, T_high: 0.58,
+                L_phys: 0.3, L_psych: 0.3, L_social: 0.1,
+                D_process: 2.0, D_deprivation: 1.2,
+                N: 0.003, N_low: 0.002, N_high: 0.004,
+                description: "One large tuna yields ~320 portions. Wild-caught, enormous individuals, very low kill count. One of the best seafood options."
             },
-            
-            // Frontier/low-sentience
             {
                 species: "Honey - Industrial",
                 group: "Products",
-                I: 0.20,
-                I_low: 0.10,
-                I_high: 0.30,
-                T: 0.15,
-                T_low: 0.05,
-                T_high: 0.25,
-                L_phys: 0.6,
-                L_psych: 0.6,
-                L_social: 0.3,
-                D_process: 0.3,
-                D_deprivation: 0.1,
-                N: 0.1,
-                N_low: 0.05,
-                N_high: 0.15,
-                description: "Hive stress, queen clipping, disease. Evidence of learning but integration unclear."
+                I: 0.20, I_low: 0.10, I_high: 0.30,
+                T: 0.15, T_low: 0.05, T_high: 0.25,
+                L_phys: 0.6, L_psych: 0.6, L_social: 0.3,
+                D_process: 0.3, D_deprivation: 0.1,
+                N: 0.001, N_low: 0.0008, N_high: 0.0012,
+                description: "Hive stress, queen clipping, disease. Evidence of learning but integration unclear. Very low N."
             },
             {
                 species: "Honey - Small-Scale",
                 group: "Products",
-                I: 0.20,
-                I_low: 0.10,
-                I_high: 0.30,
-                T: 0.15,
-                T_low: 0.05,
-                T_high: 0.25,
-                L_phys: 0.2,
-                L_psych: 0.2,
-                L_social: 0.1,
-                D_process: 0.3,
-                D_deprivation: 0.1,
-                N: 0.1,
-                N_low: 0.05,
-                N_high: 0.15,
+                I: 0.20, I_low: 0.10, I_high: 0.30,
+                T: 0.15, T_low: 0.05, T_high: 0.25,
+                L_phys: 0.2, L_psych: 0.2, L_social: 0.1,
+                D_process: 0.3, D_deprivation: 0.1,
+                N: 0.001, N_low: 0.0008, N_high: 0.0012,
                 description: "Better hive management, less stress. Bees exhibit decision-making but sentience uncertain."
             },
             {
                 species: "Mussels / Oysters*",
                 group: "Frontier",
-                I: 0.15,
-                I_low: 0.05,
-                I_high: 0.25,
-                T: 0.10,
-                T_low: 0.02,
-                T_high: 0.18,
-                L_phys: 0.1,
-                L_psych: 0.1,
-                L_social: 0.0,
-                D_process: 0.5,
-                D_deprivation: 0.1,
-                N: 8,
-                N_low: 6,
-                N_high: 12,
-                description: "Minimal nervous system, mostly reflex. Sentience highly uncertain, but typical serving is 6-12 individuals."
+                I: 0.15, I_low: 0.05, I_high: 0.25,
+                T: 0.10, T_low: 0.02, T_high: 0.18,
+                L_phys: 0.1, L_psych: 0.1, L_social: 0.0,
+                D_process: 0.5, D_deprivation: 0.1,
+                N: 8, N_low: 6, N_high: 12,
+                description: "~8 bivalves per meal. Minimal nervous system, mostly reflex. Sentience highly uncertain."
             },
             {
                 species: "Insects (Crickets, Mealworms)*",
                 group: "Frontier",
-                I: 0.12,
-                I_low: 0.05,
-                I_high: 0.20,
-                T: 0.08,
-                T_low: 0.02,
-                T_high: 0.15,
-                L_phys: 0.3,
-                L_psych: 0.2,
-                L_social: 0.0,
-                D_process: 0.5,
-                D_deprivation: 0.1,
-                N: 50,
-                N_low: 40,
-                N_high: 70,
-                description: "Nociception present but integration unclear. Sentience uncertain, but typical serving is 40-70 individuals. Precautionary approach warrants caution."
+                I: 0.12, I_low: 0.05, I_high: 0.20,
+                T: 0.08, T_low: 0.02, T_high: 0.15,
+                L_phys: 0.3, L_psych: 0.2, L_social: 0.0,
+                D_process: 0.5, D_deprivation: 0.1,
+                N: 50, N_low: 40, N_high: 70,
+                description: "~50 insects per meal. Nociception present but integration unclear. Sentience uncertain - precautionary approach warrants caution."
             }
         ];
         
@@ -1647,7 +1513,6 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                 const L = calculateL(d, omega_phys, omega_psych, omega_social);
                 
                 if (useRange) {
-                    // Calculate low, central, and high estimates
                     const I_vals = [d.I_low, d.I, d.I_high];
                     const T_vals = [d.T_low, d.T, d.T_high];
                     const N_vals = [d.N_low, d.N, d.N_high];
@@ -1726,11 +1591,11 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             
             const scaleConfig = useLogScale ? {
                 type: 'logarithmic',
-                min: 0.01,
+                min: 0.0001,
                 ticks: { 
                     color: '#94a3b8',
                     callback: function(value) {
-                        if (value === 0.01 || value === 0.1 || value === 1 || value === 10 || value === 100) {
+                        if (value === 0.0001 || value === 0.001 || value === 0.01 || value === 0.1 || value === 1 || value === 10 || value === 100) {
                             return value;
                         }
                         return '';
@@ -1754,14 +1619,17 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             };
             
             const datasets = [{
-                label: 'Harm per 100 Meals',
+                label: 'Harm per Meal',
                 data: data.map(d => d.H),
                 backgroundColor: data.map(d => {
-                    if (d.H > 10) return '#ef4444';
-                    if (d.H > 5) return '#f97316';
-                    if (d.H > 2) return '#f59e0b';
-                    if (d.H > 1) return '#eab308';
-                    if (d.H > 0.5) return '#84cc16';
+                    if (d.H > 10) return '#7f1d1d';
+                    if (d.H > 5) return '#991b1b';
+                    if (d.H > 2) return '#dc2626';
+                    if (d.H > 1) return '#f97316';
+                    if (d.H > 0.5) return '#f59e0b';
+                    if (d.H > 0.2) return '#eab308';
+                    if (d.H > 0.1) return '#84cc16';
+                    if (d.H > 0.01) return '#22c55e';
                     return '#10b981';
                 }),
                 borderRadius: 8,
@@ -1813,7 +1681,7 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                             callbacks: {
                                 label: (context) => {
                                     if (context.datasetIndex === 0) {
-                                        return `H = ${context.parsed.x.toFixed(2)}`;
+                                        return `H = ${context.parsed.x.toFixed(3)}`;
                                     }
                                     return '';
                                 },
@@ -1821,7 +1689,7 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                                     if (context.datasetIndex === 0) {
                                         const d = data[context.dataIndex];
                                         if (showUncertainty && d.H_low && d.H_high) {
-                                            return `Range: [${d.H_low.toFixed(2)} - ${d.H_high.toFixed(2)}]`;
+                                            return `Range: [${d.H_low.toFixed(3)} - ${d.H_high.toFixed(3)}]`;
                                         }
                                     }
                                     return '';
@@ -1859,43 +1727,46 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
                 else if (d.H >= 1) verdict = 'Moderate-High';
                 else if (d.H >= 0.5) verdict = 'Moderate';
                 else if (d.H >= 0.2) verdict = 'Moderate-Low';
-                else if (d.H >= 0.05) verdict = 'Low';
-                else verdict = 'Very Low';
+                else if (d.H >= 0.1) verdict = 'Low';
+                else if (d.H >= 0.01) verdict = 'Very Low';
+                else verdict = 'Negligible';
                 
                 let bgColor;
                 if (d.H >= 10) {
-                    bgColor = '#7f1d1d'; // Catastrophic - deep red
+                    bgColor = '#7f1d1d';
                 } else if (d.H >= 5) {
-                    bgColor = '#991b1b'; // Very High - red
+                    bgColor = '#991b1b';
                 } else if (d.H >= 2) {
-                    bgColor = '#9a3412'; // High - orange-red
+                    bgColor = '#dc2626';
                 } else if (d.H >= 1) {
-                    bgColor = '#92400e'; // Moderate-High - orange
+                    bgColor = '#f97316';
                 } else if (d.H >= 0.5) {
-                    bgColor = '#854d0e'; // Moderate - yellow-orange
+                    bgColor = '#f59e0b';
                 } else if (d.H >= 0.2) {
-                    bgColor = '#713f12'; // Moderate-Low - darker yellow
-                } else if (d.H >= 0.05) {
-                    bgColor = '#365314'; // Low - dark yellow-green
+                    bgColor = '#eab308';
+                } else if (d.H >= 0.1) {
+                    bgColor = '#84cc16';
+                } else if (d.H >= 0.01) {
+                    bgColor = '#22c55e';
                 } else {
-                    bgColor = '#14532d'; // Very Low - dark green
+                    bgColor = '#10b981';
                 }
                 
                 const rangeStr = (d.H_low && d.H_high) ? 
-                    `[${d.H_low.toFixed(2)} - ${d.H_high.toFixed(2)}]` : 
+                    `[${d.H_low.toFixed(3)} - ${d.H_high.toFixed(3)}]` : 
                     '—';
                 
                 html += `
                     <tr style="background: ${bgColor};">
                         <td><strong>${d.species}</strong></td>
-                        <td><strong>${d.H.toFixed(2)}</strong></td>
+                        <td><strong>${d.H.toFixed(3)}</strong></td>
                         <td style="font-size: 0.85em; color: #94a3b8;">${rangeStr}</td>
                         <td>${d.I.toFixed(2)}</td>
                         <td>${d.T.toFixed(2)}</td>
                         <td>${d.L.toFixed(1)}</td>
                         <td>${d.D_process.toFixed(1)}</td>
                         <td>${d.D_deprivation.toFixed(1)}</td>
-                        <td>${d.N.toFixed(3)}</td>
+                        <td>${d.N.toFixed(4)}</td>
                         <td>${verdict}</td>
                     </tr>
                 `;
@@ -1907,11 +1778,11 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
         function showDetailPanel(data) {
             document.getElementById('detail-panel').style.display = 'block';
             document.getElementById('detail-species-name').textContent = data.species;
-            document.getElementById('detail-h').textContent = data.H.toFixed(2);
+            document.getElementById('detail-h').textContent = data.H.toFixed(3);
             
             if (data.H_low && data.H_high) {
                 document.getElementById('detail-range').textContent = 
-                    `[${data.H_low.toFixed(2)} - ${data.H_high.toFixed(2)}]`;
+                    `[${data.H_low.toFixed(3)} - ${data.H_high.toFixed(3)}]`;
             } else {
                 document.getElementById('detail-range').textContent = '';
             }
@@ -1922,7 +1793,7 @@ H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(
             document.getElementById('detail-L').textContent = data.L.toFixed(1);
             document.getElementById('detail-D-process').textContent = data.D_process.toFixed(1);
             document.getElementById('detail-D-deprivation').textContent = data.D_deprivation.toFixed(1);
-            document.getElementById('detail-N').textContent = data.N.toFixed(3);
+            document.getElementById('detail-N').textContent = data.N.toFixed(4);
             document.getElementById('detail-L-phys').textContent = data.L_phys.toFixed(1);
             document.getElementById('detail-L-psych').textContent = data.L_psych.toFixed(1);
             document.getElementById('detail-L-social').textContent = data.L_social.toFixed(1);
