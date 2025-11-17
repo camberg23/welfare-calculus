@@ -990,10 +990,10 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         <p>When we apply the model with reasonable parameters, several non-obvious patterns emerge:</p>
         
         <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is 14× Worse Than Industrial Chicken</h3>
-            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume them in massive quantities (N=40 vs N=1). They also die horrifically—often boiled alive. The numbers overwhelm everything else.</p>
-            <p>Shrimp: <strong>H<sub>100</sub> = 27.01</strong> vs Industrial Chicken: <strong>H<sub>100</sub> = 1.95</strong></p>
-            <p>This is the catastrophic consequence of the kill-count multiplier.</p>
+            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is 5× Worse Than Industrial Chicken</h3>
+            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume them in high quantities (N=15 vs N=1). They also die horrifically—often boiled alive. The numbers overwhelm the difference in conscious capacity.</p>
+            <p>Shrimp: <strong>H<sub>100</sub> = 10.13</strong> vs Industrial Chicken: <strong>H<sub>100</sub> = 1.95</strong></p>
+            <p>This is the consequence of the kill-count multiplier.</p>
         </div>
         
         <div class="warning-box">
@@ -1040,7 +1040,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             
             <div class="comparison-card">
                 <div class="comparison-title">Test 3: The Shrimp Result</div>
-                <p>Shrimp being catastrophic (H=27) is the model's strongest claim. It's driven entirely by N=40 overwhelming modest I×T. This is either a crucial insight about the ethics of kill counts, or it reveals that our linear-ish aggregation assumption (γ≈1) is wrong. Tune γ to 0.7 and shrimp drops to ~12.</p>
+                <p>Shrimp being 5× worse than chicken is the model's strongest claim about kill counts. It's driven by N=15 overwhelming modest I×T. This is either a crucial insight about the ethics of kill counts, or it reveals that our linear-ish aggregation assumption (γ≈1) is wrong. Tune γ to 0.7 and shrimp drops to ~6.</p>
                 <p style="margin-top: 1em; color: #64748b;">⚠ Mixed: Hinges on γ assumption</p>
             </div>
 
@@ -1084,6 +1084,8 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             </tbody>
         </table>
         </div>
+        
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem; font-style: italic;">* Sentience highly uncertain for these species</p>
         
         <h2>Deeper Questions This Framework Raises</h2>
         
@@ -1152,10 +1154,10 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 L_social: 0.7,
                 D_process: 3.0,
                 D_deprivation: 0.3,
-                N: 40,
-                N_low: 30,
-                N_high: 50,
-                description: "Tiny individuals, massive kill counts, horrific deaths (boiling/suffocation). Low temporal integration but high intensity nociception. The numbers overwhelm everything else."
+                N: 15,
+                N_low: 10,
+                N_high: 20,
+                description: "Tiny individuals, high kill counts, horrific deaths (boiling/suffocation). Low temporal integration but moderate intensity nociception. Typical serving is 10-20 shrimp depending on size."
             },
             {
                 species: "Crab / Lobster",
@@ -1590,7 +1592,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 description: "Better hive management, less stress. Bees exhibit decision-making but sentience uncertain."
             },
             {
-                species: "Mussels / Oysters",
+                species: "Mussels / Oysters*",
                 group: "Frontier",
                 I: 0.15,
                 I_low: 0.05,
@@ -1603,13 +1605,13 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 L_social: 0.0,
                 D_process: 0.5,
                 D_deprivation: 0.1,
-                N: 1,
-                N_low: 0.8,
-                N_high: 1.5,
-                description: "Minimal nervous system, mostly reflex. Sentience highly uncertain."
+                N: 8,
+                N_low: 6,
+                N_high: 12,
+                description: "Minimal nervous system, mostly reflex. Sentience highly uncertain, but typical serving is 6-12 individuals."
             },
             {
-                species: "Insects (Crickets, Mealworms)",
+                species: "Insects (Crickets, Mealworms)*",
                 group: "Frontier",
                 I: 0.12,
                 I_low: 0.05,
@@ -1622,10 +1624,10 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 L_social: 0.0,
                 D_process: 0.5,
                 D_deprivation: 0.1,
-                N: 1,
-                N_low: 0.8,
-                N_high: 1.5,
-                description: "Nociception present but integration unclear. Precautionary approach warrants caution."
+                N: 50,
+                N_low: 40,
+                N_high: 70,
+                description: "Nociception present but integration unclear. Sentience uncertain, but typical serving is 40-70 individuals. Precautionary approach warrants caution."
             }
         ];
         
@@ -1673,13 +1675,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                         H100: H100
                     };
                 }
-            }).sort((a, b) => {
-                // Always put Frontier species at the bottom
-                if (a.group === 'Frontier' && b.group !== 'Frontier') return 1;
-                if (b.group === 'Frontier' && a.group !== 'Frontier') return -1;
-                // Otherwise sort by H100 descending
-                return b.H100 - a.H100;
-            });
+            }).sort((a, b) => b.H100 - a.H100);
             
             return results;
         }
@@ -1853,44 +1849,35 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
             const tbody = document.getElementById('table-body');
             
             let html = '';
-            let inFrontierZone = false;
             
             data.forEach((d, index) => {
-                // Check if we need to add frontier separator - only for actual frontier species
-                if (!inFrontierZone && (d.group === 'Frontier')) {
-                    html += `
-                        <tr style="background: transparent;">
-                            <td colspan="10" style="padding: 1rem 0;">
-                                <div class="frontier-separator">
-                                    <div class="frontier-label">⚠ SENTIENCE UNCERTAIN BELOW ⚠</div>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    inFrontierZone = true;
-                }
-                
                 let verdict = 'Moderate';
-                if (d.H100 > 10) verdict = 'Catastrophic';
-                else if (d.H100 > 5) verdict = 'Very High';
-                else if (d.H100 > 2) verdict = 'High';
-                else if (d.H100 < 1) verdict = 'Low';
+                if (d.H100 >= 10) verdict = 'Catastrophic';
+                else if (d.H100 >= 5) verdict = 'Very High';
+                else if (d.H100 >= 2) verdict = 'High';
+                else if (d.H100 >= 1) verdict = 'Moderate-High';
+                else if (d.H100 >= 0.5) verdict = 'Moderate';
+                else if (d.H100 >= 0.2) verdict = 'Moderate-Low';
+                else if (d.H100 >= 0.05) verdict = 'Low';
+                else verdict = 'Very Low';
                 
                 let bgColor;
-                if (d.H100 > 10) {
-                    bgColor = '#7f1d1d';
-                } else if (d.H100 > 5) {
-                    bgColor = '#991b1b';
-                } else if (d.H100 > 2) {
-                    bgColor = '#9a3412';
-                } else if (d.H100 > 1) {
-                    bgColor = '#92400e';
-                } else if (d.H100 > 0.5) {
-                    bgColor = '#854d0e';
-                } else if (d.H100 > 0.2) {
-                    bgColor = '#4d7c0f';
+                if (d.H100 >= 10) {
+                    bgColor = '#7f1d1d'; // Catastrophic - deep red
+                } else if (d.H100 >= 5) {
+                    bgColor = '#991b1b'; // Very High - red
+                } else if (d.H100 >= 2) {
+                    bgColor = '#9a3412'; // High - orange-red
+                } else if (d.H100 >= 1) {
+                    bgColor = '#92400e'; // Moderate-High - orange
+                } else if (d.H100 >= 0.5) {
+                    bgColor = '#854d0e'; // Moderate - yellow-orange
+                } else if (d.H100 >= 0.2) {
+                    bgColor = '#713f12'; // Moderate-Low - darker yellow
+                } else if (d.H100 >= 0.05) {
+                    bgColor = '#365314'; // Low - dark yellow-green
                 } else {
-                    bgColor = '#065f46';
+                    bgColor = '#14532d'; // Very Low - dark green
                 }
                 
                 const rangeStr = (d.H100_low && d.H100_high) ? 
