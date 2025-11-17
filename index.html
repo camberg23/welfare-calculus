@@ -23,7 +23,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 3rem 1.5rem;
+            padding: 0.5rem 1.5rem 3rem 1.5rem;
         }
         
         h1 {
@@ -70,9 +70,9 @@
         
         .hero-section {
             text-align: center;
-            padding: 1rem 0 2rem;
+            padding: 0;
             max-width: 900px;
-            margin: 0 auto 2rem;
+            margin: 0 auto 1.5rem;
         }
         
         .hero-section p {
@@ -543,8 +543,9 @@
 <body>
     <div class="container">
         <div class="hero-section">
-            <h1>Which Animals, If Any?</h1>
+            <h1>Eating Animals: The Math</h1>
             <p class="subtitle">If you care about reducing suffering but aren't willing to be vegetarian, what should you eat? The obvious answers are wrong.</p>
+            <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem;">by Cameron Berg</p>
         </div>
         
         <h2>The Problem with Simple Rules</h2>
@@ -753,6 +754,21 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 <p style="margin-top: 1rem;">Both approaches are legitimate; they're answering different questions with different tools.</p>
             </div>
         </details>
+
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ How Uncertainty Bands Work</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <p>Click "Show Uncertainty" to see ranges around each H<sub>100</sub> estimate. These aren't pulled from thin air—they reflect genuine epistemic uncertainty about the parameters:</p>
+                
+                <p style="margin-top: 1rem;"><strong>For I and T:</strong> We provide low/mid/high estimates based on uncertainty in neuroscience. For example, shrimp I could plausibly be 0.38 (minimal integration) to 0.58 (surprisingly rich nociception). The ranges reflect where empirical evidence is ambiguous.</p>
+                
+                <p style="margin-top: 1rem;"><strong>For N:</strong> Small variations based on meal size and preparation. A "shrimp meal" could be 30-50 shrimp depending on the dish.</p>
+                
+                <p style="margin-top: 1rem;"><strong>For L components:</strong> We apply ±20% to account for variation within production systems. Not all "industrial chicken" farms are equally bad; not all "pasture-raised" operations are equally good.</p>
+                
+                <p style="margin-top: 1rem;"><strong>Combined effect:</strong> These uncertainties propagate through the multiplication to give you ranges like "Shrimp: 27 [19-38]" or "Wild Salmon: 0.31 [0.17-0.52]". The ranges show you how robust the rankings are. If two species' ranges overlap substantially, the ordering between them is genuinely uncertain.</p>
+            </div>
+        </details>
         
         <h2>Species Choice Matters More Than Sourcing</h2>
         
@@ -888,10 +904,10 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
                 </div>
                 
                 <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button id="scale-toggle" style="padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;">
-                        Switch to Linear Scale
+                    <button id="scale-toggle" style="padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid #6ee7b7; background: #064e3b; color: #6ee7b7; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                        Switch to Log Scale
                     </button>
-                    <button id="uncertainty-toggle" style="padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;">
+                    <button id="uncertainty-toggle" style="padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid #6ee7b7; background: #064e3b; color: #6ee7b7; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
                         Show Uncertainty
                     </button>
                 </div>
@@ -1616,7 +1632,7 @@ H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3
         let currentFilter = 'all';
         let selectedSpecies = null;
         let chart = null;
-        let useLogScale = true;
+        let useLogScale = false;
         let showUncertainty = false;
         
         function calculateL(data, omega_phys, omega_psych, omega_social) {
