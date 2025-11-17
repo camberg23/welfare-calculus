@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>The Welfare Calculus</title>
+    <title>Eating Animals: The Math</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
@@ -402,6 +402,57 @@
             border: 1px solid #334155;
             text-align: center;
         }
+
+        .preset-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: #6ee7b7;
+            color: #6ee7b7;
+        }
+
+        .preset-btn.active {
+            background: #064e3b;
+            border-color: #6ee7b7;
+            color: #6ee7b7;
+        }
+
+        .frontier-separator {
+            height: 3px;
+            background: linear-gradient(to right, transparent, #fbbf24, transparent);
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .frontier-label {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            padding: 0.3rem 1rem;
+            color: #fbbf24;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #fbbf24;
+            border-radius: 12px;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -492,13 +543,13 @@
 <body>
     <div class="container">
         <div class="hero-section">
-            <h1>The Welfare Calculus</h1>
+            <h1>Which Animals, If Any?</h1>
             <p class="subtitle">If you care about reducing suffering but aren't willing to be vegetarian, what should you eat? The obvious answers are wrong.</p>
         </div>
         
         <h2>The Problem with Simple Rules</h2>
         
-        <p>Most people who think about animal welfare use one of two naive heuristics:</p>
+        <p>If you're like me and you eat animals but want to reduce harm, you probably use one of two intuitive heuristics:</p>
         
         <div class="comparison-grid">
             <div class="comparison-card">
@@ -532,13 +583,14 @@
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">Death Suffering (D)</div>
-                <p>The intensity and duration of the dying process itself. Bolt-gun stunning is fast (if it works). Suffocation is prolonged. Boiling alive is catastrophic.</p>
+                <div class="comparison-title">Death Suffering</div>
+                <p>Both the pain of dying (suffocation vs. stunning) and the loss of future positive experiences.</p>
+                <p style="margin-top: 1em; color: #64748b; font-size: 0.9rem;">D_process (how painful) + D_deprivation (what's lost)</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">Conscious Capacity (C)</div>
-                <p>Not all experiences are equally rich. A cow's subjective world is plausibly deeper than a shrimp's. This multiplies the moral weight of everything else.</p>
+                <div class="comparison-title">Experience Quality</div>
+                <p>Not all experiences are equally rich. We model this through <strong>intensity</strong> (how strongly pain/pleasure is felt) and <strong>temporal depth</strong> (how experiences echo through memory and anticipation).</p>
             </div>
             
             <div class="comparison-card">
@@ -548,7 +600,7 @@
         </div>
         
         <div class="insight-box">
-            <strong style="color: #6ee7b7;">Key insight:</strong> These factors interact multiplicatively. A small difference in conscious capacity matters less than a huge difference in numbers killed. But both matter.
+            <strong style="color: #6ee7b7;">Key insight:</strong> These factors interact multiplicatively. A small difference in experience quality matters less than a huge difference in numbers killed. But both matter.
         </div>
         
         <h2>The Formal Model</h2>
@@ -556,152 +608,191 @@
         <p>We can express the total harm of eating a species as:</p>
         
         <div class="formula">
-<div style="font-size: 1.3em; margin-bottom: 1.5rem; color: #6ee7b7;">
-H₁₀₀ = N × C × (α·L + β·D)
+<div style="font-size: 1.4em; margin-bottom: 1.5rem; color: #6ee7b7; line-height: 1.6;">
+H₁₀₀ = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(I × T)</span> × <span style="color: #6ee7b7;">(α·L + β·D_process + δ·D_deprivation)</span>
 </div>
 
-<div style="display: grid; grid-template-columns: auto 1fr; gap: 0.8rem 1.5rem; font-size: 1rem;">
-<strong>H₁₀₀</strong> <span style="color: #cbd5e1;">Moral harm per 100 meals</span>
-<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per 100 meals</span>
-<strong>C</strong> <span style="color: #cbd5e1;">Conscious capacity (0–1, human ≈ 1)</span>
-<strong>L</strong> <span style="color: #cbd5e1;">Lifetime suffering (0–3)</span>
-<span></span> <span style="color: #64748b; font-size: 0.9em; font-style: italic;">L = physical + psychological + social</span>
-<strong>D</strong> <span style="color: #cbd5e1;">Death suffering (0–3)</span>
-<strong>α, β</strong> <span style="color: #cbd5e1;">Moral weights for lifetime vs death</span>
+<div style="margin-bottom: 1.5rem;">
+<div style="padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px; margin-bottom: 0.8rem;">
+<strong style="color: #fbbf24;">How many minds?</strong> <span style="color: #cbd5e1;">N^γ</span>
+<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Number of individuals consumed, with γ controlling whether harm scales linearly or not</div>
 </div>
+
+<div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px; margin-bottom: 0.8rem;">
+<strong style="color: #3b82f6;">What kind of minds?</strong> <span style="color: #cbd5e1;">I × T</span>
+<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Intensity (how strongly felt) × Temporal depth (how it echoes through time)</div>
+</div>
+
+<div style="padding: 1rem; background: rgba(110, 231, 183, 0.1); border-left: 3px solid #6ee7b7; border-radius: 6px;">
+<strong style="color: #6ee7b7;">What happens to those minds?</strong> <span style="color: #cbd5e1;">α·L + β·D_process + δ·D_deprivation</span>
+<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Lifetime suffering + pain of dying + loss of future, each weighted by what you care about</div>
+</div>
+</div>
+
+<details style="cursor: pointer; color: #94a3b8;">
+<summary style="font-size: 0.95rem; margin-bottom: 0.5rem; cursor: pointer;">▸ See all parameter definitions</summary>
+<div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: 0.9rem; margin-top: 1rem; padding-left: 1rem;">
+<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per 100 meals</span>
+<strong>γ</strong> <span style="color: #cbd5e1;">Aggregation exponent (1.0 = linear, &lt;1.0 = diminishing, &gt;1.0 = accelerating)</span>
+<strong>I</strong> <span style="color: #cbd5e1;">Intensity of valenced experience (0–1)</span>
+<strong>T</strong> <span style="color: #cbd5e1;">Temporal depth: memory, anticipation, integration (0–1)</span>
+<strong>L</strong> <span style="color: #cbd5e1;">Lifetime suffering (0–3) = ω_phys·L_phys + ω_psych·L_psych + ω_social·L_social</span>
+<strong>D_process</strong> <span style="color: #cbd5e1;">Pain of dying (0–3)</span>
+<strong>D_deprivation</strong> <span style="color: #cbd5e1;">Loss of future value (0–3)</span>
+<strong>α, β, δ</strong> <span style="color: #cbd5e1;">Moral weights: how much you care about lifetime vs. death process vs. deprivation</span>
+<strong>ω</strong> <span style="color: #cbd5e1;">Suffering type weights: how much you care about physical vs. psychological vs. social harms</span>
+</div>
+</details>
         </div>
         
-        <p>This isn't arbitrary—it captures the structure of what matters:</p>
+        <p>This approximates the structure of what matters:</p>
         
         <ul>
-            <li>The product <code>N × C</code> accounts for both quantity and quality of minds</li>
-            <li>The weighted sum <code>(α×L + β×D)</code> captures different types of suffering</li>
-            <li>The weights α, β let you encode whether you care more about chronic suffering or the moment of death</li>
+            <li>The product <code style="color: #3b82f6;">N^γ × I × T</code> accounts for quantity and quality of minds, with γ controlling whether numbers scale linearly</li>
+            <li>Splitting experience into <strong>intensity</strong> and <strong>temporal depth</strong> recognizes that suffering persisting through memory matters differently than momentary pain</li>
+            <li>Decomposing death into <strong>process</strong> and <strong>deprivation</strong> separates "bad dying" from "foreclosed futures"</li>
+            <li>The weights let you encode what you care about most</li>
         </ul>
         
-        <h2>Estimating Conscious Capacity</h2>
+        <h2>Understanding the Parameters</h2>
         
-        <p>This is the hardest parameter. We can't directly measure subjective experience, but we can triangulate from multiple lines of evidence:</p>
+        <p>The model has several parameters you can tune. Here's what they mean and how to think about them:</p>
         
-        <ul>
-            <li><strong>Neuron counts & architecture:</strong> More neurons ≠ more consciousness, but integrated cortical/pallial structures matter</li>
-            <li><strong>Behavioral flexibility:</strong> Can the animal learn, adapt, solve novel problems?</li>
-            <li><strong>Nociception depth:</strong> Does pain integrate into learning and memory, or is it reflexive? Systems with dedicated "never again" circuits—where negative states reshape future behavior—are where suffering really matters.</li>
-            <li><strong>Social cognition:</strong> Recognition, cooperation, theory of mind</li>
-            <li><strong>Affective states:</strong> Evidence of anxiety, fear, joy, anticipation</li>
-        </ul>
-        
-        <p>Based on cross-species consciousness research (Birch, Godfrey-Smith, Rethink Priorities), here are principled estimates:</p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Species</th>
-                    <th>C</th>
-                    <th>Rationale</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Cow, Pig</td>
-                    <td>0.8-0.9</td>
-                    <td>Rich affective lives, social bonds, long-term memory, but less cognitive integration than humans</td>
-                </tr>
-                <tr>
-                    <td>Octopus</td>
-                    <td>0.6</td>
-                    <td>Distributed cognition, tool use, problem-solving, but very alien</td>
-                </tr>
-                <tr>
-                    <td>Chicken, Duck</td>
-                    <td>0.45-0.55</td>
-                    <td>Social learning, fear states, personality, but simpler than mammals</td>
-                </tr>
-                <tr>
-                    <td>Salmon, Tuna</td>
-                    <td>0.28-0.32</td>
-                    <td>Pain processing, learning, stress responses, but limited integration</td>
-                </tr>
-                <tr>
-                    <td>Cod, Tilapia</td>
-                    <td>0.22-0.25</td>
-                    <td>Basic nociception, some learning, simpler nervous systems</td>
-                </tr>
-                <tr>
-                    <td>Crab, Lobster</td>
-                    <td>0.20</td>
-                    <td>Nociceptors, opioid response, avoidance learning</td>
-                </tr>
-                <tr>
-                    <td>Shrimp</td>
-                    <td>0.12</td>
-                    <td>Basic pain processing, minimal integration</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 2rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">How We Estimated C (Conscious Capacity)</summary>
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Intensity (I) & Temporal Depth (T)</summary>
             <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p><strong>C measures conscious sophistication</strong> - the richness, integration, and temporal depth of subjective experience.</p>
+                <p>Instead of a single "consciousness" score, we separate two aspects of experience:</p>
                 
-                <p style="margin-top: 1rem;">Based on:</p>
-                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                    <li>Neuron counts & architecture (integrated systems, not just raw counts)</li>
-                    <li>Behavioral flexibility and learning capacity</li>
-                    <li>Nociception depth (does pain reshape future behavior?)</li>
-                    <li>Social cognition and bond formation</li>
-                    <li>Affective states (fear, anxiety, anticipation)</li>
+                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
+                    <li><strong>I (Intensity):</strong> How strongly valenced states are felt in the moment—based on nociceptor density, neural response to pain/pleasure stimuli</li>
+                    <li><strong>T (Temporal Depth):</strong> How experiences propagate through time via memory, anticipation, rumination—based on hippocampal structures, learning integration</li>
                 </ul>
                 
-                <p style="margin-top: 1rem;">These values are informed by cross-species neuroscience but involve judgment calls.</p>
+                <p style="margin-top: 1rem;">A shrimp might have moderate intensity (pain receptors fire hard) but low temporal depth (minimal carry-forward). A cow has both high intensity and high temporal depth (suffering echoes for days).</p>
             </div>
         </details>
-        
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 2rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">Relationship to Rethink Priorities' Welfare Range Estimates</summary>
+
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Aggregation Exponent (γ)</summary>
             <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Our C values are informed by <a href="https://rethinkpriorities.org/research-area/welfare-range-estimates" style="color: #6ee7b7;">Rethink Priorities' Moral Weight Project</a> but differ in magnitude. Here's why:</p>
+                <p>This controls how moral harm scales with numbers. γ = 1.0 means linear: 100 shrimp deaths = 100× the harm of 1 shrimp death. But different ethical frameworks suggest different scaling:</p>
                 
-                <p style="margin-top: 1rem;"><strong>What RP measured:</strong> Peak pleasure minus peak pain intensity (conditional on sentience). For discrete welfare interventions convertible to DALYs. Their estimates: pigs 0.515, chickens 0.332, salmon 0.056.</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
+                    <li><strong>γ < 1.0 (diminishing returns):</strong> Each additional death matters less—perhaps because the <em>existence</em> of suffering minds has special moral weight beyond quantity</li>
+                    <li><strong>γ = 1.0 (linear):</strong> Standard total utilitarianism—all suffering counts equally regardless of how it's distributed</li>
+                    <li><strong>γ > 1.0 (accelerating):</strong> Mass deaths are disproportionately worse—perhaps because large-scale suffering has systemic/relational harms beyond individual experience</li>
+                </ul>
+            </div>
+        </details>
+
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Death Components (D_process & D_deprivation)</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>D_process:</strong> The suffering during dying—suffocation, stunning failure, prolonged consciousness</li>
+                    <li><strong>D_deprivation:</strong> The loss of future value—preference frustration, foreclosed experiences. Scaled by lifespan and potential for positive states</li>
+                </ul>
                 
-                <p style="margin-top: 1rem;"><strong>What we're measuring:</strong> Conscious sophistication (richness + integration + temporal depth). For chronic welfare state assessment in dietary contexts. Our estimates: pigs 0.9, chickens 0.45, salmon 0.30.</p>
+                <p style="margin-top: 1rem;">These aren't the same. A cow might die painlessly (low D_process) but lose years of grazing (high D_deprivation). A shrimp might die agonizingly (high D_process) but have minimal future to lose (low D_deprivation).</p>
+            </div>
+        </details>
+
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Lifetime Suffering Weights (ω_phys, ω_psych, ω_social)</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <p>Lifetime suffering (L) is composed of three types:</p>
                 
-                <p style="margin-top: 1rem;"><strong>Why we differ:</strong> When assessing lifetime suffering, what matters isn't just peak intensity in a single moment, but how suffering accumulates and integrates over weeks and months. An animal that experiences suffering as temporally extended, emotionally contextualized, and cascading through memory and anticipation has a different chronic welfare profile than one with simpler, more fleeting states.</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
+                    <li><strong>Physical (L_phys):</strong> Injury, illness, chronic pain, physical discomfort</li>
+                    <li><strong>Psychological (L_psych):</strong> Stress, fear, frustration, inability to express natural behaviors</li>
+                    <li><strong>Social (L_social):</strong> Isolation, broken bonds, thwarted attachment, loss of group membership</li>
+                </ul>
                 
-                <p style="margin-top: 1rem;">RP's approach is right for their purpose (comparing interventions). We're optimizing for a different question (dietary decisions where chronic states dominate). Both are legitimate; they're answering different questions with different tools.</p>
+                <p style="margin-top: 1rem;">Each species has raw scores for these three types based on their typical living conditions. The ω weights let you express <em>your</em> moral priorities: maybe you think physical pain matters 2× more than social isolation, or maybe you think psychological stress is the core harm.</p>
+                
+                <p style="margin-top: 1rem;">The combined lifetime suffering is: <strong>L = ω_phys × L_phys + ω_psych × L_psych + ω_social × L_social</strong></p>
+                
+                <p style="margin-top: 1rem;">Try the presets in the interactive section to see how different priorities reshape the rankings.</p>
             </div>
         </details>
         
-        <h2>Why Sourcing Matters: Variations Within Species</h2>
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ How We Estimated I and T</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <p><strong>I (Intensity)</strong> is based on:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>Nociceptor density and neural architecture</li>
+                    <li>Behavioral responses to aversive stimuli</li>
+                    <li>Opioid receptor systems (markers of pain processing)</li>
+                    <li>Evidence of pleasure/reward seeking</li>
+                </ul>
+                
+                <p style="margin-top: 1rem;"><strong>T (Temporal Depth)</strong> is based on:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                    <li>Hippocampal structures (memory formation)</li>
+                    <li>Evidence of anticipation and planning</li>
+                    <li>Long-term behavioral modification from single events</li>
+                    <li>Social learning and memory retention</li>
+                </ul>
+                
+                <p style="margin-top: 1rem;">Cows/pigs: high I and T (rich momentary experience + long temporal integration). Fish: moderate I, variable T. Shrimp: moderate I, low T.</p>
+            </div>
+        </details>
         
-        <p>One of the most important insights from this framework is that <span class="emphasis">how an animal is raised often matters more than which species you eat</span>. The same species can have radically different H<sub>100</sub> scores depending on production system:</p>
+        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
+            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Relationship to Rethink Priorities' Welfare Range Estimates</summary>
+            <div style="margin-top: 1rem; color: #cbd5e1;">
+                <p>Our framework is informed by <a href="https://rethinkpriorities.org/research-area/welfare-range-estimates" style="color: #6ee7b7;">Rethink Priorities' Moral Weight Project</a> but differs in approach:</p>
+                
+                <p style="margin-top: 1rem;"><strong>What RP measured:</strong> Peak pleasure minus peak pain intensity (conditional on sentience), for discrete welfare interventions. Pigs: 0.515, chickens: 0.332, salmon: 0.056.</p>
+                
+                <p style="margin-top: 1rem;"><strong>What we measure:</strong> Experiential intensity × temporal integration, for chronic welfare assessment in dietary contexts. Pigs: I=0.85, T=0.95. Chickens: I=0.70, T=0.60. Salmon: I=0.55, T=0.45.</p>
+                
+                <p style="margin-top: 1rem;"><strong>Why we differ:</strong> When assessing lifetime suffering, what matters isn't just peak intensity in a single moment, but how suffering accumulates and integrates over weeks and months. Our I×T product captures this differently than RP's welfare ranges, which are optimized for comparing point interventions rather than chronic conditions.</p>
+                
+                <p style="margin-top: 1rem;">Both approaches are legitimate; they're answering different questions with different tools.</p>
+            </div>
+        </details>
+        
+        <h2>Species Choice Matters More Than Sourcing</h2>
+        
+        <p>Here's a counterintuitive finding: <span class="emphasis">sourcing improvements only give you 25-35% reductions in harm, while species choice can give you 4-10× differences</span>. If you're eating industrial chicken and wondering whether to switch to pasture chicken or to grass-fed beef, the math says: switch species first, then optimize within it.</p>
         
         <div class="comparison-grid">
             <div class="comparison-card">
-                <div class="comparison-title" style="color: #f87171;">Industrial Chicken: H<sub>100</sub> ≈ 5.67</div>
-                <p>Fast-growth genetics causing chronic pain, extreme confinement, inability to express natural behaviors. This is one of the worst things you can eat.</p>
+                <div class="comparison-title">Within Chicken: 34% Improvement</div>
+                <p><strong>Industrial:</strong> H<sub>100</sub> = 1.95<br>
+                <strong>Pasture:</strong> H<sub>100</sub> = 1.28</p>
+                <p style="margin-top: 1em; color: #64748b;">Sourcing reduces L by ~55%, which translates to 34% better. Meaningful, but N=1 still dominates.</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title" style="color: #6ee7b7;">Pasture Chicken: H<sub>100</sub> ≈ 2.43</div>
-                <p>Same conscious capacity, but outdoor access and natural behaviors reduce lifetime suffering by ~60%. Still not great, but much better.</p>
+                <div class="comparison-title">Chicken → Beef: 81% Improvement</div>
+                <p><strong>Industrial Chicken:</strong> H<sub>100</sub> = 1.95<br>
+                <strong>Grass-Fed Beef:</strong> H<sub>100</sub> = 0.37</p>
+                <p style="margin-top: 1em; color: #64748b;">Species change drops N from 1 to 0.25. This overwhelms all other factors.</p>
             </div>
         </div>
         
         <div class="comparison-grid">
             <div class="comparison-card">
-                <div class="comparison-title" style="color: #f87171;">Battery Cage Eggs: H<sub>100</sub> ≈ 0.91</div>
-                <p>Severe confinement for hens plus systematic male chick culling. High harm despite low N.</p>
+                <div class="comparison-title">Within Beef: 26% Improvement</div>
+                <p><strong>Feedlot:</strong> H<sub>100</sub> = 0.50<br>
+                <strong>Grass-Fed:</strong> H<sub>100</sub> = 0.37</p>
+                <p style="margin-top: 1em; color: #64748b;">Same L reduction as chicken (~55%), same proportional improvement (~26%).</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title" style="color: #6ee7b7;">Pasture Eggs: H<sub>100</sub> ≈ 0.15</div>
-                <p>Natural behaviors, outdoor access, minimal culling. 6x better than battery eggs.</p>
+                <div class="comparison-title">But Both Beat All Poultry</div>
+                <p><strong>Feedlot Beef:</strong> H<sub>100</sub> = 0.50<br>
+                <strong>Pasture Chicken:</strong> H<sub>100</sub> = 1.28</p>
+                <p style="margin-top: 1em; color: #64748b;">Even the worst beef beats the best chicken. N=0.25 is that powerful.</p>
             </div>
         </div>
         
-        <p>This pattern holds across species: wild salmon vs farmed salmon, grass-fed beef vs feedlot beef, pasture dairy vs factory dairy. <strong>Sourcing decisions can change H<sub>100</sub> by factors of 2-10× within the same species.</strong></p>
+        <div class="insight-box">
+            <strong style="color: #6ee7b7;">Bottom line:</strong> Sourcing is second-order optimization. Get the species right first (low N), then optimize sourcing (low L). Don't spend energy finding the perfect pasture chicken farm when switching to wild-caught tuna would give you 6× the improvement.
+        </div>
         
         <div class="section-divider"></div>
         
@@ -719,23 +810,73 @@ H₁₀₀ = N × C × (α·L + β·D)
                             <span class="slider-value" id="alpha-value">1.0</span>
                         </div>
                         <input type="range" id="alpha-slider" min="0" max="2" step="0.1" value="1.0">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">The area under the curve: chronic pain, confinement stress, social isolation</p>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Chronic pain, confinement stress, social isolation</p>
+                    </div>
+                    
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Death Process Weight (β)</span>
+                            <span class="slider-value" id="beta-value">0.7</span>
+                        </div>
+                        <input type="range" id="beta-slider" min="0" max="2" step="0.1" value="0.7">
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Suffering during dying (suffocation, stunning failure)</p>
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Death Deprivation Weight (δ)</span>
+                            <span class="slider-value" id="delta-value">0.3</span>
+                        </div>
+                        <input type="range" id="delta-slider" min="0" max="2" step="0.1" value="0.3">
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Loss of future positive experiences</p>
                     </div>
                 </div>
                 
                 <div class="control-group">
                     <div class="slider-group">
                         <div class="slider-label">
-                            <span>Death Suffering Weight (β)</span>
-                            <span class="slider-value" id="beta-value">0.7</span>
+                            <span>Aggregation Exponent (γ)</span>
+                            <span class="slider-value" id="gamma-value">1.0</span>
                         </div>
-                        <input type="range" id="beta-slider" min="0" max="2" step="0.1" value="0.7">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">The intensity of the final moments: suffocation, stunning failure, prolonged death</p>
+                        <input type="range" id="gamma-slider" min="0.5" max="1.5" step="0.1" value="1.0">
+                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">How harm scales with numbers: &lt;1.0 = diminishing returns, 1.0 = linear, &gt;1.0 = accelerating</p>
+                    </div>
+
+                    <h4 style="margin-top: 1.5rem; margin-bottom: 0.8rem; color: #cbd5e1; font-size: 1rem;">Lifetime Suffering Weights</h4>
+                    
+                    <div class="slider-group" style="margin-top: 1rem;">
+                        <div class="slider-label">
+                            <span>Physical (ω_phys)</span>
+                            <span class="slider-value" id="omega-phys-value">1.0</span>
+                        </div>
+                        <input type="range" id="omega-phys-slider" min="0.3" max="2" step="0.1" value="1.0">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Psychological (ω_psych)</span>
+                            <span class="slider-value" id="omega-psych-value">1.0</span>
+                        </div>
+                        <input type="range" id="omega-psych-slider" min="0.3" max="2" step="0.1" value="1.0">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>Social (ω_social)</span>
+                            <span class="slider-value" id="omega-social-value">1.0</span>
+                        </div>
+                        <input type="range" id="omega-social-slider" min="0.3" max="2" step="0.1" value="1.0">
+                    </div>
+
+                    <div class="preset-buttons">
+                        <button class="preset-btn active" data-preset="balanced">Balanced</button>
+                        <button class="preset-btn" data-preset="physical">Physical Priority</button>
+                        <button class="preset-btn" data-preset="social">Social Priority</button>
                     </div>
                 </div>
             </div>
             
-            <div style="margin-top: 1.5rem;">
+            <div style="margin-top: 2rem;">
                 <h3 style="color: #f1f5f9;">Filter by Category</h3>
                 <div class="filter-pills">
                     <div class="filter-pill active" data-group="all">All Foods</div>
@@ -746,9 +887,12 @@ H₁₀₀ = N × C × (α·L + β·D)
                     <div class="filter-pill" data-group="Frontier">Frontier Foods</div>
                 </div>
                 
-                <div style="margin-top: 1rem;">
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
                     <button id="scale-toggle" style="padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;">
                         Switch to Linear Scale
+                    </button>
+                    <button id="uncertainty-toggle" style="padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; cursor: pointer; font-size: 0.9rem; transition: all 0.2s;">
+                        Show Uncertainty
                     </button>
                 </div>
             </div>
@@ -757,22 +901,27 @@ H₁₀₀ = N × C × (α·L + β·D)
                 <canvas id="harmChart"></canvas>
             </div>
             
-            <p style="font-size: 0.85rem; color: #64748b; margin-top: 1rem;">Click any bar to see how that species' harm score decomposes into its underlying components.</p>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 1rem;">Click any bar to see how that species' harm score decomposes into its underlying components. Uncertainty bands show sensitivity to parameter estimates.</p>
         </div>
         
         <div id="detail-panel" class="detail-panel" style="display: none;">
             <div class="detail-header">
                 <div class="detail-title" id="detail-species-name">Wild Salmon</div>
-                <div class="detail-score">H<sub>100</sub> ≈ <span id="detail-h100">0.58</span></div>
+                <div class="detail-score">H<sub>100</sub> = <span id="detail-h100">0.58</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;">[0.3 - 1.2]</span></div>
             </div>
             
             <p style="color: #94a3b8; margin-bottom: 1.5rem;">Group: <span id="detail-group" style="color: #6ee7b7; font-weight: 600;">Seafood</span></p>
             
             <div class="metrics-grid">
                 <div class="metric-chip">
-                    <div class="metric-label">Conscious Capacity (C)</div>
-                    <div class="metric-value" id="detail-C">0.30</div>
-                    <div class="metric-hint">Depth & flexibility of felt experience</div>
+                    <div class="metric-label">Intensity (I)</div>
+                    <div class="metric-value" id="detail-I">0.55</div>
+                    <div class="metric-hint">Strength of valenced experience</div>
+                </div>
+                <div class="metric-chip">
+                    <div class="metric-label">Temporal Depth (T)</div>
+                    <div class="metric-value" id="detail-T">0.45</div>
+                    <div class="metric-hint">Memory, anticipation, integration</div>
                 </div>
                 <div class="metric-chip">
                     <div class="metric-label">Lifetime Suffering (L)</div>
@@ -780,9 +929,14 @@ H₁₀₀ = N × C × (α·L + β·D)
                     <div class="metric-hint">Total chronic suffering across life</div>
                 </div>
                 <div class="metric-chip">
-                    <div class="metric-label">Death Suffering (D)</div>
-                    <div class="metric-value" id="detail-D">2.0</div>
-                    <div class="metric-hint">Intensity of the dying process</div>
+                    <div class="metric-label">Death Process</div>
+                    <div class="metric-value" id="detail-D-process">2.0</div>
+                    <div class="metric-hint">Pain during dying</div>
+                </div>
+                <div class="metric-chip">
+                    <div class="metric-label">Death Deprivation</div>
+                    <div class="metric-value" id="detail-D-deprivation">1.0</div>
+                    <div class="metric-hint">Loss of future value</div>
                 </div>
                 <div class="metric-chip">
                     <div class="metric-label">Individuals (N)</div>
@@ -802,19 +956,17 @@ H₁₀₀ = N × C × (α·L + β·D)
                     <div class="metric-chip">
                         <div class="metric-label">Psychological</div>
                         <div class="metric-value" id="detail-L-psych">0.3</div>
-                        <div class="metric-hint">Stress, fear, inability to express natural behaviors</div>
+                        <div class="metric-hint">Stress, fear, thwarted behaviors</div>
                     </div>
                     <div class="metric-chip">
                         <div class="metric-label">Social</div>
                         <div class="metric-value" id="detail-L-social">0.2</div>
-                        <div class="metric-hint">Isolation, thwarted attachment, loss of bonds</div>
+                        <div class="metric-hint">Isolation, broken bonds</div>
                     </div>
                 </div>
             </div>
             
-            <p style="color: #94a3b8; font-size: 0.95rem; margin-top: 1.5rem; line-height: 1.7;">
-                This is a rough sketch of the area under the curve of suffering for this kind of mind, scaled by how many such minds your diet burns through. High numbers mean your pleasure rides on structurally bad experiences.
-            </p>
+            <p id="detail-description" style="color: #cbd5e1; font-size: 0.95rem; margin-top: 1.5rem; line-height: 1.7; padding: 1rem; background: #0a0f1e; border-radius: 8px; border: 1px solid #1e293b;"></p>
         </div>
         
         <h2>The Surprising Results</h2>
@@ -822,30 +974,75 @@ H₁₀₀ = N × C × (α·L + β·D)
         <p>When we apply the model with reasonable parameters, several non-obvious patterns emerge:</p>
         
         <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is Catastrophically Bad</h3>
-            <p>Even though shrimp have relatively simple minds (C≈0.10), you consume them in massive quantities (N≈40 per 100 meals). They also die extremely painfully—often boiled alive or left to suffocate in ice slurries. The kill-count multiplier overwhelms their lower conscious capacity.</p>
-            <p><strong>H<sub>100</sub> ≈ 45</strong> — orders of magnitude worse than anything else.</p>
+            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is 14× Worse Than Industrial Chicken</h3>
+            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume them in massive quantities (N=40 vs N=1). They also die horrifically—often boiled alive. The numbers overwhelm everything else.</p>
+            <p>Shrimp: <strong>H<sub>100</sub> = 27.01</strong> vs Industrial Chicken: <strong>H<sub>100</sub> = 1.95</strong></p>
+            <p>This is the catastrophic consequence of the kill-count multiplier.</p>
         </div>
         
         <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">2. Industrial Chicken is Worse Than Beef</h3>
-            <p>Chickens have moderate consciousness (C≈0.45) and live absolutely miserable lives in industrial settings (L≈2.8). You consume roughly 1 chicken per meal. Cows have richer minds (C=1.0) but you only consume 0.25 cows per 100 meals—4 cows feed 1,600 meals.</p>
-            <p>Industrial Chicken: <strong>H<sub>100</sub> ≈ 5.7</strong> vs Feedlot Beef: <strong>H<sub>100</sub> ≈ 0.94</strong></p>
-            <p>The "eat smaller animals" heuristic fails completely.</p>
+            <h3 style="margin-top: 0; color: #f87171;">2. Industrial Pork is the Worst Mammal Product</h3>
+            <p>Pigs have the richest conscious lives of any farmed animal (I×T = 0.81), terrible industrial conditions (L=2.4), and you eat 2 pigs per 100 meals. This combination is devastating.</p>
+            <p>Industrial Pork: <strong>H<sub>100</sub> = 6.78</strong> — worse than industrial chicken by 3.5×</p>
+            <p>If you eat pork, sourcing matters more than for any other mammal.</p>
         </div>
         
         <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">3. Products Can Be Better or Worse Than Meat</h3>
-            <p>Battery cage eggs (H<sub>100</sub> ≈ 0.91) are worse than grass-fed beef (H<sub>100</sub> ≈ 0.44) due to severe confinement and male chick culling. But pasture-raised eggs (H<sub>100</sub> ≈ 0.15) are among the lowest-harm animal foods available.</p>
-            <p>Similarly, factory dairy (H<sub>100</sub> ≈ 0.63) has significant welfare costs despite low N, while pasture dairy (H<sub>100</sub> ≈ 0.25) is much better.</p>
-            <p><strong>The product/sourcing combination matters enormously.</strong></p>
+            <h3 style="margin-top: 0; color: #6ee7b7;">3. Beef Beats All Poultry—Even Pasture-Raised Chicken</h3>
+            <p>Cows have the highest experience quality of farmed animals (I×T = 0.68), but you only consume 0.25 cows per 100 meals. This absolutely dominates the calculation. Even feedlot beef (H<sub>100</sub> = 0.50) beats duck (H<sub>100</sub> = 0.84), and grass-fed beef (H<sub>100</sub> = 0.37) beats pasture chicken (H<sub>100</sub> = 1.28).</p>
+            <p>The "eat smaller animals" heuristic completely fails. <strong>Kill count is the dominant factor once conscious capacity crosses a threshold.</strong></p>
         </div>
         
         <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">4. Large Wild-Caught Fish Are Among the Least Harmful</h3>
-            <p>Wild salmon have moderate consciousness (C≈0.30), relatively natural lives (L≈0.8), and low kill counts (N≈0.5). They rank as one of the most ethical animal foods available.</p>
-            <p>Wild salmon: <strong>H<sub>100</sub> ≈ 0.58</strong> | Tuna: <strong>H<sub>100</sub> ≈ 0.47</strong></p>
-            <p>This holds even though their conscious capacity is non-trivial — the low kill count and natural life dominate the calculation.</p>
+            <h3 style="margin-top: 0; color: #6ee7b7;">4. Wild-Caught Large Fish Are the Lowest-Harm Animal Foods</h3>
+            <p>Tuna (H<sub>100</sub> = 0.21) and wild salmon (H<sub>100</sub> = 0.31) beat even grass-fed beef. They have moderate experience quality, relatively natural lives, low kill counts, and despite painful deaths, the overall calculation favors them.</p>
+            <p><strong>If you eat animals and want to minimize harm, wild-caught large fish should be your default.</strong></p>
+        </div>
+
+        <div class="insight-box">
+            <h3 style="margin-top: 0; color: #6ee7b7;">5. Animal Products Are Negligible Compared to Meat</h3>
+            <p>Eggs and dairy have H<sub>100</sub> scores of 0.01-0.03—roughly 100× better than eating chicken, 15× better than beef. The N values (0.004-0.015) are so tiny that even terrible conditions for laying hens barely register in the per-meal calculation.</p>
+            <p>This doesn't mean the hens don't suffer—they absolutely do. But the harm-per-meal is vastly lower than eating the animals directly. <strong>If you're reducing harm but not going vegan, prioritizing products over meat is extremely high-leverage.</strong></p>
+        </div>
+
+        <h2>Sanity Checks: Does This Model Make Sense?</h2>
+
+        <p>Before accepting these rankings, we should pressure-test them against other frameworks and intuitions:</p>
+
+        <div class="comparison-grid">
+            <div class="comparison-card">
+                <div class="comparison-title">Test 1: Directional Agreement with RP</div>
+                <p>Rethink Priorities' welfare ranges rank mammals > birds > fish > invertebrates. Our model independently produces the same ordering when comparing <em>within-category averages</em>, despite measuring different things (peak intensity vs. chronic welfare integration).</p>
+                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Same directional structure</p>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-title">Test 2: Kill Count Dominance</div>
+                <p>Most people initially think chicken is better than beef (smaller minds). The model says beef is 4-5× better. This follows directly from N=0.25 vs N=1—a parameter you can verify yourself.</p>
+                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Tractable surprise from explicit math</p>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-title">Test 3: The Shrimp Result</div>
+                <p>Shrimp being catastrophic (H=27) is the model's strongest claim. It's driven entirely by N=40 overwhelming modest I×T. This is either a crucial insight about the ethics of kill counts, or it reveals that our linear-ish aggregation assumption (γ≈1) is wrong. Tune γ to 0.7 and shrimp drops to ~12.</p>
+                <p style="margin-top: 1em; color: #64748b;">⚠ Mixed: Hinges on γ assumption</p>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-title">Test 4: Products vs. Meat</div>
+                <p>Eggs/dairy being 50-100× better than meat is the model's most actionable finding. It follows from N approaching zero. If you eat 12 eggs per week vs. 3 chicken meals, you're consuming 0.024 "chicken equivalents" vs. 3. That's a 125× difference. The math checks out independently of the model.</p>
+                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Independently verifiable arithmetic</p>
+            </div>
+
+            <div class="comparison-card">
+                <div class="comparison-title">Test 5: Internal Consistency</div>
+                <p>Pasture chicken improves over industrial by only 34% (1.95 → 1.28) because N stays constant and only L changes. Grass-fed beef improves by 26% (0.50 → 0.37) for the same reason. The sourcing improvements are proportional to L reductions, which is exactly what the model predicts.</p>
+                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Internally coherent</p>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong style="color: #6ee7b7;">Net assessment:</strong> The model's rankings are informed by welfare research but not circular—the I, T, and L parameters come from empirical data, while H<sub>100</sub> emerges from the multiplicative structure. Where the model surprises (beef beats chicken, shrimp is catastrophic, products are negligible), the surprises follow from explicit parameters you can inspect. The main uncertainty is γ (aggregation), which is tunable.
         </div>
         
         <h2>Full Data: All Species Evaluated</h2>
@@ -856,9 +1053,12 @@ H₁₀₀ = N × C × (α·L + β·D)
                 <tr>
                     <th>Species</th>
                     <th>H<sub>100</sub></th>
-                    <th>C</th>
+                    <th>Range</th>
+                    <th>I</th>
+                    <th>T</th>
                     <th>L</th>
-                    <th>D</th>
+                    <th>D_proc</th>
+                    <th>D_depr</th>
                     <th>N</th>
                     <th>Verdict</th>
                 </tr>
@@ -876,22 +1076,32 @@ H₁₀₀ = N × C × (α·L + β·D)
         <div class="comparison-grid">
             <div class="comparison-card">
                 <div class="comparison-title">On Aggregation</div>
-                <p>Should we aggregate suffering across individuals linearly? Or does the <em>existence</em> of a suffering mind matter more than the quantity? (I've assumed linear aggregation, but this is debatable.)</p>
+                <p>This model assumes suffering scales with numbers raised to an exponent γ. But the right value of γ is an open ethical question. Linear aggregation (γ=1.0) treats all suffering as fungible. Diminishing returns (γ<1.0) suggests the existence of suffering minds has special weight. Explore this with the γ slider.</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">On Consciousness</div>
-                <p>What if conscious capacity doesn't scale smoothly? What if there are discrete jumps—where certain types of integration create qualitatively different experiences?</p>
+                <div class="comparison-title">On Experience Decomposition</div>
+                <p>We've split experience into intensity (I) and temporal depth (T), but what if these aren't independent? What if certain types of temporal integration require threshold intensity levels? Or what if there are discrete jumps where certain neural architectures create qualitatively different experiences?</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">On Nociception</div>
-                <p>We know animals have pain receptors, but <em>valenced experience</em> requires something more—negative affect that enters into learning, planning, and motivation. Where exactly does this emerge?</p>
+                <div class="comparison-title">On Suffering Types</div>
+                <p>We decompose lifetime suffering into physical, psychological, and social components with separate weights (ω). But are these truly separable? Does chronic physical pain create psychological suffering that we're double-counting? How do we weight social isolation for species with different social structures?</p>
             </div>
             
             <div class="comparison-card">
-                <div class="comparison-title">On Death Itself</div>
-                <p>Does death harm an animal beyond the suffering of dying? Do we owe moral consideration to preference-frustration in beings that can't conceptualize death?</p>
+                <div class="comparison-title">On Death</div>
+                <p>We've separated death into process (pain of dying) and deprivation (loss of future). But does death harm an animal beyond these? Do we owe moral consideration to preference-frustration in beings that can't conceptualize death? The β and δ weights let you explore this, but the conceptual question remains open.</p>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-title">On Temporal Depth</div>
+                <p>We know animals have pain receptors, but valenced experience that matters morally requires something more—negative affect that enters into learning, planning, and motivation. Where exactly does this emerge? Our T parameter tries to capture this, but the boundary between reflexive nociception and integrated suffering is fuzzy.</p>
+            </div>
+            
+            <div class="comparison-card">
+                <div class="comparison-title">On Parameter Interactions</div>
+                <p>The model assumes I, T, and L components multiply cleanly. But what if suffering isn't compositional this way? What if high physical pain (L_phys) amplifies psychological stress (L_psych) non-linearly? The linear weights might be wrong, but exploring non-linear interactions would make the model intractable.</p>
             </div>
         </div>
         
@@ -899,11 +1109,11 @@ H₁₀₀ = N × C × (α·L + β·D)
         
         <div class="closing-reflection">
             <h3 style="margin-top: 0; color: #f1f5f9;">What This Is (and Isn't)</h3>
-            <p>This framework emerged from conversations between Cameron Berg, GPT-5.1, and Claude Sonnet 4.5 about rational diet calibration for people who eat animals but want to minimize harm.</p>
+            <p>This framework emerged from a conversation between Cameron Berg and Claude Sonnet 4.5 about rational diet calibration for people who eat animals but want to minimize harm.</p>
             
             <p style="margin-top: 1rem;">In the US, ~5% of adults are vegetarian and ~3% vegan. Globally, 8-22% depending on region. The vast majority of people eat animals. This is for them.</p>
             
-            <p style="margin-top: 1rem;">These estimates are a <strong>reasonable first approximation</strong>, not ground truth. The C values draw on empirical research but involve judgment. The L and D scores reflect available welfare data but are coarse. The α and β weights embody one set of commitments, not universal law.</p>
+            <p style="margin-top: 1rem;">These estimates are a <strong>reasonable first approximation</strong>, not ground truth. The I and T values draw on empirical research but involve judgment. The L and D scores reflect available welfare data but are coarse. The α, β, δ weights embody one set of commitments, not universal law.</p>
             
             <p style="margin-top: 1rem;"><strong>Status:</strong> Useful framework. Not gospel. Can accommodate better data.</p>
         </div>
@@ -915,316 +1125,491 @@ H₁₀₀ = N × C × (α·L + β·D)
             {
                 species: "Shrimp",
                 group: "Seafood",
-                C: 0.10,
-                L: 2.5,
+                I: 0.48,
+                I_low: 0.38,
+                I_high: 0.58,
+                T: 0.30,
+                T_low: 0.15,
+                T_high: 0.45,
                 L_phys: 1.0,
                 L_psych: 0.8,
                 L_social: 0.7,
-                D: 3.0,
+                D_process: 3.0,
+                D_deprivation: 0.3,
                 N: 40,
-                description: "Tiny individuals, massive kill counts, horrific deaths (boiling/suffocation)"
+                N_low: 30,
+                N_high: 50,
+                description: "Tiny individuals, massive kill counts, horrific deaths (boiling/suffocation). Low temporal integration but high intensity nociception. The numbers overwhelm everything else."
             },
             {
                 species: "Crab / Lobster",
                 group: "Seafood",
-                C: 0.18,
-                L: 1.5,
+                I: 0.45,
+                I_low: 0.35,
+                I_high: 0.55,
+                T: 0.35,
+                T_low: 0.20,
+                T_high: 0.50,
                 L_phys: 0.7,
                 L_psych: 0.6,
                 L_social: 0.2,
-                D: 3.0,
+                D_process: 3.0,
+                D_deprivation: 0.5,
                 N: 3,
-                description: "Often boiled alive, complex nociception, moderate kill counts"
+                N_low: 2,
+                N_high: 4,
+                description: "Often boiled alive, complex nociception, moderate kill counts. Evidence of pain learning and memory."
             },
             
             // Small fish
             {
                 species: "Small Fish (Anchovy, Sardine)",
                 group: "Seafood",
-                C: 0.20,
-                L: 0.7,
+                I: 0.50,
+                I_low: 0.35,
+                I_high: 0.65,
+                T: 0.35,
+                T_low: 0.20,
+                T_high: 0.50,
                 L_phys: 0.3,
                 L_psych: 0.3,
                 L_social: 0.1,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 0.5,
                 N: 5,
-                description: "Wild-caught, massive trawl deaths, many individuals per meal"
+                N_low: 4,
+                N_high: 7,
+                description: "Wild-caught, massive trawl deaths, many individuals per meal. Natural lives but violent deaths."
             },
             
             // Poultry - showing variation by sourcing
             {
                 species: "Chicken - Industrial",
                 group: "Bird",
-                C: 0.45,
-                L: 2.8,
+                I: 0.70,
+                I_low: 0.60,
+                I_high: 0.80,
+                T: 0.60,
+                T_low: 0.50,
+                T_high: 0.70,
                 L_phys: 1.2,
                 L_psych: 0.8,
                 L_social: 0.8,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.5,
                 N: 1,
-                description: "Fast growth breeds, extreme confinement, chronic pain from genetics"
+                N_low: 0.9,
+                N_high: 1.2,
+                description: "Fast growth breeds, extreme confinement, chronic pain from genetics. Fear conditioning and stress visible in behavior. One of the worst foods."
             },
             {
                 species: "Chicken - Pasture-Raised",
                 group: "Bird",
-                C: 0.45,
-                L: 1.2,
+                I: 0.70,
+                I_low: 0.60,
+                I_high: 0.80,
+                T: 0.60,
+                T_low: 0.50,
+                T_high: 0.70,
                 L_phys: 0.4,
                 L_psych: 0.4,
                 L_social: 0.4,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.5,
                 N: 1,
-                description: "Natural behaviors, outdoor access, less chronic suffering"
+                N_low: 0.9,
+                N_high: 1.2,
+                description: "Natural behaviors, outdoor access, less chronic suffering. Same minds, better lives."
             },
             {
                 species: "Eggs - Battery Cage",
                 group: "Products",
-                C: 0.45,
-                L: 3.0,
+                I: 0.70,
+                I_low: 0.60,
+                I_high: 0.80,
+                T: 0.60,
+                T_low: 0.50,
+                T_high: 0.70,
                 L_phys: 1.3,
                 L_psych: 0.9,
                 L_social: 0.8,
-                D: 1.5,
+                D_process: 1.5,
+                D_deprivation: 1.5,
                 N: 0.015,
-                description: "Extreme confinement stress for hens + male chick culling"
+                N_low: 0.012,
+                N_high: 0.018,
+                description: "Extreme confinement stress for hens + male chick culling. Despite low N, severe lifetime suffering."
             },
             {
                 species: "Eggs - Pasture-Raised",
                 group: "Products",
-                C: 0.45,
-                L: 0.8,
+                I: 0.70,
+                I_low: 0.60,
+                I_high: 0.80,
+                T: 0.60,
+                T_low: 0.50,
+                T_high: 0.70,
                 L_phys: 0.3,
                 L_psych: 0.3,
                 L_social: 0.2,
-                D: 1.5,
+                D_process: 1.5,
+                D_deprivation: 1.5,
                 N: 0.008,
-                description: "Natural behaviors, outdoor access, minimal culling if small-scale"
+                N_low: 0.006,
+                N_high: 0.010,
+                description: "Natural behaviors, outdoor access, minimal culling if small-scale. Among the lowest-harm animal foods."
             },
             
             // Other birds
             {
                 species: "Turkey - Industrial",
                 group: "Bird",
-                C: 0.50,
-                L: 2.5,
+                I: 0.72,
+                I_low: 0.62,
+                I_high: 0.82,
+                T: 0.62,
+                T_low: 0.52,
+                T_high: 0.72,
                 L_phys: 1.1,
                 L_psych: 0.7,
                 L_social: 0.7,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.5,
                 N: 0.5,
-                description: "Similar welfare issues to industrial chicken"
+                N_low: 0.4,
+                N_high: 0.6,
+                description: "Similar welfare issues to industrial chicken, slightly better N due to size."
             },
             {
                 species: "Duck",
                 group: "Bird",
-                C: 0.55,
-                L: 1.8,
+                I: 0.73,
+                I_low: 0.63,
+                I_high: 0.83,
+                T: 0.63,
+                T_low: 0.53,
+                T_high: 0.73,
                 L_phys: 0.8,
                 L_psych: 0.5,
                 L_social: 0.5,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.5,
                 N: 0.5,
-                description: "Often raised in better conditions than chickens"
+                N_low: 0.4,
+                N_high: 0.6,
+                description: "Often raised in better conditions than chickens. Evidence of social learning and bonds."
             },
             
             // Cephalopods
             {
                 species: "Octopus",
                 group: "Seafood",
-                C: 0.60,
-                L: 1.0,
+                I: 0.75,
+                I_low: 0.60,
+                I_high: 0.90,
+                T: 0.70,
+                T_low: 0.55,
+                T_high: 0.85,
                 L_phys: 0.5,
                 L_psych: 0.4,
                 L_social: 0.1,
-                D: 2.5,
+                D_process: 2.5,
+                D_deprivation: 2.0,
                 N: 1,
-                description: "Highly intelligent, complex problem-solving, mostly wild-caught"
+                N_low: 0.8,
+                N_high: 1.2,
+                description: "Highly intelligent, complex problem-solving, mostly wild-caught. Distributed nervous system creates uncertainty about experience."
             },
             
             // Mammals
             {
                 species: "Pig - Industrial",
                 group: "Mammal",
-                C: 0.90,
-                L: 2.2,
+                I: 0.85,
+                I_low: 0.75,
+                I_high: 0.95,
+                T: 0.95,
+                T_low: 0.85,
+                T_high: 1.00,
                 L_phys: 0.8,
                 L_psych: 0.6,
-                L_social: 0.8,
-                D: 1.5,
+                L_social: 1.0,
+                D_process: 1.5,
+                D_deprivation: 2.5,
                 N: 2,
-                description: "Highly intelligent, strong social bonds, often confined"
+                N_low: 1.5,
+                N_high: 2.5,
+                description: "Highly intelligent, strong social bonds, often confined. Rich temporal integration of suffering."
             },
             {
                 species: "Beef - Feedlot",
                 group: "Mammal",
-                C: 0.80,
-                L: 1.5,
+                I: 0.80,
+                I_low: 0.70,
+                I_high: 0.90,
+                T: 0.85,
+                T_low: 0.75,
+                T_high: 0.95,
                 L_phys: 0.5,
                 L_psych: 0.3,
                 L_social: 0.7,
-                D: 1.0,
+                D_process: 1.0,
+                D_deprivation: 2.5,
                 N: 0.25,
-                description: "Rich conscious lives, but large individuals = low kill count"
+                N_low: 0.20,
+                N_high: 0.30,
+                description: "Rich conscious lives, but large individuals = low kill count. Some confinement stress."
             },
             {
                 species: "Beef - Grass-Fed",
                 group: "Mammal",
-                C: 0.80,
-                L: 0.7,
+                I: 0.80,
+                I_low: 0.70,
+                I_high: 0.90,
+                T: 0.85,
+                T_low: 0.75,
+                T_high: 0.95,
                 L_phys: 0.2,
                 L_psych: 0.2,
                 L_social: 0.3,
-                D: 1.0,
+                D_process: 1.0,
+                D_deprivation: 2.5,
                 N: 0.25,
-                description: "Natural grazing, minimal confinement, same low kill count"
+                N_low: 0.20,
+                N_high: 0.30,
+                description: "Natural grazing, minimal confinement, same low kill count. Among the best mammal options."
             },
             {
                 species: "Dairy - Factory",
                 group: "Products",
-                C: 0.80,
-                L: 2.5,
+                I: 0.80,
+                I_low: 0.70,
+                I_high: 0.90,
+                T: 0.85,
+                T_low: 0.75,
+                T_high: 0.95,
                 L_phys: 1.0,
                 L_psych: 0.7,
                 L_social: 0.8,
-                D: 1.0,
+                D_process: 1.0,
+                D_deprivation: 2.5,
                 N: 0.004,
-                description: "Chronic mastitis, repeated pregnancy/separation, but product per animal is huge"
+                N_low: 0.003,
+                N_high: 0.005,
+                description: "Chronic mastitis, repeated pregnancy/separation. Product per animal is huge but welfare costs are high."
             },
             {
                 species: "Dairy - Pasture",
                 group: "Products",
-                C: 0.80,
-                L: 1.0,
+                I: 0.80,
+                I_low: 0.70,
+                I_high: 0.90,
+                T: 0.85,
+                T_low: 0.75,
+                T_high: 0.95,
                 L_phys: 0.3,
                 L_psych: 0.3,
                 L_social: 0.4,
-                D: 1.0,
+                D_process: 1.0,
+                D_deprivation: 2.5,
                 N: 0.004,
-                description: "Grazing access, better health, still some calf separation"
+                N_low: 0.003,
+                N_high: 0.005,
+                description: "Grazing access, better health, still some calf separation. Much better than factory."
             },
             
             // Fish - showing wild vs farmed
             {
                 species: "Salmon - Farmed",
                 group: "Seafood",
-                C: 0.30,
-                L: 1.8,
+                I: 0.55,
+                I_low: 0.45,
+                I_high: 0.65,
+                T: 0.45,
+                T_low: 0.35,
+                T_high: 0.55,
                 L_phys: 0.9,
                 L_psych: 0.7,
                 L_social: 0.2,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.0,
                 N: 0.5,
-                description: "Sea lice, crowding, lesions, restricted movement"
+                N_low: 0.4,
+                N_high: 0.6,
+                description: "Sea lice, crowding, lesions, restricted movement. Pain affects feeding and behavior."
             },
             {
                 species: "Salmon - Wild",
                 group: "Seafood",
-                C: 0.30,
-                L: 0.8,
+                I: 0.55,
+                I_low: 0.45,
+                I_high: 0.65,
+                T: 0.45,
+                T_low: 0.35,
+                T_high: 0.55,
                 L_phys: 0.3,
                 L_psych: 0.3,
                 L_social: 0.2,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.0,
                 N: 0.5,
-                description: "Natural life, migrations, predation stress but freedom"
+                N_low: 0.4,
+                N_high: 0.6,
+                description: "Natural life, migrations, predation stress but freedom. Among the best animal foods."
             },
             {
                 species: "Tilapia - Farmed",
                 group: "Seafood",
-                C: 0.22,
-                L: 1.8,
+                I: 0.48,
+                I_low: 0.38,
+                I_high: 0.58,
+                T: 0.38,
+                T_low: 0.28,
+                T_high: 0.48,
                 L_phys: 0.9,
                 L_psych: 0.8,
                 L_social: 0.1,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 0.8,
                 N: 1,
-                description: "High-density farming, poor water quality"
+                N_low: 0.8,
+                N_high: 1.2,
+                description: "High-density farming, poor water quality. Stress responses visible in cortisol levels."
             },
             {
                 species: "Catfish",
                 group: "Seafood",
-                C: 0.24,
-                L: 1.5,
+                I: 0.50,
+                I_low: 0.40,
+                I_high: 0.60,
+                T: 0.40,
+                T_low: 0.30,
+                T_high: 0.50,
                 L_phys: 0.7,
                 L_psych: 0.7,
                 L_social: 0.1,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 0.8,
                 N: 1,
-                description: "Similar to tilapia farming conditions"
+                N_low: 0.8,
+                N_high: 1.2,
+                description: "Similar to tilapia farming conditions, some evidence of social learning."
             },
             {
                 species: "Cod / Whitefish",
                 group: "Seafood",
-                C: 0.25,
-                L: 0.9,
+                I: 0.52,
+                I_low: 0.42,
+                I_high: 0.62,
+                T: 0.42,
+                T_low: 0.32,
+                T_high: 0.52,
                 L_phys: 0.4,
                 L_psych: 0.4,
                 L_social: 0.1,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.0,
                 N: 0.7,
-                description: "Usually wild-caught, moderate welfare"
+                N_low: 0.5,
+                N_high: 0.9,
+                description: "Usually wild-caught, moderate welfare. Evidence of pain avoidance learning."
             },
             {
                 species: "Tuna - Large",
                 group: "Seafood",
-                C: 0.28,
-                L: 0.7,
+                I: 0.58,
+                I_low: 0.48,
+                I_high: 0.68,
+                T: 0.48,
+                T_low: 0.38,
+                T_high: 0.58,
                 L_phys: 0.3,
                 L_psych: 0.3,
                 L_social: 0.1,
-                D: 2.0,
+                D_process: 2.0,
+                D_deprivation: 1.2,
                 N: 0.3,
-                description: "Wild-caught, large individuals, low kill count"
+                N_low: 0.2,
+                N_high: 0.4,
+                description: "Wild-caught, large individuals, low kill count. One of the best seafood options."
             },
             
             // Frontier/low-sentience
             {
                 species: "Honey - Industrial",
                 group: "Products",
-                C: 0.07,
-                L: 1.5,
+                I: 0.20,
+                I_low: 0.10,
+                I_high: 0.30,
+                T: 0.15,
+                T_low: 0.05,
+                T_high: 0.25,
                 L_phys: 0.6,
                 L_psych: 0.6,
                 L_social: 0.3,
-                D: 0.3,
+                D_process: 0.3,
+                D_deprivation: 0.1,
                 N: 0.1,
-                description: "Hive stress, queen clipping, disease, but small N per serving"
+                N_low: 0.05,
+                N_high: 0.15,
+                description: "Hive stress, queen clipping, disease. Evidence of learning but integration unclear."
             },
             {
                 species: "Honey - Small-Scale",
                 group: "Products",
-                C: 0.07,
-                L: 0.5,
+                I: 0.20,
+                I_low: 0.10,
+                I_high: 0.30,
+                T: 0.15,
+                T_low: 0.05,
+                T_high: 0.25,
                 L_phys: 0.2,
                 L_psych: 0.2,
                 L_social: 0.1,
-                D: 0.3,
+                D_process: 0.3,
+                D_deprivation: 0.1,
                 N: 0.1,
-                description: "Better hive management, less stress"
+                N_low: 0.05,
+                N_high: 0.15,
+                description: "Better hive management, less stress. Bees exhibit decision-making but sentience uncertain."
             },
             {
                 species: "Mussels / Oysters",
                 group: "Frontier",
-                C: 0.05,
-                L: 0.2,
+                I: 0.15,
+                I_low: 0.05,
+                I_high: 0.25,
+                T: 0.10,
+                T_low: 0.02,
+                T_high: 0.18,
                 L_phys: 0.1,
                 L_psych: 0.1,
                 L_social: 0.0,
-                D: 0.5,
+                D_process: 0.5,
+                D_deprivation: 0.1,
                 N: 1,
-                description: "Minimal nervous system, mostly reflex"
+                N_low: 0.8,
+                N_high: 1.5,
+                description: "Minimal nervous system, mostly reflex. Sentience highly uncertain."
             },
             {
                 species: "Insects (Crickets, Mealworms)",
                 group: "Frontier",
-                C: 0.03,
-                L: 0.5,
+                I: 0.12,
+                I_low: 0.05,
+                I_high: 0.20,
+                T: 0.08,
+                T_low: 0.02,
+                T_high: 0.15,
                 L_phys: 0.3,
                 L_psych: 0.2,
                 L_social: 0.0,
-                D: 0.5,
+                D_process: 0.5,
+                D_deprivation: 0.1,
                 N: 1,
-                description: "Nociception present but integration unclear"
+                N_low: 0.8,
+                N_high: 1.5,
+                description: "Nociception present but integration unclear. Precautionary approach warrants caution."
             }
         ];
         
@@ -1232,12 +1617,55 @@ H₁₀₀ = N × C × (α·L + β·D)
         let selectedSpecies = null;
         let chart = null;
         let useLogScale = true;
+        let showUncertainty = false;
         
-        function calculateH100(data, alpha, beta) {
-            return data.map(d => ({
-                ...d,
-                H100: d.N * d.C * (alpha * d.L + beta * d.D)
-            })).sort((a, b) => b.H100 - a.H100);
+        function calculateL(data, omega_phys, omega_psych, omega_social) {
+            return omega_phys * data.L_phys + omega_psych * data.L_psych + omega_social * data.L_social;
+        }
+        
+        function calculateH100(data, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, useRange = false) {
+            const results = data.map(d => {
+                const L = calculateL(d, omega_phys, omega_psych, omega_social);
+                
+                if (useRange) {
+                    // Calculate low, central, and high estimates
+                    const I_vals = [d.I_low, d.I, d.I_high];
+                    const T_vals = [d.T_low, d.T, d.T_high];
+                    const N_vals = [d.N_low, d.N, d.N_high];
+                    
+                    const H100_low = Math.pow(N_vals[0], gamma) * I_vals[0] * T_vals[0] * 
+                        (alpha * L * 0.8 + beta * d.D_process * 0.8 + delta * d.D_deprivation * 0.8);
+                    const H100_central = Math.pow(N_vals[1], gamma) * I_vals[1] * T_vals[1] * 
+                        (alpha * L + beta * d.D_process + delta * d.D_deprivation);
+                    const H100_high = Math.pow(N_vals[2], gamma) * I_vals[2] * T_vals[2] * 
+                        (alpha * L * 1.2 + beta * d.D_process * 1.2 + delta * d.D_deprivation * 1.2);
+                    
+                    return {
+                        ...d,
+                        L: L,
+                        H100: H100_central,
+                        H100_low: H100_low,
+                        H100_high: H100_high
+                    };
+                } else {
+                    const H100 = Math.pow(d.N, gamma) * d.I * d.T * 
+                        (alpha * L + beta * d.D_process + delta * d.D_deprivation);
+                    
+                    return {
+                        ...d,
+                        L: L,
+                        H100: H100
+                    };
+                }
+            }).sort((a, b) => {
+                // Always put Frontier species at the bottom
+                if (a.group === 'Frontier' && b.group !== 'Frontier') return 1;
+                if (b.group === 'Frontier' && a.group !== 'Frontier') return -1;
+                // Otherwise sort by H100 descending
+                return b.H100 - a.H100;
+            });
+            
+            return results;
         }
         
         function getFilteredData(data) {
@@ -1248,11 +1676,21 @@ H₁₀₀ = N × C × (α·L + β·D)
         function updateVisualization() {
             const alpha = parseFloat(document.getElementById('alpha-slider').value);
             const beta = parseFloat(document.getElementById('beta-slider').value);
+            const delta = parseFloat(document.getElementById('delta-slider').value);
+            const gamma = parseFloat(document.getElementById('gamma-slider').value);
+            const omega_phys = parseFloat(document.getElementById('omega-phys-slider').value);
+            const omega_psych = parseFloat(document.getElementById('omega-psych-slider').value);
+            const omega_social = parseFloat(document.getElementById('omega-social-slider').value);
             
             document.getElementById('alpha-value').textContent = alpha.toFixed(1);
             document.getElementById('beta-value').textContent = beta.toFixed(1);
+            document.getElementById('delta-value').textContent = delta.toFixed(1);
+            document.getElementById('gamma-value').textContent = gamma.toFixed(1);
+            document.getElementById('omega-phys-value').textContent = omega_phys.toFixed(1);
+            document.getElementById('omega-psych-value').textContent = omega_psych.toFixed(1);
+            document.getElementById('omega-social-value').textContent = omega_social.toFixed(1);
             
-            const results = calculateH100(speciesData, alpha, beta);
+            const results = calculateH100(speciesData, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, showUncertainty);
             const filtered = getFilteredData(results);
             
             updateChart(filtered);
@@ -1302,24 +1740,43 @@ H₁₀₀ = N × C × (α·L + β·D)
                 }
             };
             
+            const datasets = [{
+                label: 'Harm per 100 Meals',
+                data: data.map(d => d.H100),
+                backgroundColor: data.map(d => {
+                    if (d.H100 > 10) return '#ef4444';
+                    if (d.H100 > 5) return '#f97316';
+                    if (d.H100 > 2) return '#f59e0b';
+                    if (d.H100 > 1) return '#eab308';
+                    if (d.H100 > 0.5) return '#84cc16';
+                    return '#10b981';
+                }),
+                borderRadius: 8,
+                borderSkipped: false
+            }];
+            
+            if (showUncertainty) {
+                datasets.push({
+                    label: 'Lower Bound',
+                    data: data.map(d => d.H100_low || d.H100 * 0.6),
+                    backgroundColor: 'rgba(148, 163, 184, 0.3)',
+                    borderRadius: 8,
+                    borderSkipped: false
+                });
+                datasets.push({
+                    label: 'Upper Bound',
+                    data: data.map(d => d.H100_high || d.H100 * 1.4),
+                    backgroundColor: 'rgba(148, 163, 184, 0.3)',
+                    borderRadius: 8,
+                    borderSkipped: false
+                });
+            }
+            
             chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: data.map(d => d.species),
-                    datasets: [{
-                        label: 'Harm per 100 Meals',
-                        data: data.map(d => d.H100),
-                        backgroundColor: data.map(d => {
-                            if (d.H100 > 10) return '#ef4444';
-                            if (d.H100 > 5) return '#f97316';
-                            if (d.H100 > 2) return '#f59e0b';
-                            if (d.H100 > 1) return '#eab308';
-                            if (d.H100 > 0.5) return '#84cc16';
-                            return '#10b981';
-                        }),
-                        borderRadius: 8,
-                        borderSkipped: false
-                    }]
+                    datasets: datasets
                 },
                 options: {
                     indexAxis: 'y',
@@ -1341,10 +1798,20 @@ H₁₀₀ = N × C × (α·L + β·D)
                             titleColor: '#e2e8f0',
                             bodyColor: '#cbd5e1',
                             callbacks: {
-                                label: (context) => `H₁₀₀ = ${context.parsed.x.toFixed(2)}`,
+                                label: (context) => {
+                                    if (context.datasetIndex === 0) {
+                                        return `H₁₀₀ = ${context.parsed.x.toFixed(2)}`;
+                                    }
+                                    return '';
+                                },
                                 afterLabel: (context) => {
-                                    const d = data[context.dataIndex];
-                                    return d.description || '';
+                                    if (context.datasetIndex === 0) {
+                                        const d = data[context.dataIndex];
+                                        if (showUncertainty && d.H100_low && d.H100_high) {
+                                            return `Range: [${d.H100_low.toFixed(2)} - ${d.H100_high.toFixed(2)}]`;
+                                        }
+                                    }
+                                    return '';
                                 }
                             }
                         }
@@ -1369,68 +1836,93 @@ H₁₀₀ = N × C × (α·L + β·D)
         function updateTable(data) {
             const tbody = document.getElementById('table-body');
             
-            tbody.innerHTML = data.map((d) => {
+            let html = '';
+            let inFrontierZone = false;
+            
+            data.forEach((d, index) => {
+                // Check if we need to add frontier separator - only for actual frontier species
+                if (!inFrontierZone && (d.group === 'Frontier')) {
+                    html += `
+                        <tr style="background: transparent;">
+                            <td colspan="10" style="padding: 1rem 0;">
+                                <div class="frontier-separator">
+                                    <div class="frontier-label">⚠ SENTIENCE UNCERTAIN BELOW ⚠</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    inFrontierZone = true;
+                }
+                
                 let verdict = 'Moderate';
                 if (d.H100 > 10) verdict = 'Catastrophic';
                 else if (d.H100 > 5) verdict = 'Very High';
                 else if (d.H100 > 2) verdict = 'High';
                 else if (d.H100 < 1) verdict = 'Low';
                 
-                // Calculate gradient color based on value
                 let bgColor;
                 if (d.H100 > 10) {
-                    bgColor = '#7f1d1d'; // deep red
+                    bgColor = '#7f1d1d';
                 } else if (d.H100 > 5) {
-                    bgColor = '#991b1b'; // red
+                    bgColor = '#991b1b';
                 } else if (d.H100 > 2) {
-                    bgColor = '#9a3412'; // orange-red
+                    bgColor = '#9a3412';
                 } else if (d.H100 > 1) {
-                    bgColor = '#92400e'; // orange
+                    bgColor = '#92400e';
                 } else if (d.H100 > 0.5) {
-                    bgColor = '#854d0e'; // yellow-orange
+                    bgColor = '#854d0e';
                 } else if (d.H100 > 0.2) {
-                    bgColor = '#4d7c0f'; // yellow-green
+                    bgColor = '#4d7c0f';
                 } else {
-                    bgColor = '#065f46'; // green
+                    bgColor = '#065f46';
                 }
                 
-                return `
+                const rangeStr = (d.H100_low && d.H100_high) ? 
+                    `[${d.H100_low.toFixed(2)} - ${d.H100_high.toFixed(2)}]` : 
+                    '—';
+                
+                html += `
                     <tr style="background: ${bgColor};">
                         <td><strong>${d.species}</strong></td>
                         <td><strong>${d.H100.toFixed(2)}</strong></td>
-                        <td>${d.C.toFixed(2)}</td>
+                        <td style="font-size: 0.85em; color: #94a3b8;">${rangeStr}</td>
+                        <td>${d.I.toFixed(2)}</td>
+                        <td>${d.T.toFixed(2)}</td>
                         <td>${d.L.toFixed(1)}</td>
-                        <td>${d.D.toFixed(1)}</td>
+                        <td>${d.D_process.toFixed(1)}</td>
+                        <td>${d.D_deprivation.toFixed(1)}</td>
                         <td>${d.N.toFixed(3)}</td>
                         <td>${verdict}</td>
                     </tr>
                 `;
-            }).join('');
+            });
+            
+            tbody.innerHTML = html;
         }
         
         function showDetailPanel(data) {
             document.getElementById('detail-panel').style.display = 'block';
             document.getElementById('detail-species-name').textContent = data.species;
             document.getElementById('detail-h100').textContent = data.H100.toFixed(2);
+            
+            if (data.H100_low && data.H100_high) {
+                document.getElementById('detail-range').textContent = 
+                    `[${data.H100_low.toFixed(2)} - ${data.H100_high.toFixed(2)}]`;
+            } else {
+                document.getElementById('detail-range').textContent = '';
+            }
+            
             document.getElementById('detail-group').textContent = data.group;
-            document.getElementById('detail-C').textContent = data.C.toFixed(2);
+            document.getElementById('detail-I').textContent = data.I.toFixed(2);
+            document.getElementById('detail-T').textContent = data.T.toFixed(2);
             document.getElementById('detail-L').textContent = data.L.toFixed(1);
-            document.getElementById('detail-D').textContent = data.D.toFixed(1);
+            document.getElementById('detail-D-process').textContent = data.D_process.toFixed(1);
+            document.getElementById('detail-D-deprivation').textContent = data.D_deprivation.toFixed(1);
             document.getElementById('detail-N').textContent = data.N.toFixed(3);
             document.getElementById('detail-L-phys').textContent = data.L_phys.toFixed(1);
             document.getElementById('detail-L-psych').textContent = data.L_psych.toFixed(1);
             document.getElementById('detail-L-social').textContent = data.L_social.toFixed(1);
-            
-            // Update or create description element
-            let descElem = document.getElementById('detail-description');
-            if (!descElem) {
-                const decomp = document.querySelector('.decomposition-section');
-                descElem = document.createElement('p');
-                descElem.id = 'detail-description';
-                descElem.style.cssText = 'color: #cbd5e1; font-size: 0.95rem; margin-top: 1.5rem; line-height: 1.7; padding: 1rem; background: #0a0f1e; border-radius: 8px; border: 1px solid #1e293b;';
-                decomp.parentNode.insertBefore(descElem, decomp.nextSibling);
-            }
-            descElem.textContent = data.description || '';
+            document.getElementById('detail-description').textContent = data.description || '';
             
             document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
@@ -1438,10 +1930,21 @@ H₁₀₀ = N × C × (α·L + β·D)
         // Event listeners
         document.getElementById('alpha-slider').addEventListener('input', updateVisualization);
         document.getElementById('beta-slider').addEventListener('input', updateVisualization);
+        document.getElementById('delta-slider').addEventListener('input', updateVisualization);
+        document.getElementById('gamma-slider').addEventListener('input', updateVisualization);
+        document.getElementById('omega-phys-slider').addEventListener('input', updateVisualization);
+        document.getElementById('omega-psych-slider').addEventListener('input', updateVisualization);
+        document.getElementById('omega-social-slider').addEventListener('input', updateVisualization);
         
         document.getElementById('scale-toggle').addEventListener('click', () => {
             useLogScale = !useLogScale;
             document.getElementById('scale-toggle').textContent = useLogScale ? 'Switch to Linear Scale' : 'Switch to Log Scale';
+            updateVisualization();
+        });
+        
+        document.getElementById('uncertainty-toggle').addEventListener('click', () => {
+            showUncertainty = !showUncertainty;
+            document.getElementById('uncertainty-toggle').textContent = showUncertainty ? 'Hide Uncertainty' : 'Show Uncertainty';
             updateVisualization();
         });
         
@@ -1450,6 +1953,29 @@ H₁₀₀ = N × C × (α·L + β·D)
                 document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
                 currentFilter = pill.dataset.group;
+                updateVisualization();
+            });
+        });
+        
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const preset = btn.dataset.preset;
+                if (preset === 'balanced') {
+                    document.getElementById('omega-phys-slider').value = 1.0;
+                    document.getElementById('omega-psych-slider').value = 1.0;
+                    document.getElementById('omega-social-slider').value = 1.0;
+                } else if (preset === 'physical') {
+                    document.getElementById('omega-phys-slider').value = 1.5;
+                    document.getElementById('omega-psych-slider').value = 0.5;
+                    document.getElementById('omega-social-slider').value = 0.5;
+                } else if (preset === 'social') {
+                    document.getElementById('omega-phys-slider').value = 0.5;
+                    document.getElementById('omega-psych-slider').value = 0.5;
+                    document.getElementById('omega-social-slider').value = 1.5;
+                }
                 updateVisualization();
             });
         });
