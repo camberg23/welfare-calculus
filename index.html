@@ -1,1862 +1,475 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Eating Animals: The Math</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            line-height: 1.7;
-            color: #e2e8f0;
-            background: linear-gradient(to bottom, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0.5rem 1.5rem 3rem 1.5rem;
-        }
-        
-        h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #f8fafc;
-            line-height: 1.2;
-            text-align: center;
-        }
-        
-        .subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            color: #94a3b8;
-            font-style: italic;
-            text-align: center;
-            margin-bottom: 3rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 600;
-            margin: 3rem 0 1rem 0;
-            color: #f1f5f9;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 0.5rem;
-        }
-        
-        h3 {
-            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-            font-weight: 600;
-            margin: 2rem 0 0.8rem 0;
-            color: #cbd5e1;
-        }
-        
-        p {
-            margin-bottom: 1.2rem;
-            font-size: clamp(0.95rem, 2vw, 1.1rem);
-            color: #cbd5e1;
-        }
-        
-        .hero-section {
-            text-align: center;
-            padding: 0;
-            max-width: 900px;
-            margin: 0 auto 1.5rem;
-        }
-        
-        .hero-section p {
-            color: #94a3b8;
-            font-size: clamp(1rem, 2.2vw, 1.25rem);
-        }
-        
-        .hero-highlight {
-            color: #6ee7b7;
-            font-weight: 600;
-        }
-        
-        .problem-box {
-            background: linear-gradient(135deg, #422006 0%, #292524 100%);
-            border-left: 4px solid #fbbf24;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 12px;
-        }
-        
-        .insight-box {
-            background: linear-gradient(135deg, #064e3b 0%, #1e293b 100%);
-            border-left: 4px solid #6ee7b7;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 12px;
-        }
-        
-        .warning-box {
-            background: linear-gradient(135deg, #450a0a 0%, #292524 100%);
-            border-left: 4px solid #f87171;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 12px;
-        }
-        
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .comparison-card {
-            background: rgba(30, 41, 59, 0.3);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            transition: all 0.3s ease;
-        }
-        
-        .comparison-card:hover {
-            transform: translateY(-2px);
-            border-color: rgba(110, 231, 183, 0.4);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-        
-        .comparison-title {
-            font-weight: 600;
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
-            color: #6ee7b7;
-        }
-        
-        .formula {
-            background: #0f172a;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 12px;
-            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            overflow-x: auto;
-            border: 1px solid #334155;
-            color: #6ee7b7;
-        }
-        
-        .interactive-section {
-            background: rgba(30, 41, 59, 0.3);
-            padding: 2rem;
-            margin: 3rem 0;
-            border-radius: 12px;
-            border: 1px solid rgba(51, 65, 85, 0.5);
-        }
-        
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .control-group {
-            background: rgba(15, 23, 42, 0.4);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid #334155;
-        }
-        
-        .slider-group {
-            margin: 1.5rem 0;
-        }
-        
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-            font-weight: 500;
-            color: #e2e8f0;
-        }
-        
-        .slider-value {
-            background: #064e3b;
-            color: #6ee7b7;
-            padding: 0.3rem 0.8rem;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.95rem;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: #334155;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #6ee7b7;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 0 8px rgba(110, 231, 183, 0.2);
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #6ee7b7;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .filter-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin: 1.5rem 0;
-        }
-        
-        .filter-pill {
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-        
-        .filter-pill:hover {
-            border-color: #6ee7b7;
-            color: #6ee7b7;
-        }
-        
-        .filter-pill.active {
-            background: #6ee7b7;
-            color: #0f172a;
-            border-color: #6ee7b7;
-        }
-        
-        .chart-container {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: #0f172a;
-            border-radius: 12px;
-            border: 1px solid #334155;
-        }
-        
-        .detail-panel {
-            background: rgba(30, 41, 59, 0.3);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(51, 65, 85, 0.5);
-            margin: 2rem 0;
-        }
-        
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #334155;
-        }
-        
-        .detail-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #f1f5f9;
-        }
-        
-        .detail-score {
-            font-family: monospace;
-            font-size: 1.3rem;
-            color: #6ee7b7;
-        }
-        
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        
-        .metric-chip {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid rgba(51, 65, 85, 0.4);
-        }
-        
-        .metric-label {
-            font-size: 0.75rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.3rem;
-        }
-        
-        .metric-value {
-            font-family: monospace;
-            font-size: 1.3rem;
-            color: #e2e8f0;
-            margin-bottom: 0.3rem;
-        }
-        
-        .metric-hint {
-            font-size: 0.7rem;
-            color: #64748b;
-            line-height: 1.4;
-        }
-        
-        .decomposition-section {
-            margin: 1.5rem 0;
-            padding: 1.5rem;
-            background: #0a0f1e;
-            border-radius: 10px;
-            border: 1px solid #1e293b;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-            background: #1e293b;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        th, td {
-            padding: 0.8rem;
-            text-align: left;
-            border-bottom: 1px solid #334155;
-            font-size: clamp(0.75rem, 1.8vw, 0.95rem);
-        }
-        
-        th {
-            background: #0f172a;
-            font-weight: 600;
-            color: #94a3b8;
-            font-size: clamp(0.7rem, 1.8vw, 0.85rem);
-        }
-        
-        tr:hover {
-            background: #0f172a;
-        }
-        
-        .emphasis {
-            font-weight: 600;
-            color: #6ee7b7;
-        }
-        
-        code {
-            background: #0f172a;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.9em;
-            color: #6ee7b7;
-        }
-        
-        ul, ol {
-            margin-left: 2rem;
-            margin-bottom: 1.5rem;
-            color: #cbd5e1;
-        }
-        
-        li {
-            margin-bottom: 0.6rem;
-        }
-        
-        .section-divider {
-            height: 2px;
-            background: linear-gradient(to right, transparent, #334155, transparent);
-            margin: 4rem 0;
-        }
-        
-        .closing-reflection {
-            max-width: 800px;
-            margin: 3rem auto;
-            padding: 2rem;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 16px;
-            border: 1px solid #334155;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Welfare Calculus</title>
+<style>
+  :root{
+    --paper:#f5f1e8; --ink:#191512; --ink-soft:#615950; --ink-faint:#938a7d; --line:#ddd6c7;
+    --teal:#0d6b66; --teal-deep:#0a544f; --teal-dim:#0d6b6618; --amber:#bf6a1c; --amber-dim:#bf6a1c14;
+    --panel:#fffdf7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .mono{font-family:"SF Mono",ui-monospace,"Cascadia Mono","Roboto Mono",Menlo,Consolas,monospace}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+  a{color:var(--teal);text-underline-offset:2px}
+  strong{font-weight:600}
 
-        .preset-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.8rem;
-            flex-wrap: wrap;
-        }
+  header{padding:62px 0 40px;border-bottom:1px solid var(--line)}
+  h1{font-size:clamp(2.2rem,5.6vw,3.9rem);line-height:1.05;font-weight:600;letter-spacing:-.015em;max-width:16ch}
+  h1 em{font-style:italic;color:var(--teal)}
+  .lede{font-size:clamp(1.04rem,2.1vw,1.25rem);color:var(--ink-soft);max-width:60ch;margin-top:22px}
+  .topcredit{display:flex;align-items:center;gap:11px;margin-top:24px}
+  .topcredit .topmark{height:34px;width:auto;opacity:.92}
+  .topcredit .bystack{display:flex;flex-direction:column;line-height:1.25}
+  .topcredit .byname{font-size:13.5px;color:var(--ink);font-weight:600;display:block}
+  .topcredit .torg{font-family:"SF Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:1px}
 
-        .preset-btn {
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
+  .act{padding:48px 0;border-bottom:1px solid var(--line)}
+  .actlabel{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:10px}
+  h2{font-size:clamp(1.45rem,3.2vw,2rem);font-weight:600;letter-spacing:-.01em;margin-bottom:10px;max-width:24ch}
+  .sub{color:var(--ink-soft);margin-bottom:22px;max-width:64ch;font-size:1.02rem}
+  p{margin-bottom:14px;max-width:66ch}
+  .small{font-size:.86rem;color:var(--ink-soft)}
+  .tiny{font-size:.76rem;color:var(--ink-faint);font-family:"SF Mono",ui-monospace,monospace}
 
-        .preset-btn:hover {
-            border-color: #6ee7b7;
-            color: #6ee7b7;
-        }
+  .controls{display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+  .ctlblock{display:flex;flex-direction:column;gap:7px}
+  .ctlblock .vl{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:5px;overflow:hidden;width:fit-content}
+  .seg button{background:var(--panel);border:none;border-left:1px solid var(--line);padding:7px 12px;
+    font-family:"SF Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-soft);cursor:pointer;transition:all .12s;white-space:nowrap}
+  .seg button:first-child{border-left:none}
+  .seg button[aria-pressed=true]{background:var(--teal);color:#fff}
+  .vexplain{font-size:.86rem;color:var(--ink-soft);margin:14px 0 18px;max-width:64ch;padding:11px 14px;background:var(--teal-dim);border-radius:5px}
+  .vexplain b{color:var(--ink)}
 
-        .preset-btn.active {
-            background: #064e3b;
-            border-color: #6ee7b7;
-            color: #6ee7b7;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem 1rem;
-            }
-            
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chart-container {
-                height: 400px !important;
-            }
-            
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .formula {
-                font-size: 0.85rem;
-                padding: 1rem;
-            }
-            
-            .formula > div:first-child {
-                font-size: 1.1em !important;
-            }
-            
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .filter-pills {
-                justify-content: center;
-            }
-            
-            .filter-pill {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-            
-            .detail-panel {
-                padding: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem 0.75rem;
-            }
-            
-            .chart-container {
-                height: 350px !important;
-            }
-            
-            .interactive-section {
-                padding: 1.5rem;
-            }
-            
-            .control-group {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.75rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-        }
-    </style>
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:7px;overflow:hidden;box-shadow:0 14px 36px -30px #19151230}
+  .ptitle{display:flex;justify-content:space-between;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .ptitle .t{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+  .ptitle .u{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;color:var(--ink-faint)}
+
+  .chart{padding:14px 18px 6px}
+  .hrow{display:grid;grid-template-columns:108px 1fr 92px;gap:12px;align-items:center;padding:7px 0;cursor:pointer;border-radius:5px;transition:background .12s}
+  .hrow:hover{background:#fbf8f0}
+  .hrow.sel{background:var(--teal-dim)}
+  .hname{font-family:"SF Mono",ui-monospace,monospace;font-size:12.5px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .htrack{position:relative;height:34px}
+  .ridge{position:absolute;inset:0}
+  .ridge svg{width:100%;height:100%;display:block;overflow:visible}
+  .hmed{position:absolute;top:3px;bottom:3px;width:2px;background:var(--teal-deep)}
+  .hval{font-family:"SF Mono",ui-monospace,monospace;font-size:12px;text-align:right}
+  .hval .sub2{display:block;font-size:9px;color:var(--ink-faint);line-height:1.1}
+  .haxis{display:grid;grid-template-columns:108px 1fr 92px;gap:12px;padding:0 18px 12px}
+  .haxinner{position:relative;height:15px;font-family:"SF Mono",ui-monospace,monospace;font-size:9.5px;color:var(--ink-faint)}
+  .haxinner span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+  .clab{padding:4px 18px 14px;font-size:.78rem;color:var(--ink-faint)}
+
+  .breakdown{margin:0 18px 16px;border:1px solid var(--line);border-radius:6px;overflow:hidden;display:none}
+  .breakdown.show{display:block}
+  .bkhead{padding:11px 15px;background:#fbf8f0;border-bottom:1px solid var(--line);font-family:"SF Mono",ui-monospace,monospace;font-size:12px}
+  .bkbody{padding:14px 15px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .bkcell{padding:0 14px;border-left:1px solid var(--line)}
+  .bkcell:first-child{border-left:none;padding-left:0}
+  .bkcell .bl{font-family:"SF Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+  .bkcell .bv{font-family:"SF Mono",ui-monospace,monospace;font-size:17px;margin:3px 0}
+  .bkcell .bd{font-size:11px;color:var(--ink-soft);line-height:1.35}
+  .bkeq{padding:10px 15px;border-top:1px solid var(--line);font-family:"SF Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-soft);background:#fbf8f0}
+  .bkeq b{color:var(--teal)}
+  @media(max-width:560px){.bkbody{grid-template-columns:1fr;gap:12px}.bkcell{border-left:none;padding-left:0}}
+
+  .insight{background:var(--amber-dim);border-left:3px solid var(--amber);padding:16px 18px;border-radius:0 5px 5px 0;margin:22px 0}
+  .insight .it{font-weight:600;margin-bottom:5px}
+  .insight p{margin-bottom:0;max-width:none}
+
+  .presetbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+  .presetbar .pl{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
+  .preset{font-family:"SF Mono",ui-monospace,monospace;font-size:11.5px;padding:7px 13px;border:1px solid var(--line);border-radius:20px;background:var(--panel);color:var(--ink-soft);cursor:pointer;transition:all .12s}
+  .preset:hover{border-color:var(--teal);color:var(--teal)}
+  .preset[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+  .dietgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));border-top:1px solid var(--line)}
+  .dcell{padding:14px 16px;border-right:1px solid #ece6d8;border-bottom:1px solid #ece6d8}
+  .dcell .dn{font-family:"SF Mono",ui-monospace,monospace;font-size:12.5px;margin-bottom:9px;display:flex;justify-content:space-between}
+  .dcell .dn .dc{color:var(--ink-faint)}
+  .stepper{display:flex;align-items:center;border:1px solid var(--line);border-radius:5px;overflow:hidden;width:fit-content}
+  .stepper button{width:32px;height:30px;border:none;background:var(--panel);font-size:17px;cursor:pointer;color:var(--ink-soft);font-family:inherit;line-height:1}
+  .stepper button:hover{background:var(--teal-dim);color:var(--teal)}
+  .stepper .cnt{min-width:36px;text-align:center;font-family:"SF Mono",ui-monospace,monospace;font-size:13px;border-left:1px solid var(--line);border-right:1px solid var(--line);line-height:30px}
+  .dcell .dunit{font-size:11px;color:var(--ink-faint);margin-top:6px}
+
+  .total{border-top:1px solid var(--line);padding:20px 22px}
+  .total .tk{font-family:"SF Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+  .total .tv{font-size:2.6rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+  .total .tv small{font-size:.92rem;color:var(--ink-soft);font-weight:400}
+  .total .tb{font-size:.84rem;color:var(--ink-soft);margin-top:9px}
+
+  .servinfo{font-size:.82rem;color:var(--ink-soft);margin-top:12px;padding:11px 14px;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+  .servinfo b{font-family:"SF Mono",ui-monospace,monospace;font-size:.92em}
+
+  .caveat{border-left:3px solid var(--ink-faint);padding:14px 18px;margin:0 0 24px;background:#faf7ef;border-radius:0 5px 5px 0}
+  .caveat p{margin:0;font-size:.92rem;color:var(--ink-soft)}
+
+  .offset{background:var(--panel);border:1px solid var(--line);border-radius:7px;overflow:hidden}
+  .obody{padding:22px}
+  .ambition .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .ambition .lab{font-size:15px}
+  .ambition .val{font-family:"SF Mono",ui-monospace,monospace;font-size:13px;color:var(--amber);background:var(--amber-dim);padding:2px 9px;border-radius:4px}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--line);border-radius:2px;outline:none;margin:10px 0 4px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--paper);border:2px solid var(--amber);cursor:pointer;transition:transform .12s,box-shadow .12s}
+  input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 0 0 6px var(--amber-dim)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--paper);border:2px solid var(--amber);cursor:pointer}
+  .ratiomarks{position:relative;height:14px;font-family:"SF Mono",ui-monospace,monospace;font-size:10px;color:var(--ink-faint)}
+  .ratiomarks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+  .ratiomarks span:first-child{transform:none;left:0!important}
+  .ratiomarks span:last-child{transform:none;right:0!important;left:auto!important}
+  .bignum{text-align:center;padding:22px 0 6px}
+  .bignum .n{font-size:clamp(2.2rem,7vw,3.3rem);font-weight:600;letter-spacing:-.02em;color:var(--amber);line-height:1}
+  .bignum .n small{font-size:.34em;color:var(--ink-soft);font-weight:400}
+  .bignum .cap{font-size:.9rem;color:var(--ink-soft);margin-top:8px;max-width:48ch;margin-left:auto;margin-right:auto}
+  .charities{display:grid;gap:10px;margin-top:20px}
+  .charity{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:6px;flex-wrap:wrap}
+  .charity .ci{flex:1;min-width:200px}
+  .charity .cn{font-weight:600;font-size:15px}
+  .charity .cd{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+  .charity .camt{text-align:right;font-family:"SF Mono",ui-monospace,monospace}
+  .charity .camt .cm{font-size:17px;color:var(--teal)}
+  .charity .camt .cmsub{font-size:10px;color:var(--ink-faint)}
+  .gobtn{display:inline-block;margin-top:9px;font-family:"SF Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.04em;padding:7px 14px;background:var(--teal);color:#fff;border-radius:5px;text-decoration:none;transition:background .12s}
+  .gobtn:hover{background:var(--teal-deep)}
+
+  details{border:1px solid var(--line);border-radius:6px;margin:12px 0;background:var(--panel)}
+  summary{padding:13px 17px;cursor:pointer;font-weight:600;font-size:14.5px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"+";font-family:monospace;color:var(--teal);margin-right:10px;font-weight:700}
+  details[open] summary::before{content:"–"}
+  details .b{padding:2px 17px 17px;color:var(--ink-soft);font-size:13.5px}
+  details .b p{max-width:none}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line)}
+  th{font-family:"SF Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);font-weight:400}
+  td.n{font-family:"SF Mono",ui-monospace,monospace;text-align:right}
+  footer{padding:42px 0 70px;color:var(--ink-soft)}
+  footer p{max-width:none}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media(max-width:560px){
+    .hrow,.haxis{grid-template-columns:74px 1fr 72px;gap:8px}
+    .hname{font-size:11px}.hval{font-size:11px}
+    .total .tv{font-size:2.1rem}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero-section">
-            <h1>Eating Animals: The Math</h1>
-            <p class="subtitle">If you care about reducing suffering but aren't willing to be vegetarian, what should you eat? The obvious answers are wrong.</p>
-            <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem;">by Cameron Berg</p>
-        </div>
-        
-        <h2>The Problem with Simple Rules</h2>
-        
-        <p>If you're like me and you eat animals but want to reduce harm, you probably use one of two intuitive heuristics:</p>
-        
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">Heuristic #1: Complexity</div>
-                <p>"Eat simpler animals that have less complex conscious experience."</p>
-                <p style="margin-top: 1em; color: #64748b;">Intuition: A chicken probably suffers less than a cow, so chicken is more ethical.</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Heuristic #2: Death Count</div>
-                <p>"Eat creatures that give you more meals per death."</p>
-                <p style="margin-top: 1em; color: #64748b;">Intuition: One cow feeds you for a year; one chicken gives you ~10 meals. Minimize kill count.</p>
-            </div>
-        </div>
-        
-        <div class="problem-box">
-            <strong style="color: #fbbf24;">The Problem:</strong> These heuristics point in opposite directions. If you follow #1, you eat lots of small animals. If you follow #2, you eat large complex animals. <span class="hero-highlight">Which is actually less harmful?</span>
-        </div>
-        
-        <p>The answer requires a formal model that weighs multiple factors simultaneously. But first, let's be honest about what this model actually does.</p>
-        
-        <h2>What This Model Actually Does</h2>
-        
-        <div class="insight-box">
-            <p><strong style="color: #6ee7b7;">Fair warning:</strong> This model is going to tell you that the number of individuals you eat matters more than almost anything else. If you're eating 35 chickens per year vs 0.3 cows, that 100× difference in kill count dominates the 2× difference in consciousness.</p>
-            
-            <p style="margin-top: 1rem;">So why build a formal model? Because:</p>
-            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
-                <li>Most people don't naturally track individuals-per-meal. We think in "meals" not "fractional animals"</li>
-                <li>The consciousness adjustments (I×T) matter for edge cases like shrimp</li>
-                <li>The aggregation question (γ) determines whether many-small-deaths or few-large-deaths is worse</li>
-                <li>It quantifies how much sourcing matters relative to species choice</li>
-            </ul>
-            
-            <p style="margin-top: 1rem;"><strong>If you just want the bottom line:</strong> Eat large animals, avoid crustaceans. The model helps you see why and lets you tune your moral assumptions.</p>
-        </div>
-        
-        <h2>What Are We Actually Measuring?</h2>
-        
-        <p>The harm of eating an animal isn't just about the moment of death. It's the <span class="emphasis">total moral weight of everything that animal experiences</span> multiplied by how many such animals your diet burns through:</p>
-        
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">Lifetime Suffering (L)</div>
-                <p>The area under the curve of chronic stress, pain, confinement, and deprivation throughout life.</p>
-                <p style="margin-top: 1em; color: #64748b; font-size: 0.9rem;">L decomposes into: <strong>physical suffering</strong> + <strong>psychological stress</strong> + <strong>social deprivation</strong></p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Death Suffering</div>
-                <p>Both the pain of dying (suffocation vs. stunning) and the loss of future positive experiences.</p>
-                <p style="margin-top: 1em; color: #64748b; font-size: 0.9rem;">D_process (how painful) + D_deprivation (what's lost)</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Experience Quality</div>
-                <p>Not all experiences are equally rich. We model this through <strong>intensity</strong> (how strongly pain/pleasure is felt) and <strong>temporal depth</strong> (how experiences echo through memory and anticipation).</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Number of Individuals (N)</div>
-                <p><strong>This is the key parameter.</strong> One chicken yields ~10 portions (5oz each), so N=0.096 per meal. One cow yields ~1,280 portions, so N=0.0008 per meal. That's a 120× difference that overwhelms most other factors.</p>
-            </div>
-        </div>
-        
-        <div class="insight-box">
-            <strong style="color: #6ee7b7;">Key insight:</strong> These factors interact multiplicatively. The consciousness quality factors (I×T) vary by ~10× across species. But N varies by ~10,000×. So N dominates ~95% of the variance in harm.
-        </div>
-        
-        <h2>The Formal Model</h2>
-        
-        <p>We can express the total harm of eating a species as:</p>
-        
-        <div class="formula">
-<div style="font-size: 1.4em; margin-bottom: 1.5rem; color: #6ee7b7; line-height: 1.6;">
-H = <span style="color: #fbbf24;">N^γ</span> × <span style="color: #3b82f6;">(I × T)</span> × <span style="color: #6ee7b7;">(α·L + β·D_process + δ·D_deprivation)</span>
-</div>
-
-<div style="margin-bottom: 1.5rem;">
-<div style="padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px; margin-bottom: 0.8rem;">
-<strong style="color: #fbbf24;">How many individuals per meal?</strong> <span style="color: #cbd5e1;">N^γ</span>
-<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Based on standardized 5-6oz portions. One chicken = 10 portions, one cow = 1,280 portions.</div>
-</div>
-
-<div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px; margin-bottom: 0.8rem;">
-<strong style="color: #3b82f6;">What kind of minds?</strong> <span style="color: #cbd5e1;">I × T</span>
-<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Intensity (how strongly felt) × Temporal depth (how it echoes through time)</div>
-</div>
-
-<div style="padding: 1rem; background: rgba(110, 231, 183, 0.1); border-left: 3px solid #6ee7b7; border-radius: 6px;">
-<strong style="color: #6ee7b7;">What happens to those minds?</strong> <span style="color: #cbd5e1;">α·L + β·D_process + δ·D_deprivation</span>
-<div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.3rem;">Lifetime suffering + pain of dying + loss of future, each weighted by what you care about</div>
-</div>
-</div>
-
-<details style="cursor: pointer; color: #94a3b8;">
-<summary style="font-size: 0.95rem; margin-bottom: 0.5rem; cursor: pointer;">▸ See all parameter definitions</summary>
-<div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: 0.9rem; margin-top: 1rem; padding-left: 1rem;">
-<strong>H</strong> <span style="color: #cbd5e1;">Total moral harm per meal</span>
-<strong>N</strong> <span style="color: #cbd5e1;">Individuals consumed per meal (based on 5-6oz portions)</span>
-<strong>γ</strong> <span style="color: #cbd5e1;">Aggregation exponent (1.0 = linear, &lt;1.0 = diminishing, &gt;1.0 = accelerating)</span>
-<strong>I</strong> <span style="color: #cbd5e1;">Intensity of valenced experience (0–1)</span>
-<strong>T</strong> <span style="color: #cbd5e1;">Temporal depth: memory, anticipation, integration (0–1)</span>
-<strong>L</strong> <span style="color: #cbd5e1;">Lifetime suffering (0–3) = ω_phys·L_phys + ω_psych·L_psych + ω_social·L_social</span>
-<strong>D_process</strong> <span style="color: #cbd5e1;">Pain of dying (0–3)</span>
-<strong>D_deprivation</strong> <span style="color: #cbd5e1;">Loss of future value (0–3)</span>
-<strong>α, β, δ</strong> <span style="color: #cbd5e1;">Moral weights: how much you care about lifetime vs. death process vs. deprivation</span>
-<strong>ω</strong> <span style="color: #cbd5e1;">Suffering type weights: how much you care about physical vs. psychological vs. social harms</span>
-</div>
-</details>
-        </div>
-        
-        <p>This approximates the structure of what matters:</p>
-        
-        <ul>
-            <li>The product <code style="color: #3b82f6;">N^γ × I × T</code> accounts for quantity and quality of minds, with γ controlling whether numbers scale linearly</li>
-            <li>Splitting experience into <strong>intensity</strong> and <strong>temporal depth</strong> recognizes that suffering persisting through memory matters differently than momentary pain</li>
-            <li>Decomposing death into <strong>process</strong> and <strong>deprivation</strong> separates "bad dying" from "foreclosed futures"</li>
-            <li>The weights let you encode what you care about most</li>
-        </ul>
-        
-        <p><strong>Critical note:</strong> With default parameters (γ=1, all weights ~1), this reduces to approximately: H ≈ N × (consciousness quality) × (suffering factors). Since N varies by 10,000× and consciousness varies by ~10×, <span class="emphasis">N dominates everything</span>. The model's value isn't complexity—it's making this calculation explicit.</p>
-        
-        <h2>Understanding the Parameters</h2>
-        
-        <p>The model has several parameters you can tune. Here's what they mean and how to think about them:</p>
-        
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Calculating N (Individuals Per Meal)</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p><strong>N is based on standardized 5-6oz protein portions.</strong> This is the arithmetic that drives the entire model:</p>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Chicken:</strong><br>
-                    Live weight: 5 lbs<br>
-                    × Meat yield: 65% = 3.25 lbs = 52 oz<br>
-                    ÷ Portion size: 5 oz<br>
-                    = 10.4 portions per chicken<br>
-                    <strong style="color: #fbbf24;">→ N = 1/10.4 = 0.096</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Pig:</strong><br>
-                    Live weight: 280 lbs<br>
-                    × Meat yield: 60% = 168 lbs = 2,688 oz<br>
-                    ÷ Portion size: 5 oz<br>
-                    = 538 portions per pig<br>
-                    <strong style="color: #fbbf24;">→ N = 1/538 = 0.002</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Cow (Beef):</strong><br>
-                    Live weight: 1,200 lbs<br>
-                    × Meat yield: 40% = 480 lbs = 7,680 oz<br>
-                    ÷ Portion size: 6 oz<br>
-                    = 1,280 portions per cow<br>
-                    <strong style="color: #fbbf24;">→ N = 1/1,280 = 0.0008</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Shrimp:</strong><br>
-                    Typical serving: 15 shrimp<br>
-                    <strong style="color: #fbbf24;">→ N = 15</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Salmon:</strong><br>
-                    Live weight: 10 lbs<br>
-                    × Meat yield: 60% = 6 lbs = 96 oz<br>
-                    ÷ Portion size: 6 oz<br>
-                    = 16 portions per salmon<br>
-                    <strong style="color: #fbbf24;">→ N = 1/16 = 0.0625</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Large Tuna:</strong><br>
-                    Live weight: 200 lbs<br>
-                    × Meat yield: 50% = 100 lbs = 1,600 oz<br>
-                    ÷ Portion size: 5 oz<br>
-                    = 320 portions per tuna<br>
-                    <strong style="color: #fbbf24;">→ N = 1/320 = 0.003</strong>
-                    </p>
-                </div>
-                
-                <p style="margin-top: 1.5rem;"><strong>For products (eggs, dairy, honey):</strong> N is calculated based on annual production per animal divided by consumption per meal, accounting for culling rates.</p>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Eggs:</strong><br>
-                    1 hen lays ~300 eggs/year<br>
-                    Consumption: 2 eggs per meal<br>
-                    = 150 meals per hen per year<br>
-                    <strong style="color: #fbbf24;">→ N = 1/150 ≈ 0.007</strong>
-                    </p>
-                </div>
-                
-                <div style="background: #0a0f1e; padding: 1rem; border-radius: 8px; margin: 1rem 0; border: 1px solid #1e293b;">
-                    <p style="font-family: monospace; font-size: 0.9rem; line-height: 1.8;">
-                    <strong style="color: #6ee7b7;">Dairy:</strong><br>
-                    1 cow produces ~48,000 cups milk/year<br>
-                    Consumption: 1 cup per meal<br>
-                    (Adjusted for culling and calf mortality)<br>
-                    <strong style="color: #fbbf24;">→ N ≈ 0.0005</strong>
-                    </p>
-                </div>
-                
-                <p style="margin-top: 1.5rem; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-left: 3px solid #fbbf24; border-radius: 6px;">
-                <strong>Why this matters:</strong> When people think "I'm having chicken for dinner," they don't think "I'm consuming 0.096 chickens." But that's the actual arithmetic. Over a year of daily chicken meals, you kill 35 chickens. Over a year of daily beef meals, you kill 0.3 cows. That 117× difference in kill count is the core driver of the model.
-                </p>
-            </div>
-        </details>
-
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Intensity (I) & Temporal Depth (T)</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Instead of a single "consciousness" score, we separate two aspects of experience:</p>
-                
-                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
-                    <li><strong>I (Intensity):</strong> How strongly valenced states are felt in the moment—based on nociceptor density, neural response to pain/pleasure stimuli</li>
-                    <li><strong>T (Temporal Depth):</strong> How experiences propagate through time via memory, anticipation, rumination—based on hippocampal structures, learning integration</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;">A shrimp might have moderate intensity (pain receptors fire hard) but low temporal depth (minimal carry-forward). A cow has both high intensity and high temporal depth (suffering echoes for days).</p>
-            </div>
-        </details>
-
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Aggregation Exponent (γ)</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>This controls how moral harm scales with numbers, and it's the most philosophically important parameter in the model:</p>
-                
-                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
-                    <li><strong>γ < 1.0 (diminishing returns):</strong> Each additional death matters less—perhaps because the <em>existence</em> of suffering minds has special moral weight beyond quantity</li>
-                    <li><strong>γ = 1.0 (linear):</strong> Standard total utilitarianism—all suffering counts equally regardless of how it's distributed</li>
-                    <li><strong>γ > 1.0 (accelerating):</strong> Mass deaths are disproportionately worse—perhaps because large-scale suffering has systemic/relational harms beyond individual experience</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;"><strong>Why this matters:</strong> If γ=1.0, eating 15 shrimp (with I×T=0.14 each) is genuinely worse than eating 1 chicken (I×T=0.42). If γ=0.7, shrimp drops significantly in harm. This is an open ethical question, not a settled fact.</p>
-            </div>
-        </details>
-
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Death Components (D_process & D_deprivation)</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <ul style="margin-left: 1.5rem;">
-                    <li><strong>D_process:</strong> The suffering during dying—suffocation, stunning failure, prolonged consciousness</li>
-                    <li><strong>D_deprivation:</strong> The loss of future value—preference frustration, foreclosed experiences. Scaled by lifespan and potential for positive states</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;">These aren't the same. A cow might die painlessly (low D_process) but lose years of grazing (high D_deprivation). A shrimp might die agonizingly (high D_process) but have minimal future to lose (low D_deprivation).</p>
-            </div>
-        </details>
-
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Lifetime Suffering Weights (ω_phys, ω_psych, ω_social)</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Lifetime suffering (L) is composed of three types:</p>
-                
-                <ul style="margin-left: 1.5rem; margin-top: 0.8rem;">
-                    <li><strong>Physical (L_phys):</strong> Injury, illness, chronic pain, physical discomfort</li>
-                    <li><strong>Psychological (L_psych):</strong> Stress, fear, frustration, inability to express natural behaviors</li>
-                    <li><strong>Social (L_social):</strong> Isolation, broken bonds, thwarted attachment, loss of group membership</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;">Each species has raw scores for these three types based on their typical living conditions. The ω weights let you express <em>your</em> moral priorities: maybe you think physical pain matters 2× more than social isolation, or maybe you think psychological stress is the core harm.</p>
-                
-                <p style="margin-top: 1rem;">The combined lifetime suffering is: <strong>L = ω_phys × L_phys + ω_psych × L_psych + ω_social × L_social</strong></p>
-                
-                <p style="margin-top: 1rem;">Try the presets in the interactive section to see how different priorities reshape the rankings.</p>
-            </div>
-        </details>
-        
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ How We Estimated I and T</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p><strong>I (Intensity)</strong> is based on:</p>
-                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                    <li>Nociceptor density and neural architecture</li>
-                    <li>Behavioral responses to aversive stimuli</li>
-                    <li>Opioid receptor systems (markers of pain processing)</li>
-                    <li>Evidence of pleasure/reward seeking</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;"><strong>T (Temporal Depth)</strong> is based on:</p>
-                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                    <li>Hippocampal structures (memory formation)</li>
-                    <li>Evidence of anticipation and planning</li>
-                    <li>Long-term behavioral modification from single events</li>
-                    <li>Social learning and memory retention</li>
-                </ul>
-                
-                <p style="margin-top: 1rem;">Cows/pigs: high I and T (rich momentary experience + long temporal integration). Fish: moderate I, variable T. Shrimp: moderate I, low T.</p>
-            </div>
-        </details>
-        
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ Relationship to Rethink Priorities' Welfare Range Estimates</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Our framework is informed by <a href="https://rethinkpriorities.org/research-area/welfare-range-estimates" style="color: #6ee7b7;">Rethink Priorities' Moral Weight Project</a> but differs in approach:</p>
-                
-                <p style="margin-top: 1rem;"><strong>What RP measured:</strong> Peak pleasure minus peak pain intensity (conditional on sentience), for discrete welfare interventions. Pigs: 0.515, chickens: 0.332, salmon: 0.056.</p>
-                
-                <p style="margin-top: 1rem;"><strong>What we measure:</strong> Experiential intensity × temporal integration, for chronic welfare assessment in dietary contexts. Pigs: I=0.85, T=0.95. Chickens: I=0.70, T=0.60. Salmon: I=0.55, T=0.45.</p>
-                
-                <p style="margin-top: 1rem;"><strong>Why we differ:</strong> When assessing lifetime suffering, what matters isn't just peak intensity in a single moment, but how suffering accumulates and integrates over weeks and months. Our I×T product captures this differently than RP's welfare ranges, which are optimized for comparing point interventions rather than chronic conditions.</p>
-                
-                <p style="margin-top: 1rem;">Both approaches are legitimate; they're answering different questions with different tools.</p>
-            </div>
-        </details>
-
-        <details style="background: rgba(30, 41, 59, 0.3); padding: 1.5rem; margin: 1.5rem 0; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(110, 231, 183, 0.3)'" onmouseout="this.style.borderColor='rgba(51, 65, 85, 0.5)'">
-            <summary style="font-weight: 600; font-size: 1.1rem; color: #f1f5f9; cursor: pointer;">▸ How Uncertainty Bands Work</summary>
-            <div style="margin-top: 1rem; color: #cbd5e1;">
-                <p>Click "Show Uncertainty" to see ranges around each H estimate. These aren't pulled from thin air—they reflect genuine epistemic uncertainty about the parameters:</p>
-                
-                <p style="margin-top: 1rem;"><strong>For I and T:</strong> We provide low/mid/high estimates based on uncertainty in neuroscience. For example, shrimp I could plausibly be 0.38 (minimal integration) to 0.58 (surprisingly rich nociception). The ranges reflect where empirical evidence is ambiguous.</p>
-                
-                <p style="margin-top: 1rem;"><strong>For N:</strong> Small variations based on meal size and preparation. A "shrimp meal" could be 10-20 shrimp depending on the dish.</p>
-                
-                <p style="margin-top: 1rem;"><strong>For L components:</strong> We apply ±20% to account for variation within production systems. Not all "industrial chicken" farms are equally bad; not all "pasture-raised" operations are equally good.</p>
-                
-                <p style="margin-top: 1rem;"><strong>Combined effect:</strong> These uncertainties propagate through the multiplication to give you ranges. The ranges show you how robust the rankings are. If two species' ranges overlap substantially, the ordering between them is genuinely uncertain.</p>
-            </div>
-        </details>
-        
-        <h2>Species Choice Matters More Than Sourcing</h2>
-        
-        <p>Here's a counterintuitive finding: <span class="emphasis">sourcing improvements only give you 25-35% reductions in harm, while species choice can give you 10-100× differences</span>. If you're eating industrial chicken and wondering whether to switch to pasture chicken or to grass-fed beef, the math says: switch species first, then optimize within it.</p>
-        
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">Within Chicken: 35% Improvement</div>
-                <p><strong>Industrial:</strong> H = 0.187<br>
-                <strong>Pasture:</strong> H = 0.123</p>
-                <p style="margin-top: 1em; color: #64748b;">Sourcing reduces L by ~55%, which translates to 35% better. Meaningful, but N=0.096 still dominates.</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Chicken → Beef: 99% Improvement</div>
-                <p><strong>Industrial Chicken:</strong> H = 0.187<br>
-                <strong>Grass-Fed Beef:</strong> H = 0.001</p>
-                <p style="margin-top: 1em; color: #64748b;">Species change drops N from 0.096 to 0.0008. This overwhelms all other factors—it's a 120× difference in kill count.</p>
-            </div>
-        </div>
-        
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">Within Beef: 35% Improvement</div>
-                <p><strong>Feedlot:</strong> H = 0.002<br>
-                <strong>Grass-Fed:</strong> H = 0.001</p>
-                <p style="margin-top: 1em; color: #64748b;">Same L reduction as chicken (~55%), same proportional improvement (~35%).</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">But Both Beat All Poultry</div>
-                <p><strong>Feedlot Beef:</strong> H = 0.002<br>
-                <strong>Pasture Chicken:</strong> H = 0.123</p>
-                <p style="margin-top: 1em; color: #64748b;">Even the worst beef beats the best chicken by 62×. N=0.0008 is that powerful.</p>
-            </div>
-        </div>
-        
-        <div class="insight-box">
-            <strong style="color: #6ee7b7;">Bottom line:</strong> Sourcing is second-order optimization. Get the species right first (low N), then optimize sourcing (low L). Don't spend energy finding the perfect pasture chicken farm when switching to wild-caught tuna would give you 3× the improvement.
-        </div>
-        
-        <div class="section-divider"></div>
-        
-        <h2>Interactive Model Explorer</h2>
-        
-        <div class="interactive-section">
-            <h3 style="margin-top: 0; color: #f1f5f9;">Adjust Your Moral Weights</h3>
-            <p>What do you care about most? Tune the weights to match your intuitions and watch the moral landscape reshuffle:</p>
-            
-            <div class="controls-grid">
-                <div class="control-group">
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Lifetime Suffering Weight (α)</span>
-                            <span class="slider-value" id="alpha-value">1.0</span>
-                        </div>
-                        <input type="range" id="alpha-slider" min="0" max="2" step="0.1" value="1.0">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Chronic pain, confinement stress, social isolation</p>
-                    </div>
-                    
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Death Process Weight (β)</span>
-                            <span class="slider-value" id="beta-value">0.7</span>
-                        </div>
-                        <input type="range" id="beta-slider" min="0" max="2" step="0.1" value="0.7">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Suffering during dying (suffocation, stunning failure)</p>
-                    </div>
-
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Death Deprivation Weight (δ)</span>
-                            <span class="slider-value" id="delta-value">0.3</span>
-                        </div>
-                        <input type="range" id="delta-slider" min="0" max="2" step="0.1" value="0.3">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">Loss of future positive experiences</p>
-                    </div>
-                </div>
-                
-                <div class="control-group">
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Aggregation Exponent (γ)</span>
-                            <span class="slider-value" id="gamma-value">1.0</span>
-                        </div>
-                        <input type="range" id="gamma-slider" min="0.5" max="1.5" step="0.1" value="1.0">
-                        <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.8rem;">How harm scales with numbers: &lt;1.0 = diminishing returns, 1.0 = linear, &gt;1.0 = accelerating</p>
-                    </div>
-
-                    <h4 style="margin-top: 1.5rem; margin-bottom: 0.8rem; color: #cbd5e1; font-size: 1rem;">Lifetime Suffering Weights</h4>
-                    
-                    <div class="slider-group" style="margin-top: 1rem;">
-                        <div class="slider-label">
-                            <span>Physical (ω_phys)</span>
-                            <span class="slider-value" id="omega-phys-value">1.0</span>
-                        </div>
-                        <input type="range" id="omega-phys-slider" min="0.3" max="2" step="0.1" value="1.0">
-                    </div>
-
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Psychological (ω_psych)</span>
-                            <span class="slider-value" id="omega-psych-value">1.0</span>
-                        </div>
-                        <input type="range" id="omega-psych-slider" min="0.3" max="2" step="0.1" value="1.0">
-                    </div>
-
-                    <div class="slider-group">
-                        <div class="slider-label">
-                            <span>Social (ω_social)</span>
-                            <span class="slider-value" id="omega-social-value">1.0</span>
-                        </div>
-                        <input type="range" id="omega-social-slider" min="0.3" max="2" step="0.1" value="1.0">
-                    </div>
-
-                    <div class="preset-buttons">
-                        <button class="preset-btn active" data-preset="balanced">Balanced</button>
-                        <button class="preset-btn" data-preset="physical">Physical Priority</button>
-                        <button class="preset-btn" data-preset="social">Social Priority</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 2rem;">
-                <h3 style="color: #f1f5f9;">Filter by Category</h3>
-                <div class="filter-pills">
-                    <div class="filter-pill active" data-group="all">All Foods</div>
-                    <div class="filter-pill" data-group="Seafood">Seafood</div>
-                    <div class="filter-pill" data-group="Bird">Birds</div>
-                    <div class="filter-pill" data-group="Mammal">Mammals</div>
-                    <div class="filter-pill" data-group="Products">Products (Eggs/Dairy/Honey)</div>
-                    <div class="filter-pill" data-group="Frontier">Frontier Foods</div>
-                </div>
-                
-                <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <button id="scale-toggle" style="padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid #6ee7b7; background: #064e3b; color: #6ee7b7; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                        Switch to Log Scale
-                    </button>
-                    <button id="uncertainty-toggle" style="padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid #6ee7b7; background: #064e3b; color: #6ee7b7; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                        Show Uncertainty
-                    </button>
-                </div>
-            </div>
-            
-            <div class="chart-container" style="height: 700px;">
-                <canvas id="harmChart"></canvas>
-            </div>
-            
-            <p style="font-size: 0.85rem; color: #64748b; margin-top: 1rem;">Click any bar to see how that species' harm score decomposes into its underlying components. Uncertainty bands show sensitivity to parameter estimates.</p>
-        </div>
-        
-        <div id="detail-panel" class="detail-panel" style="display: none;">
-            <div class="detail-header">
-                <div class="detail-title" id="detail-species-name">Wild Salmon</div>
-                <div class="detail-score">H = <span id="detail-h">0.039</span> <span id="detail-range" style="color: #94a3b8; font-size: 0.9rem;"></span></div>
-            </div>
-            
-            <p style="color: #94a3b8; margin-bottom: 1.5rem;">Group: <span id="detail-group" style="color: #6ee7b7; font-weight: 600;">Seafood</span></p>
-            
-            <div class="metrics-grid">
-                <div class="metric-chip">
-                    <div class="metric-label">Intensity (I)</div>
-                    <div class="metric-value" id="detail-I">0.55</div>
-                    <div class="metric-hint">Strength of valenced experience</div>
-                </div>
-                <div class="metric-chip">
-                    <div class="metric-label">Temporal Depth (T)</div>
-                    <div class="metric-value" id="detail-T">0.45</div>
-                    <div class="metric-hint">Memory, anticipation, integration</div>
-                </div>
-                <div class="metric-chip">
-                    <div class="metric-label">Lifetime Suffering (L)</div>
-                    <div class="metric-value" id="detail-L">0.8</div>
-                    <div class="metric-hint">Total chronic suffering across life</div>
-                </div>
-                <div class="metric-chip">
-                    <div class="metric-label">Death Process</div>
-                    <div class="metric-value" id="detail-D-process">2.0</div>
-                    <div class="metric-hint">Pain during dying</div>
-                </div>
-                <div class="metric-chip">
-                    <div class="metric-label">Death Deprivation</div>
-                    <div class="metric-value" id="detail-D-deprivation">1.0</div>
-                    <div class="metric-hint">Loss of future value</div>
-                </div>
-                <div class="metric-chip">
-                    <div class="metric-label">Individuals (N)</div>
-                    <div class="metric-value" id="detail-N">0.0625</div>
-                    <div class="metric-hint">Individuals per meal</div>
-                </div>
-            </div>
-            
-            <div class="decomposition-section">
-                <h3 style="margin-top: 0; font-size: 1rem; color: #94a3b8;">Lifetime Suffering Breakdown (L)</h3>
-                <div class="metrics-grid" style="margin-top: 1rem;">
-                    <div class="metric-chip">
-                        <div class="metric-label">Physical</div>
-                        <div class="metric-value" id="detail-L-phys">0.3</div>
-                        <div class="metric-hint">Injury, illness, chronic pain</div>
-                    </div>
-                    <div class="metric-chip">
-                        <div class="metric-label">Psychological</div>
-                        <div class="metric-value" id="detail-L-psych">0.3</div>
-                        <div class="metric-hint">Stress, fear, thwarted behaviors</div>
-                    </div>
-                    <div class="metric-chip">
-                        <div class="metric-label">Social</div>
-                        <div class="metric-value" id="detail-L-social">0.2</div>
-                        <div class="metric-hint">Isolation, broken bonds</div>
-                    </div>
-                </div>
-            </div>
-            
-            <p id="detail-description" style="color: #cbd5e1; font-size: 0.95rem; margin-top: 1.5rem; line-height: 1.7; padding: 1rem; background: #0a0f1e; border-radius: 8px; border: 1px solid #1e293b;"></p>
-        </div>
-        
-        <h2>The Results</h2>
-        
-        <p>When we apply the model with reasonable parameters, several non-obvious patterns emerge:</p>
-        
-        <div class="warning-box">
-            <h3 style="margin-top: 0; color: #f87171;">1. Shrimp is Catastrophically Bad (H = 10.1)</h3>
-            <p>Even though shrimp have lower experience quality (I×T = 0.14) than chickens (I×T = 0.42), you consume 15 per meal vs 0.096 chickens. They also die horrifically—often boiled alive. The numbers overwhelm the consciousness difference by orders of magnitude.</p>
-            <p><strong>If you accept linear aggregation (γ=1), shrimp is 54× worse than chicken.</strong> If you think aggregation has diminishing returns (γ=0.7), shrimp drops to ~6, which is still 32× worse than chicken.</p>
-            <p>This is the model's most controversial claim. It hinges on whether you think suffering scales linearly with numbers.</p>
-        </div>
-        
-        <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">2. All Mammals Beat All Poultry—Even Industrial vs Pasture</h3>
-            <p>This is the model's strongest and most actionable finding. Even <strong>industrial pork</strong> (I×T=0.81, L=2.4, N=0.002) beats <strong>pasture chicken</strong> (I×T=0.42, L=1.2, N=0.096) by 18×.</p>
-            
-            <p style="margin-top: 1rem;">Why? One pig yields 538 portions. One chicken yields 10 portions. That's a 54× difference in kill count. Even though pigs are twice as conscious and suffer twice as much in industrial farms, the arithmetic overwhelms it.</p>
-            
-            <p style="margin-top: 1rem;"><strong>Over a year:</strong> If you eat one meat meal daily, the chicken path kills 35 birds (consciousness-weighted: 14.7 units) while the pork path kills 0.7 pigs (consciousness-weighted: 0.6 units). That's a 25× difference.</p>
-            
-            <p style="margin-top: 1rem;">The "eat smaller animals" heuristic is completely backwards if numbers matter.</p>
-        </div>
-        
-        <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">3. Beef is the Best Meat (H = 0.001-0.002)</h3>
-            <p>Cows have rich conscious lives (I×T = 0.68), but you only consume 0.0008 cows per meal. One cow yields 1,280 portions—literally 3.5 years of daily beef meals. This absolutely dominates.</p>
-            
-            <p style="margin-top: 1rem;">Even <strong>feedlot beef</strong> (H = 0.002) beats <strong>pasture chicken</strong> (H = 0.123) by 62×. Grass-fed beef (H = 0.001) is 187× better than industrial chicken.</p>
-            
-            <p style="margin-top: 1rem;">If you eat meat and want to minimize harm: <strong>beef should be your default, then large fish, then pork, then poultry</strong>.</p>
-        </div>
-
-        <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">4. Wild-Caught Large Fish Are Excellent (H = 0.002-0.039)</h3>
-            <p>Tuna (H = 0.002) and wild salmon (H = 0.039) are comparable to beef. They have moderate consciousness, relatively natural lives, and low kill counts per meal.</p>
-            <p>One large tuna yields 320 portions. One salmon yields 16 portions. Combined with lower consciousness than mammals, these are genuinely low-harm options.</p>
-        </div>
-
-        <div class="insight-box">
-            <h3 style="margin-top: 0; color: #6ee7b7;">5. Animal Products Are Negligible (H = 0.001-0.013)</h3>
-            <p>Eggs (H = 0.007-0.013) and dairy (H = 0.001) have H scores roughly 15-200× better than eating the animals directly. Even battery cage eggs (H=0.013) beat most fish.</p>
-            
-            <p style="margin-top: 1rem;">This doesn't mean the hens don't suffer—they absolutely do. Battery cage conditions are horrific (L=3.0). But N=0.007 is so tiny that harm per meal barely registers.</p>
-            
-            <p style="margin-top: 1rem;"><strong>If you're reducing harm but not going vegan, prioritizing products over meat is extremely high-leverage.</strong></p>
-        </div>
-
-        <h2>Sanity Checks: Does This Model Make Sense?</h2>
-
-        <p>Before accepting these rankings, we should pressure-test them against other frameworks and intuitions:</p>
-
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">Test 1: Directional Agreement with RP</div>
-                <p>Rethink Priorities' welfare ranges rank mammals > birds > fish > invertebrates. Our model independently produces the same ordering when comparing within-category averages, despite measuring different things.</p>
-                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Same directional structure</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Test 2: Kill Count Dominance</div>
-                <p>Most people initially think chicken is better than beef (smaller minds). The model says beef is 100× better. This follows directly from N=0.0008 vs N=0.096—a parameter you can verify yourself by counting portions.</p>
-                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Tractable surprise from explicit math</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">Test 3: The Shrimp Result</div>
-                <p>Shrimp being 54× worse than chicken is driven by N=15 overwhelming modest I×T. This is either a crucial insight about aggregation ethics, or it reveals that linear aggregation (γ=1) is wrong. Tune γ to 0.7 and shrimp drops to 6× worse.</p>
-                <p style="margin-top: 1em; color: #64748b;">⚠ Mixed: Hinges on γ assumption</p>
-            </div>
-
-            <div class="comparison-card">
-                <div class="comparison-title">Test 4: Products vs. Meat</div>
-                <p>Eggs/dairy being 15-200× better than meat follows from N approaching zero. If you eat 12 eggs per week vs 3 chicken meals, you're consuming 0.024 "chicken equivalents" vs 0.29 chickens. That's a 12× difference in the arithmetic alone.</p>
-                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Independently verifiable</p>
-            </div>
-
-            <div class="comparison-card">
-                <div class="comparison-title">Test 5: Internal Consistency</div>
-                <p>Pasture chicken improves over industrial by 34% (0.187 → 0.123) because N stays constant and only L changes. Grass-fed beef improves by 35% (0.002 → 0.001) for the same reason. Sourcing improvements are proportional, as predicted.</p>
-                <p style="margin-top: 1em; color: #64748b;">✓ Passes: Internally coherent</p>
-            </div>
-        </div>
-
-        <div class="insight-box">
-            <strong style="color: #6ee7b7;">Net assessment:</strong> The rankings are driven primarily by N (kill count per meal), with consciousness quality (I×T) and welfare conditions (L) as secondary factors. The main uncertainty is γ (aggregation), which is philosophically debatable rather than empirically measurable. Where the model surprises (beef beats chicken, shrimp is catastrophic), the surprises follow from explicit parameters you can inspect and challenge.
-        </div>
-        
-        <h2>Full Data: All Species Evaluated</h2>
-        
-        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 2rem 0;">
-        <table id="full-table">
-            <thead>
-                <tr>
-                    <th>Species</th>
-                    <th>H</th>
-                    <th>Range</th>
-                    <th>I</th>
-                    <th>T</th>
-                    <th>L</th>
-                    <th>D_proc</th>
-                    <th>D_depr</th>
-                    <th>N (per meal)</th>
-                    <th>Verdict</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Populated by JavaScript -->
-            </tbody>
-        </table>
-        </div>
-        
-        <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem; font-style: italic;">* Sentience highly uncertain for these species</p>
-        
-        <h2>Deeper Questions This Framework Raises</h2>
-        
-        <p>This model is a tool for structured thinking, not final truth. It surfaces questions that resist easy answers:</p>
-        
-        <div class="comparison-grid">
-            <div class="comparison-card">
-                <div class="comparison-title">On Aggregation</div>
-                <p>This model assumes suffering scales with numbers raised to γ. But the right value of γ is an open ethical question. Linear aggregation (γ=1.0) treats all suffering as fungible. Diminishing returns (γ<1.0) suggests individual experiences have special weight. Explore this with the γ slider.</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">On Experience Decomposition</div>
-                <p>We've split experience into intensity (I) and temporal depth (T), but what if these aren't independent? What if certain types of temporal integration require threshold intensity levels? The I×T product is a simplification.</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">On Suffering Types</div>
-                <p>We decompose lifetime suffering into physical, psychological, and social components with separate weights (ω). But are these truly separable? Does chronic physical pain create psychological suffering we're double-counting?</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">On Death</div>
-                <p>We've separated death into process (pain of dying) and deprivation (loss of future). But does death harm an animal beyond these? The β and δ weights let you explore this, but the conceptual question remains open.</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">On The Dominance of N</div>
-                <p>With default parameters, N explains ~95% of variance in H. Is this model just an elaborate way of saying "count bodies"? Or does it provide value by making that calculation explicit and letting you adjust for consciousness quality?</p>
-            </div>
-            
-            <div class="comparison-card">
-                <div class="comparison-title">On Parameter Interactions</div>
-                <p>The model assumes I, T, and L components multiply cleanly. But what if suffering isn't compositional this way? What if high physical pain amplifies psychological stress non-linearly? Linear weights might be wrong, but exploring non-linear interactions would make the model intractable.</p>
-            </div>
-        </div>
-        
-        <div class="section-divider"></div>
-        
-        <div class="closing-reflection">
-            <h3 style="margin-top: 0; color: #f1f5f9;">What This Is (and Isn't)</h3>
-            <p>This framework emerged from a conversation between Cameron Berg and Claude Sonnet 4.5 about rational diet calibration for people who eat animals but want to minimize harm.</p>
-            
-            <p style="margin-top: 1rem;">In the US, ~5% of adults are vegetarian and ~3% vegan. Globally, 8-22% depending on region. The vast majority of people eat animals. This is for them.</p>
-            
-            <p style="margin-top: 1rem;">These estimates are a <strong>reasonable first approximation</strong>, not ground truth. The I and T values draw on empirical research but involve judgment. The L and D scores reflect available welfare data but are coarse. The α, β, δ, γ weights embody one set of commitments, not universal law.</p>
-            
-            <p style="margin-top: 1rem;">The model's value isn't in complex math—it's in making explicit a calculation most people don't naturally perform: <strong>how many fractional animals am I consuming per meal, adjusted for their consciousness quality and suffering?</strong></p>
-            
-            <p style="margin-top: 1rem;"><strong>Status:</strong> Useful framework. Not gospel. Can accommodate better data.</p>
-        </div>
+<header>
+  <div class="wrap">
+    <h1>For people who eat meat, <em>intend to keep eating it</em>, and would still rather know (and offset) the damage.</h1>
+    <p class="lede">About 95% of people eat meat and aren’t planning to stop. I’m one of them. I also care about not causing pointless suffering, and this is my attempt to take the first thing seriously without pretending the second isn’t true: measure the suffering behind common foods, add up my own diet, and find out what it costs to offset. You can use it to do the same for yours.</p>
+    <div class="topcredit">
+      <img class="topmark" alt="Reciprocal Research" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGsAAABQCAYAAAAeAotiAAAP0ElEQVR4nNWde5xVVRXHv/NgGEED8QEi6AA+eajZB8kHpJj4qkwUyTIzNd9ahr00zXxrmdXHzFeg+OKTkanlW8semvhESaE0Q0URBUVAZmBmbn+svVjrHM4Md+bes+9lfT73M7D3Pmf/9l5rr733WmvvU0M+VAPUAW1AwaVvCXwS2BUYAQwBNgM+ATQCDeGZFmAFsBR4F3gNeBF4Nvz9yL2zLvxtT9W1LiybAzsHPCMDlgFAX6A30COUbwE+Bj4AFgYs/wKeB2YDSzKwtHXQLyVRTQ7vqyUJdiRwMPBZYCekk7pLbcB84BngQeBh4E2XX4cxLQvLCOAAYF+EUQNLwALwBvAccD/wQPi/x1JWppWTWR7cRsAk4GhgD0RKPS1HOvl/wFvA+8goagmYGpDRthkwGGgCtgJ6pd7zIfAIcBPSYe0ZWPoBhwFHAbtnYPkQ6eQ3AqbFDgvIiO+LCNlgYOsOsCwFHgKmIoyDbIGpKNWGHwiTpgCvItKtv1XALOByZJRthamMYqgOYdgk4Fpgbur9BURFHoMwGmA74FJEIHy5ZQiDzwb2AbboAg6A+oDlUOAXiFpOY3kCmJzCX24t1mXyHX4UMI8k6HnAhYj6y6JapPGd/WoznmtEVNm1wNupOp9DBGI8MmJ9+lnAsE7a0h0s9cCewC+BBSksjwNjU3VUhLTiYcC9JEE+jajAtKqoD8/V0jVJU3WiHeppAHAK8M8UhqnAKOBMRMp9R9U4LDVlxLI58F2So7kNuBroE8qkn8mVFCzAl0lK7+vA8SQ7piOJLBVDHdDTpe0BHAK87PAsBA53ZRrIZ1FVR7LN/YDzkXlMsbyMjECINMJ8p19JUpJ/BWzi8vPU09pBAKOBOUArcAmywrsIaHbYZgKbhvJ5SraOWKUdgT85HM3AySEv13lMGbUBcJcD8DYi0Up5D3M/so9H9mOeKRuFvE8j85Tm/RvYLSJGX8cUksJzRUjv6nRQFGnn9EUmTb/qaQp59XlUnCI/v/zU4ViKzJFKujzvhSxCtNxy4AiHN2/SuQ1gHLJNUSzTXJmy9Zt2UG/gHySluDGUidVwrWuGwzEXsUJAUrX4eeE4kiPwdPeuGKT1NJFc6t8c0suiEv3keZ+rZLorE2OyVIHpSXLl+TiycYbsjvfqaBywyD07pZPn8iCtpx/wpMNxVblw6Auucy+/PaT5zXCepHNUPXCPw/F7bGSvS2BULe4MvOPe8c2QHothinNjxLaoOM4sFYc+eKp76aPYUjwWoxTH7Q7Hb139xeLQ94wkybCjUvl5kzJsILYfa0c2+T6/yy/cFbGRFRATUr+QHoNRYB14Mda5f8SEpas49H2jMJW4CtgrpMeyMCiOXZG5tB1ZVfeni+3SeaoReAlp0MrwYojXIK1nEsaop5CFjl++d5W0o/bEltMLEBthKe/tLo6jSap26EIfa0EvzbF1uy5nhyB+JJW8QS6/FMrqqIdCWkyjq+K42eE40uHolLSThmNS91jqxTFIgT6C2ddUp5cLhy46foZ11HdS9edNOpL7IC6aNmSUb0wR+y+VWF0er0RMJhBf/X0d68RLQlraF1UKqbrvgbhX2pH27kBcdZil7i9P5XX40DjM2/qTkBZrVOl+qi+i9tqRebOBfNSTty+uQtp8dyovBmldjyJtXob4/DoUGk18ODywCDF+xlqmgwnF2Zj62y+k5dV5WqeapdowG2JsbbIbsDrg+HlHGDRhdyyw5LyQFntUNSBOy3aSk35epHNDExKIUwB+HfIqMU/fhbT9A8RXBymNogVvRcC+jzjSYupurWcXTGCOYW0Ldp51q4VkNvFd8VrfXlj7dcGzpv0KdCDmLLvavSAWaV0TsV39p0Ja3gKjHoMfhrrfw3xzMRmm7XwCaf9shy0xHx2ORBS1IS7x2AEeWdby9sg4msPfXPxMRZDyYlqofxQyjxWAulosfEsl+lnEyAhxQ6gUx/yAowaxmhTIf2TpklmtNO8iIWqxSfv7bmTOqsHCEtYITxOyxygA3wtpUQM7sAVGIxLL0YYIjjrw8pJ0FYRtsAXGdSEtdh94PDMRAZ5DyrGrG9DVyNDzD8Uk7ZwpmLRfHNLKuSFW8ouXh0J9rVS+D2qAYzPwABLRWiDJxUrobF19NiBGW2WYBkyW24Kh77vA1XVlSKtUjJ8f6artTtLMeszVfINLqxR5sEuwqKD9Q3o5GOZH1LcxRs1CvNGVjqBVoX2BpPufbRDzRgEZelBZZoFJ9b6YGWgFcGBIL4VhPoztLIxR/6V8Vv1SSfFNRbA9r2lfJP6+phhSgZmIMawZ8+x2R/r9kvwSjFELEAOuvrfSpG0/DcG3BLEV8oOQsAgxzUMVBNEHUtATSEa3nufKFCtYyoQGkv6j/wDbpspUmhTHPqTc/tOw/VU1kjJsNMnYienYiZF1dbK+Y0vgr+4dT2FntKqFUWACOBTzK54E5uCrhGugWNLO3hYLNdBQtEGpMp78/DSW5IGBmUiIAFRfm1Wz9UbOjBWAy8AaXwlLc1fIh3H52MH5iLrQMllmq1OwZXABC1+G6pifOyMNAb8VLKT3gpBZrcyCJAMuxTq/BVmCK2kbGpHtiJZbjljyoXL2v2JJhUg134MgNqgC8SNUu0vebXMkyYXHdOxgwnjk7LHmvUK8gwnlIBXM32Hz6xr1oEdR1oeGgOHcBXElKFNmI5G3J7i0GVjM4/rSPmXWdKQNL2pYMohdcH2iVgT7C8ji4ZqQvhPiD2oFxiCHEr6E7FXqQvr6QKqiV4W/DWA+/xNC4voieZD0x/UFDiJ5rOZOxEcH+RiC8yTlg865c2uxEdUz85HqJb3zAmR19zoyJx2CTMogvqBXQ9pq4gb/lEqF8Ff5shrMWPr9kLg+jCzFOAT4MzaSliIBqiBhdAX3u8g9X237qizKXGDopit2jGB3yG9yP4cc8FZm3I3FTWiZw5B4Ci1zHxL8D9XdTkiGBq5Zuuum+JaQWa1S59WXBrao3SzLVqjM2I7ktQuvISF3vkw1k26KbwHbdD0aMqtRp6sANQK3YR2/CBlhkD0fKTN6Ate751YAX3PvrrbNcYfmJvWZzMMaV03glVGbkzTCPoNZyzsbIZ6Bp2HulgLwI1emmtrsDbm6Dz4RzEWyHLlIyheuNPlbbPxlJDMwI2wxqsx7hvdDopf0XddjYQzVwjDvfFVVPx7g8xjw8anClSTFMBxTBWvUQapMseTnMX9qfgamRquBYYrzWwi+xQTvwhDMvrZWuG6FSEd2E3JuSTtV7ZelzDPatr4kl/13YqvNSjNMhfAWzNdYqxnPhsS7QqFKqkGV8I1I+q7OCPk9KL0ztTN6IYcFtQ41WVVSWLVt9ciNoQXgN77AtYhefBObCyolXdqRd2CdeE5IKwej0vVsiNzipnUdn8qPTTpQRmCLoeN8gSMwsHuHtEqA9RteP59APtKu9Q3GDu99xDoOsuVM2s4zMF/ddr5AfyS2u4CcsfUPxSRVgU8iHTcfmVvytOlpOw/CTnxekcqLSd7p2I7NVzVg0nVPyHwV2UTGXsoqyOGYJ+CUkJZ3p2kfPIYdja0ko4YgN14XkJtQAer9UnVG+Pcw8j8amkUKdBTSUa1I59Vg1vW8SAXzvvB3EHY/YUxVqHVNRq4KbEUMuQCFWuyYyb3YHa8nY5ux2NTL1a0jLBYtDX/rqMwpmjbEyaj3c8xCPN+1QFttSKxDQqhvDw/th1wLp3kxSJmyADtbvD3x1HEBi8pdHH4eV95UF+o6GLnOogZbsidGt6rDodi9fLGt8MqQfoiBtp0QfpUzBl31bYDM1+3IBjnvetOkPHgqYHgL2WtmCqsCU+t0MzLZV+ICj2sChpXIfsPnlZtU3Z2ObRcOzrnONGk9hzgMZ6fwJUg5OwwbXfd09kAOpBi2xk62PJwjBq1vC2w0P0dck5O/6eYlZN5aiASzdjoFKIevwDg8MZWXN2k95zsMp4a0cjNM3zfT1TUhhSNvyjondloxGFTl9UV0pl78tAlxL4SsQxyNahtbicQHQvk6Mevyy6llrmNd5A8OLsOuU2igSA+AAp3M2iafWOFcimEMtnyfh9weVo45VBk1FrO/zUPC1mK5SdTHVkPyRm/9HEbRApOOrPHWhFgM0w4902G4n9JP72vbhmIBN83YQcJYo0r70d/rqOeZu6TuVeVtiljidYO6d3deVgJpPTdhDZoW0rrDMGXEZiQ9z19N1Zc3KaO89nqaEm5/04aNQ8weBeROJ11Kx2iYXyll+Z26Mo9qezYl+SWFc0N6bEaNw+IrlmBfH+q2itcGnIg17k3MZB+jgQq+D8nrtW/EJHBdDVSc/Uky6qpUft6kjBqDeTlasZsISlbB2pALsUa+gY2wGHOYMqM/yRMjd7LurzZo+vbIsR991l8mFmNBof20FxYFXcDOi5VNYPRF/j7ZRWSfOMyLfEia/+LA35GzworTjzZl8oEkI5o0lDoGbo9jIrbZV4M5lHlk+7BlfyVBC7ZKLHulGaSN3pDk1xP8UVWPFSRaV+fcVuy2lhiM8v1xDubcbAe+kVGmbOQ74XTsAsMCYnDVb4LUku/y189P/hteq5DFgjZ+N5Ij8D0sejeGM1MFYQjJM9BLkbtHYuBYU8EBJL9x+Dp2JznkyzS/Mf4KdtS2gBykG4OstvRDoY8hVgKPPw9MdSSF6USSH6uZg1liovnLtKJByOmNgvs9gH0uwpcvt6mqFju7NIDkB9hakFMxIzALOli4QrlxpDt+AvA3kv1yA3awL3rIgB81x5H8qmkb8AfEiek7R00sKoHFdpyOJPXg1qbyxiL7lEkkR/sSZDGR/pqrdnCpODzVA19AhNUzaS6m9qCC0c5eHQ1Avtv7EUmwTyNfGN0h6wWY+qjP+KXViqetkblTP8DWAvw41HMjyQMILUh8xbFYPH+aPBOycHTE0JHIESS/pSggt+Gch90eUA2RvkBSWnZAPta5mCT4j5H55DJEAodS/NHYHkgs3wTk5Mcj2KbST9y3YZ+YHR3+vyJV7gPkIshzkZE/iOLVUiMy9x2KfMZwFvYVJL8HvYDkx6rLMprKyWkdZRqAMxhZcEzG7p711IxI31uIQfV9pGNXIczpjbhm+iP7qIFYtLCnZxCvwB2IKgbpHMUxHLlJ7VCyR/cyRHUuCDgWI4LVhjCxN7LS3SK0aSBrC9lqRBDvQDbqSxwOXa6XTHkMS50D/GXIo5FR8RlEbXT1E+meFiEe1b8gI2SWy/Odk8bRgJx43B9ZAO2IhZt1lQoIc19ADjc8iPjesnCUjfLUobpzT9870R9h2Cikw5qQ+a4PErSiDW1BpH4hsul9BTmm8xLSUZ7qwzNZoXMd4RgccOyEmKK2Ctg+gag7HZ3NiIp9B9mevIzMT3OwCCiwuVf3n2Wn/wPCLVnezwGptQAAAABJRU5ErkJggg==">
+      <span class="bystack">
+        <span class="byname">Cameron Berg &amp; Claude Opus 4.8</span>
+        <span class="torg">Reciprocal Research</span>
+      </span>
     </div>
-    
-    <script>
-        const speciesData = [
-            {
-                species: "Shrimp",
-                group: "Seafood",
-                I: 0.48, I_low: 0.38, I_high: 0.58,
-                T: 0.30, T_low: 0.15, T_high: 0.45,
-                L_phys: 1.0, L_psych: 0.8, L_social: 0.7,
-                D_process: 3.0, D_deprivation: 0.3,
-                N: 15, N_low: 10, N_high: 20,
-                description: "15 shrimp per typical serving. Moderate pain capacity, often boiled alive. Low temporal integration but the numbers overwhelm consciousness differences."
-            },
-            {
-                species: "Crab / Lobster",
-                group: "Seafood",
-                I: 0.45, I_low: 0.35, I_high: 0.55,
-                T: 0.35, T_low: 0.20, T_high: 0.50,
-                L_phys: 0.7, L_psych: 0.6, L_social: 0.2,
-                D_process: 3.0, D_deprivation: 0.5,
-                N: 0.5, N_low: 0.4, N_high: 0.6,
-                description: "One crab/lobster yields ~2 meals. Often boiled alive, complex nociception. Evidence of pain learning and memory."
-            },
-            {
-                species: "Small Fish (Anchovy, Sardine)",
-                group: "Seafood",
-                I: 0.50, I_low: 0.35, I_high: 0.65,
-                T: 0.35, T_low: 0.20, T_high: 0.50,
-                L_phys: 0.3, L_psych: 0.3, L_social: 0.1,
-                D_process: 2.0, D_deprivation: 0.5,
-                N: 5, N_low: 4, N_high: 7,
-                description: "~5 small fish per meal. Wild-caught, massive trawl deaths. Natural lives but violent deaths."
-            },
-            {
-                species: "Chicken - Industrial",
-                group: "Bird",
-                I: 0.70, I_low: 0.60, I_high: 0.80,
-                T: 0.60, T_low: 0.50, T_high: 0.70,
-                L_phys: 1.2, L_psych: 0.8, L_social: 0.8,
-                D_process: 2.0, D_deprivation: 1.5,
-                N: 0.096, N_low: 0.08, N_high: 0.11,
-                description: "One chicken yields ~10 portions (5oz each). Fast growth breeds, extreme confinement, chronic pain from genetics. One of the worst poultry options."
-            },
-            {
-                species: "Chicken - Pasture-Raised",
-                group: "Bird",
-                I: 0.70, I_low: 0.60, I_high: 0.80,
-                T: 0.60, T_low: 0.50, T_high: 0.70,
-                L_phys: 0.4, L_psych: 0.4, L_social: 0.4,
-                D_process: 2.0, D_deprivation: 1.5,
-                N: 0.096, N_low: 0.08, N_high: 0.11,
-                description: "Natural behaviors, outdoor access, less chronic suffering. Same minds as industrial, better lives. Still N=0.096 per portion."
-            },
-            {
-                species: "Eggs - Battery Cage",
-                group: "Products",
-                I: 0.70, I_low: 0.60, I_high: 0.80,
-                T: 0.60, T_low: 0.50, T_high: 0.70,
-                L_phys: 1.3, L_psych: 0.9, L_social: 0.8,
-                D_process: 1.5, D_deprivation: 1.5,
-                N: 0.007, N_low: 0.006, N_high: 0.009,
-                description: "2 eggs per meal, hen lays ~300/year = 150 meals per hen. Extreme confinement stress + male chick culling, but tiny N makes harm per meal low."
-            },
-            {
-                species: "Eggs - Pasture-Raised",
-                group: "Products",
-                I: 0.70, I_low: 0.60, I_high: 0.80,
-                T: 0.60, T_low: 0.50, T_high: 0.70,
-                L_phys: 0.3, L_psych: 0.3, L_social: 0.2,
-                D_process: 1.5, D_deprivation: 1.5,
-                N: 0.007, N_low: 0.006, N_high: 0.009,
-                description: "Natural behaviors, outdoor access, minimal culling if small-scale. Among the lowest-harm animal foods."
-            },
-            {
-                species: "Turkey - Industrial",
-                group: "Bird",
-                I: 0.72, I_low: 0.62, I_high: 0.82,
-                T: 0.62, T_low: 0.52, T_high: 0.72,
-                L_phys: 1.1, L_psych: 0.7, L_social: 0.7,
-                D_process: 2.0, D_deprivation: 1.5,
-                N: 0.028, N_low: 0.025, N_high: 0.035,
-                description: "One turkey yields ~36 portions. Similar welfare issues to industrial chicken, but much better N due to size."
-            },
-            {
-                species: "Duck",
-                group: "Bird",
-                I: 0.73, I_low: 0.63, I_high: 0.83,
-                T: 0.63, T_low: 0.53, T_high: 0.73,
-                L_phys: 0.8, L_psych: 0.5, L_social: 0.5,
-                D_process: 2.0, D_deprivation: 1.5,
-                N: 0.11, N_low: 0.09, N_high: 0.13,
-                description: "One duck yields ~9 portions. Often raised in better conditions than chickens. Evidence of social learning and bonds."
-            },
-            {
-                species: "Octopus",
-                group: "Seafood",
-                I: 0.75, I_low: 0.60, I_high: 0.90,
-                T: 0.70, T_low: 0.55, T_high: 0.85,
-                L_phys: 0.5, L_psych: 0.4, L_social: 0.1,
-                D_process: 2.5, D_deprivation: 2.0,
-                N: 0.13, N_low: 0.10, N_high: 0.16,
-                description: "One octopus yields ~8 portions. Highly intelligent, complex problem-solving, mostly wild-caught. Distributed nervous system creates uncertainty."
-            },
-            {
-                species: "Pig - Industrial",
-                group: "Mammal",
-                I: 0.85, I_low: 0.75, I_high: 0.95,
-                T: 0.95, T_low: 0.85, T_high: 1.00,
-                L_phys: 0.8, L_psych: 0.6, L_social: 1.0,
-                D_process: 1.5, D_deprivation: 2.5,
-                N: 0.002, N_low: 0.0015, N_high: 0.0025,
-                description: "One pig yields ~538 portions. Highly intelligent, strong social bonds, often confined. Rich temporal integration - but tiny N overwhelms welfare concerns."
-            },
-            {
-                species: "Beef - Feedlot",
-                group: "Mammal",
-                I: 0.80, I_low: 0.70, I_high: 0.90,
-                T: 0.85, T_low: 0.75, T_high: 0.95,
-                L_phys: 0.5, L_psych: 0.3, L_social: 0.7,
-                D_process: 1.0, D_deprivation: 2.5,
-                N: 0.0008, N_low: 0.0006, N_high: 0.001,
-                description: "One cow yields ~1280 portions. Rich conscious lives, but enormous size = incredibly low kill count. Some confinement stress."
-            },
-            {
-                species: "Beef - Grass-Fed",
-                group: "Mammal",
-                I: 0.80, I_low: 0.70, I_high: 0.90,
-                T: 0.85, T_low: 0.75, T_high: 0.95,
-                L_phys: 0.2, L_psych: 0.2, L_social: 0.3,
-                D_process: 1.0, D_deprivation: 2.5,
-                N: 0.0008, N_low: 0.0006, N_high: 0.001,
-                description: "Natural grazing, minimal confinement, same incredibly low kill count. One of the best mammal options."
-            },
-            {
-                species: "Dairy - Factory",
-                group: "Products",
-                I: 0.80, I_low: 0.70, I_high: 0.90,
-                T: 0.85, T_low: 0.75, T_high: 0.95,
-                L_phys: 1.0, L_psych: 0.7, L_social: 0.8,
-                D_process: 1.0, D_deprivation: 2.5,
-                N: 0.0005, N_low: 0.0004, N_high: 0.0006,
-                description: "1 cup milk per meal, cow produces ~48,000 cups/year (accounting for culling). Chronic mastitis, repeated pregnancy/separation. But N is tiny."
-            },
-            {
-                species: "Dairy - Pasture",
-                group: "Products",
-                I: 0.80, I_low: 0.70, I_high: 0.90,
-                T: 0.85, T_low: 0.75, T_high: 0.95,
-                L_phys: 0.3, L_psych: 0.3, L_social: 0.4,
-                D_process: 1.0, D_deprivation: 2.5,
-                N: 0.0005, N_low: 0.0004, N_high: 0.0006,
-                description: "Grazing access, better health, still some calf separation. Much better than factory."
-            },
-            {
-                species: "Salmon - Farmed",
-                group: "Seafood",
-                I: 0.55, I_low: 0.45, I_high: 0.65,
-                T: 0.45, T_low: 0.35, T_high: 0.55,
-                L_phys: 0.9, L_psych: 0.7, L_social: 0.2,
-                D_process: 2.0, D_deprivation: 1.0,
-                N: 0.0625, N_low: 0.05, N_high: 0.08,
-                description: "One salmon yields ~16 portions. Sea lice, crowding, lesions, restricted movement. Pain affects feeding and behavior."
-            },
-            {
-                species: "Salmon - Wild",
-                group: "Seafood",
-                I: 0.55, I_low: 0.45, I_high: 0.65,
-                T: 0.45, T_low: 0.35, T_high: 0.55,
-                L_phys: 0.3, L_psych: 0.3, L_social: 0.2,
-                D_process: 2.0, D_deprivation: 1.0,
-                N: 0.0625, N_low: 0.05, N_high: 0.08,
-                description: "Natural life, migrations, predation stress but freedom. One of the better seafood options."
-            },
-            {
-                species: "Tilapia - Farmed",
-                group: "Seafood",
-                I: 0.48, I_low: 0.38, I_high: 0.58,
-                T: 0.38, T_low: 0.28, T_high: 0.48,
-                L_phys: 0.9, L_psych: 0.8, L_social: 0.1,
-                D_process: 2.0, D_deprivation: 0.8,
-                N: 0.37, N_low: 0.30, N_high: 0.45,
-                description: "One tilapia yields ~3 portions. High-density farming, poor water quality. Stress responses visible in cortisol levels."
-            },
-            {
-                species: "Catfish",
-                group: "Seafood",
-                I: 0.50, I_low: 0.40, I_high: 0.60,
-                T: 0.40, T_low: 0.30, T_high: 0.50,
-                L_phys: 0.7, L_psych: 0.7, L_social: 0.1,
-                D_process: 2.0, D_deprivation: 0.8,
-                N: 0.28, N_low: 0.22, N_high: 0.35,
-                description: "One catfish yields ~4 portions. Similar to tilapia farming conditions, some evidence of social learning."
-            },
-            {
-                species: "Cod / Whitefish",
-                group: "Seafood",
-                I: 0.52, I_low: 0.42, I_high: 0.62,
-                T: 0.42, T_low: 0.32, T_high: 0.52,
-                L_phys: 0.4, L_psych: 0.4, L_social: 0.1,
-                D_process: 2.0, D_deprivation: 1.0,
-                N: 0.21, N_low: 0.17, N_high: 0.25,
-                description: "One cod yields ~5 portions. Usually wild-caught, moderate welfare. Evidence of pain avoidance learning."
-            },
-            {
-                species: "Tuna - Large",
-                group: "Seafood",
-                I: 0.58, I_low: 0.48, I_high: 0.68,
-                T: 0.48, T_low: 0.38, T_high: 0.58,
-                L_phys: 0.3, L_psych: 0.3, L_social: 0.1,
-                D_process: 2.0, D_deprivation: 1.2,
-                N: 0.003, N_low: 0.002, N_high: 0.004,
-                description: "One large tuna yields ~320 portions. Wild-caught, enormous individuals, very low kill count. One of the best seafood options."
-            },
-            {
-                species: "Honey - Industrial",
-                group: "Products",
-                I: 0.20, I_low: 0.10, I_high: 0.30,
-                T: 0.15, T_low: 0.05, T_high: 0.25,
-                L_phys: 0.6, L_psych: 0.6, L_social: 0.3,
-                D_process: 0.3, D_deprivation: 0.1,
-                N: 0.001, N_low: 0.0008, N_high: 0.0012,
-                description: "Hive stress, queen clipping, disease. Evidence of learning but integration unclear. Very low N."
-            },
-            {
-                species: "Honey - Small-Scale",
-                group: "Products",
-                I: 0.20, I_low: 0.10, I_high: 0.30,
-                T: 0.15, T_low: 0.05, T_high: 0.25,
-                L_phys: 0.2, L_psych: 0.2, L_social: 0.1,
-                D_process: 0.3, D_deprivation: 0.1,
-                N: 0.001, N_low: 0.0008, N_high: 0.0012,
-                description: "Better hive management, less stress. Bees exhibit decision-making but sentience uncertain."
-            },
-            {
-                species: "Mussels / Oysters*",
-                group: "Frontier",
-                I: 0.15, I_low: 0.05, I_high: 0.25,
-                T: 0.10, T_low: 0.02, T_high: 0.18,
-                L_phys: 0.1, L_psych: 0.1, L_social: 0.0,
-                D_process: 0.5, D_deprivation: 0.1,
-                N: 8, N_low: 6, N_high: 12,
-                description: "~8 bivalves per meal. Minimal nervous system, mostly reflex. Sentience highly uncertain."
-            },
-            {
-                species: "Insects (Crickets, Mealworms)*",
-                group: "Frontier",
-                I: 0.12, I_low: 0.05, I_high: 0.20,
-                T: 0.08, T_low: 0.02, T_high: 0.15,
-                L_phys: 0.3, L_psych: 0.2, L_social: 0.0,
-                D_process: 0.5, D_deprivation: 0.1,
-                N: 50, N_low: 40, N_high: 70,
-                description: "~50 insects per meal. Nociception present but integration unclear. Sentience uncertain - precautionary approach warrants caution."
-            }
-        ];
-        
-        let currentFilter = 'all';
-        let selectedSpecies = null;
-        let chart = null;
-        let useLogScale = false;
-        let showUncertainty = false;
-        
-        function calculateL(data, omega_phys, omega_psych, omega_social) {
-            return omega_phys * data.L_phys + omega_psych * data.L_psych + omega_social * data.L_social;
-        }
-        
-        function calculateH(data, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, useRange = false) {
-            const results = data.map(d => {
-                const L = calculateL(d, omega_phys, omega_psych, omega_social);
-                
-                if (useRange) {
-                    const I_vals = [d.I_low, d.I, d.I_high];
-                    const T_vals = [d.T_low, d.T, d.T_high];
-                    const N_vals = [d.N_low, d.N, d.N_high];
-                    
-                    const H_low = Math.pow(N_vals[0], gamma) * I_vals[0] * T_vals[0] * 
-                        (alpha * L * 0.8 + beta * d.D_process * 0.8 + delta * d.D_deprivation * 0.8);
-                    const H_central = Math.pow(N_vals[1], gamma) * I_vals[1] * T_vals[1] * 
-                        (alpha * L + beta * d.D_process + delta * d.D_deprivation);
-                    const H_high = Math.pow(N_vals[2], gamma) * I_vals[2] * T_vals[2] * 
-                        (alpha * L * 1.2 + beta * d.D_process * 1.2 + delta * d.D_deprivation * 1.2);
-                    
-                    return {
-                        ...d,
-                        L: L,
-                        H: H_central,
-                        H_low: H_low,
-                        H_high: H_high
-                    };
-                } else {
-                    const H = Math.pow(d.N, gamma) * d.I * d.T * 
-                        (alpha * L + beta * d.D_process + delta * d.D_deprivation);
-                    
-                    return {
-                        ...d,
-                        L: L,
-                        H: H
-                    };
-                }
-            }).sort((a, b) => b.H - a.H);
-            
-            return results;
-        }
-        
-        function getFilteredData(data) {
-            if (currentFilter === 'all') return data;
-            return data.filter(d => d.group === currentFilter);
-        }
-        
-        function updateVisualization() {
-            const alpha = parseFloat(document.getElementById('alpha-slider').value);
-            const beta = parseFloat(document.getElementById('beta-slider').value);
-            const delta = parseFloat(document.getElementById('delta-slider').value);
-            const gamma = parseFloat(document.getElementById('gamma-slider').value);
-            const omega_phys = parseFloat(document.getElementById('omega-phys-slider').value);
-            const omega_psych = parseFloat(document.getElementById('omega-psych-slider').value);
-            const omega_social = parseFloat(document.getElementById('omega-social-slider').value);
-            
-            document.getElementById('alpha-value').textContent = alpha.toFixed(1);
-            document.getElementById('beta-value').textContent = beta.toFixed(1);
-            document.getElementById('delta-value').textContent = delta.toFixed(1);
-            document.getElementById('gamma-value').textContent = gamma.toFixed(1);
-            document.getElementById('omega-phys-value').textContent = omega_phys.toFixed(1);
-            document.getElementById('omega-psych-value').textContent = omega_psych.toFixed(1);
-            document.getElementById('omega-social-value').textContent = omega_social.toFixed(1);
-            
-            const results = calculateH(speciesData, alpha, beta, delta, gamma, omega_phys, omega_psych, omega_social, showUncertainty);
-            const filtered = getFilteredData(results);
-            
-            updateChart(filtered);
-            updateTable(results);
-            
-            if (selectedSpecies) {
-                const species = results.find(d => d.species === selectedSpecies);
-                if (species) {
-                    showDetailPanel(species);
-                }
-            }
-        }
-        
-        function updateChart(data) {
-            const ctx = document.getElementById('harmChart').getContext('2d');
-            
-            if (chart) {
-                chart.destroy();
-            }
-            
-            const scaleConfig = useLogScale ? {
-                type: 'logarithmic',
-                min: 0.0001,
-                ticks: { 
-                    color: '#94a3b8',
-                    callback: function(value) {
-                        if (value === 0.0001 || value === 0.001 || value === 0.01 || value === 0.1 || value === 1 || value === 10 || value === 100) {
-                            return value;
-                        }
-                        return '';
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'H (log scale)',
-                    color: '#94a3b8'
-                }
-            } : {
-                type: 'linear',
-                ticks: { 
-                    color: '#94a3b8'
-                },
-                title: {
-                    display: true,
-                    text: 'H',
-                    color: '#94a3b8'
-                }
-            };
-            
-            const datasets = [{
-                label: 'Harm per Meal',
-                data: data.map(d => d.H),
-                backgroundColor: data.map(d => {
-                    if (d.H > 10) return '#7f1d1d';
-                    if (d.H > 5) return '#991b1b';
-                    if (d.H > 2) return '#dc2626';
-                    if (d.H > 1) return '#f97316';
-                    if (d.H > 0.5) return '#f59e0b';
-                    if (d.H > 0.2) return '#eab308';
-                    if (d.H > 0.1) return '#84cc16';
-                    if (d.H > 0.01) return '#22c55e';
-                    return '#10b981';
-                }),
-                borderRadius: 8,
-                borderSkipped: false
-            }];
-            
-            if (showUncertainty) {
-                datasets.push({
-                    label: 'Lower Bound',
-                    data: data.map(d => d.H_low || d.H * 0.6),
-                    backgroundColor: 'rgba(148, 163, 184, 0.3)',
-                    borderRadius: 8,
-                    borderSkipped: false
-                });
-                datasets.push({
-                    label: 'Upper Bound',
-                    data: data.map(d => d.H_high || d.H * 1.4),
-                    backgroundColor: 'rgba(148, 163, 184, 0.3)',
-                    borderRadius: 8,
-                    borderSkipped: false
-                });
-            }
-            
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.map(d => d.species),
-                    datasets: datasets
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    onClick: (event, elements) => {
-                        if (elements.length > 0) {
-                            const index = elements[0].index;
-                            selectedSpecies = data[index].species;
-                            showDetailPanel(data[index]);
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#0f172a',
-                            borderColor: '#334155',
-                            borderWidth: 1,
-                            titleColor: '#e2e8f0',
-                            bodyColor: '#cbd5e1',
-                            callbacks: {
-                                label: (context) => {
-                                    if (context.datasetIndex === 0) {
-                                        return `H = ${context.parsed.x.toFixed(3)}`;
-                                    }
-                                    return '';
-                                },
-                                afterLabel: (context) => {
-                                    if (context.datasetIndex === 0) {
-                                        const d = data[context.dataIndex];
-                                        if (showUncertainty && d.H_low && d.H_high) {
-                                            return `Range: [${d.H_low.toFixed(3)} - ${d.H_high.toFixed(3)}]`;
-                                        }
-                                    }
-                                    return '';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ...scaleConfig,
-                            grid: { color: '#1e293b' }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { 
-                                color: '#cbd5e1',
-                                font: { size: 11 }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        
-        function updateTable(data) {
-            const tbody = document.getElementById('table-body');
-            
-            let html = '';
-            
-            data.forEach((d, index) => {
-                let verdict = 'Moderate';
-                if (d.H >= 10) verdict = 'Catastrophic';
-                else if (d.H >= 5) verdict = 'Very High';
-                else if (d.H >= 2) verdict = 'High';
-                else if (d.H >= 1) verdict = 'Moderate-High';
-                else if (d.H >= 0.5) verdict = 'Moderate';
-                else if (d.H >= 0.2) verdict = 'Moderate-Low';
-                else if (d.H >= 0.1) verdict = 'Low';
-                else if (d.H >= 0.01) verdict = 'Very Low';
-                else verdict = 'Negligible';
-                
-                let bgColor;
-                if (d.H >= 10) {
-                    bgColor = '#7f1d1d';
-                } else if (d.H >= 5) {
-                    bgColor = '#991b1b';
-                } else if (d.H >= 2) {
-                    bgColor = '#dc2626';
-                } else if (d.H >= 1) {
-                    bgColor = '#f97316';
-                } else if (d.H >= 0.5) {
-                    bgColor = '#f59e0b';
-                } else if (d.H >= 0.2) {
-                    bgColor = '#eab308';
-                } else if (d.H >= 0.1) {
-                    bgColor = '#84cc16';
-                } else if (d.H >= 0.01) {
-                    bgColor = '#22c55e';
-                } else {
-                    bgColor = '#10b981';
-                }
-                
-                const rangeStr = (d.H_low && d.H_high) ? 
-                    `[${d.H_low.toFixed(3)} - ${d.H_high.toFixed(3)}]` : 
-                    '—';
-                
-                html += `
-                    <tr style="background: ${bgColor};">
-                        <td><strong>${d.species}</strong></td>
-                        <td><strong>${d.H.toFixed(3)}</strong></td>
-                        <td style="font-size: 0.85em; color: #94a3b8;">${rangeStr}</td>
-                        <td>${d.I.toFixed(2)}</td>
-                        <td>${d.T.toFixed(2)}</td>
-                        <td>${d.L.toFixed(1)}</td>
-                        <td>${d.D_process.toFixed(1)}</td>
-                        <td>${d.D_deprivation.toFixed(1)}</td>
-                        <td>${d.N.toFixed(4)}</td>
-                        <td>${verdict}</td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
-        }
-        
-        function showDetailPanel(data) {
-            document.getElementById('detail-panel').style.display = 'block';
-            document.getElementById('detail-species-name').textContent = data.species;
-            document.getElementById('detail-h').textContent = data.H.toFixed(3);
-            
-            if (data.H_low && data.H_high) {
-                document.getElementById('detail-range').textContent = 
-                    `[${data.H_low.toFixed(3)} - ${data.H_high.toFixed(3)}]`;
-            } else {
-                document.getElementById('detail-range').textContent = '';
-            }
-            
-            document.getElementById('detail-group').textContent = data.group;
-            document.getElementById('detail-I').textContent = data.I.toFixed(2);
-            document.getElementById('detail-T').textContent = data.T.toFixed(2);
-            document.getElementById('detail-L').textContent = data.L.toFixed(1);
-            document.getElementById('detail-D-process').textContent = data.D_process.toFixed(1);
-            document.getElementById('detail-D-deprivation').textContent = data.D_deprivation.toFixed(1);
-            document.getElementById('detail-N').textContent = data.N.toFixed(4);
-            document.getElementById('detail-L-phys').textContent = data.L_phys.toFixed(1);
-            document.getElementById('detail-L-psych').textContent = data.L_psych.toFixed(1);
-            document.getElementById('detail-L-social').textContent = data.L_social.toFixed(1);
-            document.getElementById('detail-description').textContent = data.description || '';
-            
-            document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        // Event listeners
-        document.getElementById('alpha-slider').addEventListener('input', updateVisualization);
-        document.getElementById('beta-slider').addEventListener('input', updateVisualization);
-        document.getElementById('delta-slider').addEventListener('input', updateVisualization);
-        document.getElementById('gamma-slider').addEventListener('input', updateVisualization);
-        document.getElementById('omega-phys-slider').addEventListener('input', updateVisualization);
-        document.getElementById('omega-psych-slider').addEventListener('input', updateVisualization);
-        document.getElementById('omega-social-slider').addEventListener('input', updateVisualization);
-        
-        document.getElementById('scale-toggle').addEventListener('click', () => {
-            useLogScale = !useLogScale;
-            document.getElementById('scale-toggle').textContent = useLogScale ? 'Switch to Linear Scale' : 'Switch to Log Scale';
-            updateVisualization();
-        });
-        
-        document.getElementById('uncertainty-toggle').addEventListener('click', () => {
-            showUncertainty = !showUncertainty;
-            document.getElementById('uncertainty-toggle').textContent = showUncertainty ? 'Hide Uncertainty' : 'Show Uncertainty';
-            updateVisualization();
-        });
-        
-        document.querySelectorAll('.filter-pill').forEach(pill => {
-            pill.addEventListener('click', () => {
-                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-                pill.classList.add('active');
-                currentFilter = pill.dataset.group;
-                updateVisualization();
-            });
-        });
-        
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                const preset = btn.dataset.preset;
-                if (preset === 'balanced') {
-                    document.getElementById('omega-phys-slider').value = 1.0;
-                    document.getElementById('omega-psych-slider').value = 1.0;
-                    document.getElementById('omega-social-slider').value = 1.0;
-                } else if (preset === 'physical') {
-                    document.getElementById('omega-phys-slider').value = 1.5;
-                    document.getElementById('omega-psych-slider').value = 0.5;
-                    document.getElementById('omega-social-slider').value = 0.5;
-                } else if (preset === 'social') {
-                    document.getElementById('omega-phys-slider').value = 0.5;
-                    document.getElementById('omega-psych-slider').value = 0.5;
-                    document.getElementById('omega-social-slider').value = 1.5;
-                }
-                updateVisualization();
-            });
-        });
-        
-        // Initialize
-        updateVisualization();
-    </script>
+  </div>
+</header>
+
+<!-- ACT 1 -->
+<section class="act">
+  <div class="wrap">
+    <div class="actlabel">Part one</div>
+    <h2>The suffering behind a year of meals</h2>
+    <p class="sub">Each row is the suffering caused by eating one daily serving of that food for a year, measured in days an animal spends on a farm, weighted by how much that kind of animal can suffer. The shape is the range of credible estimates; the line is the middle. Tap a row to see the calculation.</p>
+
+    <div class="controls">
+      <div class="ctlblock">
+        <span class="vl">How much can a small animal suffer?</span>
+        <div class="seg" id="view">
+          <button data-v="rp" aria-pressed="true">best estimate</button>
+          <button data-v="flat">all equal</button>
+          <button data-v="neuron">by brain size</button>
+        </div>
+      </div>
+      <div class="ctlblock">
+        <span class="vl">Scale</span>
+        <div class="seg" id="scale">
+          <button data-v="lin">linear</button>
+          <button data-v="log" aria-pressed="true">log</button>
+        </div>
+      </div>
+    </div>
+    <div class="vexplain" id="vexplain"></div>
+
+    <div class="panel">
+      <div class="ptitle"><span class="t">Suffering · one daily serving · one year</span><span class="u" id="unit">weighted animal-days</span></div>
+      <div class="chart" id="hchart"></div>
+      <div class="breakdown" id="breakdown"></div>
+      <div class="haxis"><div></div><div class="haxinner" id="haxis"></div><div></div></div>
+      <div class="clab">The middle line is the median estimate. The shaded shape is the credible range, wider means more genuine uncertainty.</div>
+    </div>
+
+    <div class="insight">
+      <div class="it">One food sits in a category of its own.</div>
+      <p>Shrimp dwarfs everything because a kilogram of farmed shrimp is about <strong>94 animals</strong>, while a kilogram of beef is three one-thousandths of one cow. This log scale lets you compare the rest. Switch to <strong>linear</strong> for the unfiltered first impression, and use the moral-view buttons to see how much the ranking depends on how a small animal's suffering is weighed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACT 2 -->
+<section class="act">
+  <div class="wrap">
+    <div class="actlabel">Part two</div>
+    <h2>Your diet</h2>
+    <p class="sub">Pick a starting point, then adjust. The yearly total updates under the moral view you chose above.</p>
+
+    <div class="presetbar">
+      <span class="pl">Start from</span>
+      <button class="preset" data-preset="meat">meat-heavy</button>
+      <button class="preset" data-preset="balanced">balanced omnivore</button>
+      <button class="preset" data-preset="pescatarian">pescatarian</button>
+      <button class="preset" data-preset="light">light meat</button>
+      <button class="preset" data-preset="clear">clear</button>
+    </div>
+
+    <div class="panel">
+      <div class="dietgrid" id="dietgrid"></div>
+      <div class="total">
+        <div class="tk">Your yearly footprint</div>
+        <div class="tv"><span id="totDays">0</span><small> weighted animal-days of suffering</small></div>
+        <div class="tb" id="totB">Pick a starting point above, or add servings.</div>
+      </div>
+    </div>
+
+    <div class="servinfo">
+      <b>What's a serving?</b> Roughly one restaurant portion: ≈140&nbsp;g (5&nbsp;oz) of cooked meat or fish, 2 eggs, or a cup of dairy. A shrimp serving is ~10–12 shrimp; a salmon fillet is one serving. Count how many times in a week each food shows up on your plate.
+    </div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section class="act">
+  <div class="wrap">
+    <div class="actlabel">Part three</div>
+    <h2>Estimating what it costs to offset</h2>
+    <p class="sub">The most effective animal charities reduce suffering remarkably cheaply. The conversion from your footprint to dollars is approximate, so this is a range.</p>
+
+    <div class="caveat">
+      <p>An offset doesn't undo the harm. The animals in your diet are still farmed and killed, and nothing here changes that. It works the way a flight offset does. Someone worried about climate doesn't always stop flying, but they can fund enough emissions cuts elsewhere to balance the ledger. This balances a different ledger, measured in suffering rather than carbon, and it makes no claim to absolve.</p>
+    </div>
+
+    <div class="offset">
+      <div class="obody">
+        <div class="ambition">
+          <div class="top"><span class="lab">Ambition</span><span class="val" id="ambval">match your footprint (1×)</span></div>
+          <input type="range" id="ambition" min="1" max="10" step="1" value="1">
+          <div class="ratiomarks" id="ratiomarks"></div>
+        </div>
+        <div class="bignum">
+          <div class="n" id="offsetDollar">$0.00<small>/mo</small></div>
+          <div class="cap" id="offsetCap">Set your diet above to see the cost.</div>
+        </div>
+        <div class="charities" id="charities"></div>
+        <details style="margin-top:18px">
+          <summary>Why it's a range, and why it's this cheap</summary>
+          <div class="b">
+            <p>Your footprint is in suffering-days; charities avert suffering in their own units (a hen out of a cage, a shrimp given a fast death), so the conversion can't be exact. We use conservative published cost-effectiveness figures and show a range. It's cheap because these are among the most cost-effective suffering reductions anyone has measured, not because the suffering is small. Moving the slider past 1× funds more good than your diet costs.</p>
+            <p class="tiny">Anchors: Shrimp Welfare Project ≈1,500 shrimp/$; The Humane League ≈10 hen-years cage-free/$; EA Animal Welfare Fund. Conversion ≈60–300 suffering-days averted per dollar.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+    <p class="small" style="margin-top:16px">U.S. donations to these groups are tax-deductible.</p>
+  </div>
+</section>
+
+<section class="act">
+  <div class="wrap">
+    <div class="actlabel">Reading the results</div>
+    <h2>What holds up</h2>
+    <p><strong>Robust across every moral view:</strong> small aquatic animals cause by far the most suffering per gram of protein; large mammals the least; and changing species matters far more than changing how a species is farmed.</p>
+    <p><strong>Genuinely uncertain:</strong> exactly how much worse shrimp is than chicken, roughly 13× to 55× depending on how you read the welfare evidence. That it's worse is settled; by how much is not.</p>
+    <details>
+      <summary>What the three moral views mean, and which to pick</summary>
+      <div class="b">
+        <p><b>Best estimate</b> uses Rethink Priorities' welfare ranges, their considered guess at how much each species can suffer relative to a human. If you don't have a strong view, use this. <b>All equal</b> counts every sentient animal the same, the most cautious stance about dismissing small minds; it pushes small animals up. <b>By brain size</b> discounts animals with fewer neurons hardest, the most skeptical published position. The three bracket the honest range of expert opinion; the conclusions that survive all three are the ones to trust.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Sources</summary>
+      <div class="b">
+        <p>Quantity (lives and days per kg): Faunalytics Animal Product Impact Scales 2026 (osf.io/8pv96), including pre-slaughter deaths and feed-fish. Welfare ranges and their uncertainty: Rethink Priorities Moral Weight Project public posteriors. Charity cost-effectiveness: Shrimp Welfare Project, The Humane League, EA Animal Welfare Fund / Animal Charity Evaluators.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="small">A structured-thinking tool, not the final word. Its purpose is to show which dietary intuitions hold up under the real numbers, and what can be done about the ones that don't.</p>
+  </div>
+</footer>
+
+<script id="DATA" type="application/json">{"faunalytics": {"Shrimp": {"lives": 94.319, "days": 9917.6, "protein": 20, "rp": "shrimp", "sev": 0.65, "days_conf": true, "serving_g": 110}, "Crab/lobster": {"lives": 2.45, "days": 2.45, "protein": 19, "rp": "crabs", "sev": 0.4, "days_conf": false, "serving_g": 110}, "Fish (farmed)": {"lives": 2.268, "days": 82.1, "protein": 20, "rp": "salmon", "sev": 0.55, "days_conf": true, "serving_g": 140}, "Chicken": {"lives": 0.665, "days": 28.72, "protein": 27, "rp": "chickens", "sev": 0.75, "days_conf": true, "serving_g": 140}, "Pork": {"lives": 0.419, "days": 2.238, "protein": 27, "rp": "pigs", "sev": 0.8, "days_conf": true, "serving_g": 140}, "Eggs": {"lives": 0.163, "days": 27.97, "protein": 13, "rp": "chickens", "sev": 0.7, "days_conf": true, "serving_g": 100}, "Turkey": {"lives": 0.088, "days": 11.47, "protein": 29, "rp": "chickens", "sev": 0.65, "days_conf": true, "serving_g": 140}, "Beef": {"lives": 0.00299, "days": 3.094, "protein": 26, "rp": "cows", "sev": 0.4, "days_conf": true, "serving_g": 140}, "Dairy": {"lives": 4.31e-05, "days": 0.0378, "protein": 3.4, "rp": "cows", "sev": 0.55, "days_conf": true, "serving_g": 240}}, "rp_wr": {"mixture": {"pigs": {"mean": 0.592, "p5": 0.22, "p50": 0.624, "p95": 1.144}, "chickens": {"mean": 0.42, "p5": 0.103, "p50": 0.444, "p95": 0.998}, "bees": {"mean": 0.352, "p5": 0.047, "p50": 0.398, "p95": 0.815}, "octopuses": {"mean": 0.482, "p5": 0.054, "p50": 0.377, "p95": 1.949}, "carp": {"mean": 0.439, "p5": 0.048, "p50": 0.376, "p95": 1.592}, "salmon": {"mean": 0.343, "p5": 0.019, "p50": 0.28, "p95": 1.353}, "crayfish": {"mean": 0.305, "p5": 0.01, "p50": 0.212, "p95": 1.405}, "shrimp": {"mean": 0.481, "p5": 0.004, "p50": 0.177, "p95": 3.028}, "crabs": {"mean": 0.237, "p5": 0.004, "p50": 0.143, "p95": 1.189}, "bsf": {"mean": 0.17, "p5": 0.001, "p50": 0.095, "p95": 0.856}, "silkworms": {"mean": 0.245, "p5": 0.001, "p50": 0.091, "p95": 1.401}}, "neuron_count": {"pigs": {"mean": 0.523, "p5": 0.005, "p50": 0.589, "p95": 1.116}, "chickens": {"mean": 0.373, "p5": 0.002, "p50": 0.417, "p95": 0.974}, "bees": {"mean": 0.318, "p5": 0.0, "p50": 0.373, "p95": 0.8}, "octopuses": {"mean": 0.447, "p5": 0.005, "p50": 0.356, "p95": 1.945}, "carp": {"mean": 0.389, "p5": 0.0, "p50": 0.348, "p95": 1.493}, "salmon": {"mean": 0.3, "p5": 0.0, "p50": 0.26, "p95": 1.29}, "crayfish": {"mean": 0.265, "p5": 0.0, "p50": 0.19, "p95": 1.313}, "shrimp": {"mean": 0.439, "p5": 0.0, "p50": 0.156, "p95": 2.865}, "crabs": {"mean": 0.219, "p5": 0.0, "p50": 0.132, "p95": 1.171}, "bsf": {"mean": 0.149, "p5": 0.0, "p50": 0.078, "p95": 0.796}, "silkworms": {"mean": 0.217, "p5": 0.0, "p50": 0.073, "p95": 1.334}}, "cubic": {"pigs": {"mean": 0.26, "p5": 0.163, "p50": 0.259, "p95": 0.366}, "chickens": {"mean": 0.126, "p5": 0.077, "p50": 0.124, "p95": 0.18}, "octopuses": {"mean": 0.067, "p5": 0.035, "p50": 0.065, "p95": 0.106}, "bees": {"mean": 0.06, "p5": 0.031, "p50": 0.059, "p95": 0.095}, "carp": {"mean": 0.06, "p5": 0.029, "p50": 0.058, "p95": 0.098}, "salmon": {"mean": 0.024, "p5": 0.012, "p50": 0.024, "p95": 0.037}, "crayfish": {"mean": 0.014, "p5": 0.005, "p50": 0.013, "p95": 0.024}, "shrimp": {"mean": 0.006, "p5": 0.002, "p50": 0.006, "p95": 0.012}, "crabs": {"mean": 0.006, "p5": 0.002, "p50": 0.006, "p95": 0.011}, "bsf": {"mean": 0.002, "p5": 0.0, "p50": 0.002, "p95": 0.004}, "silkworms": {"mean": 0.002, "p5": 0.0, "p50": 0.002, "p95": 0.004}}, "qualitative": {"pigs": {"mean": 0.662, "p5": 0.569, "p50": 0.665, "p95": 0.747}, "chickens": {"mean": 0.481, "p5": 0.412, "p50": 0.481, "p95": 0.545}, "bees": {"mean": 0.442, "p5": 0.356, "p50": 0.444, "p95": 0.522}, "carp": {"mean": 0.398, "p5": 0.316, "p50": 0.4, "p95": 0.476}, "octopuses": {"mean": 0.381, "p5": 0.31, "p50": 0.381, "p95": 0.448}, "salmon": {"mean": 0.295, "p5": 0.238, "p50": 0.295, "p95": 0.347}, "crayfish": {"mean": 0.229, "p5": 0.172, "p50": 0.23, "p95": 0.284}, "shrimp": {"mean": 0.193, "p5": 0.138, "p50": 0.192, "p95": 0.246}, "crabs": {"mean": 0.152, "p5": 0.11, "p50": 0.152, "p95": 0.191}, "bsf": {"mean": 0.117, "p5": 0.072, "p50": 0.117, "p95": 0.158}, "silkworms": {"mean": 0.11, "p5": 0.068, "p50": 0.113, "p95": 0.149}}, "undiluted": {"shrimp": {"mean": 2.733, "p5": 1.25, "p50": 2.246, "p95": 5.956}, "octopuses": {"mean": 1.842, "p5": 1.17, "p50": 1.729, "p95": 2.852}, "carp": {"mean": 1.5, "p5": 0.942, "p50": 1.42, "p95": 2.306}, "salmon": {"mean": 1.295, "p5": 0.852, "p50": 1.236, "p95": 1.905}, "crayfish": {"mean": 1.305, "p5": 0.709, "p50": 1.201, "p95": 2.266}, "pigs": {"mean": 1.104, "p5": 0.816, "p50": 1.079, "p95": 1.468}, "silkworms": {"mean": 1.369, "p5": 0.421, "p50": 1.076, "p95": 3.43}, "crabs": {"mean": 1.163, "p5": 0.582, "p50": 1.063, "p95": 2.06}, "chickens": {"mean": 0.959, "p5": 0.693, "p50": 0.941, "p95": 1.282}, "bsf": {"mean": 0.914, "p5": 0.323, "p50": 0.865, "p95": 1.715}, "bees": {"mean": 0.829, "p5": 0.492, "p50": 0.814, "p95": 1.225}}, "higher_lower": {"pigs": {"mean": 0.386, "p5": 0.259, "p50": 0.386, "p95": 0.513}, "chickens": {"mean": 0.219, "p5": 0.147, "p50": 0.219, "p95": 0.294}, "bees": {"mean": 0.127, "p5": 0.07, "p50": 0.126, "p95": 0.188}, "carp": {"mean": 0.122, "p5": 0.064, "p50": 0.12, "p95": 0.184}, "octopuses": {"mean": 0.119, "p5": 0.063, "p50": 0.117, "p95": 0.181}, "salmon": {"mean": 0.067, "p5": 0.035, "p50": 0.066, "p95": 0.098}, "crayfish": {"mean": 0.03, "p5": 0.011, "p50": 0.03, "p95": 0.05}, "shrimp": {"mean": 0.023, "p5": 0.009, "p50": 0.022, "p95": 0.039}, "crabs": {"mean": 0.023, "p5": 0.009, "p50": 0.022, "p95": 0.039}, "bsf": {"mean": 0.016, "p5": 0.005, "p50": 0.017, "p95": 0.028}, "silkworms": {"mean": 0.013, "p5": 0.003, "p50": 0.012, "p95": 0.027}}, "pleasure_pain": {"pigs": {"mean": 0.668, "p5": 0.529, "p50": 0.662, "p95": 0.783}, "carp": {"mean": 0.53, "p5": 0.381, "p50": 0.533, "p95": 0.653}, "octopuses": {"mean": 0.52, "p5": 0.403, "p50": 0.527, "p95": 0.623}, "chickens": {"mean": 0.457, "p5": 0.354, "p50": 0.462, "p95": 0.56}, "salmon": {"mean": 0.424, "p5": 0.305, "p50": 0.425, "p95": 0.523}, "bees": {"mean": 0.426, "p5": 0.28, "p50": 0.42, "p95": 0.559}, "crayfish": {"mean": 0.313, "p5": 0.222, "p50": 0.322, "p95": 0.423}, "shrimp": {"mean": 0.304, "p5": 0.192, "p50": 0.304, "p95": 0.406}, "crabs": {"mean": 0.24, "p5": 0.146, "p50": 0.251, "p95": 0.308}, "silkworms": {"mean": 0.138, "p5": 0.062, "p50": 0.155, "p95": 0.216}, "bsf": {"mean": 0.116, "p5": 0.052, "p50": 0.113, "p95": 0.165}}, "hc_cubic": {"pigs": {"mean": 0.313, "p5": 0.171, "p50": 0.304, "p95": 0.439}, "chickens": {"mean": 0.134, "p5": 0.075, "p50": 0.13, "p95": 0.206}, "octopuses": {"mean": 0.079, "p5": 0.037, "p50": 0.073, "p95": 0.127}, "carp": {"mean": 0.072, "p5": 0.033, "p50": 0.068, "p95": 0.121}, "bees": {"mean": 0.07, "p5": 0.029, "p50": 0.063, "p95": 0.118}, "salmon": {"mean": 0.029, "p5": 0.013, "p50": 0.025, "p95": 0.043}, "crayfish": {"mean": 0.015, "p5": 0.005, "p50": 0.017, "p95": 0.03}, "shrimp": {"mean": 0.008, "p5": 0.002, "p50": 0.006, "p95": 0.013}, "crabs": {"mean": 0.007, "p5": 0.002, "p50": 0.006, "p95": 0.013}, "bsf": {"mean": 0.002, "p5": 0.0, "p50": 0.001, "p95": 0.005}, "silkworms": {"mean": 0.002, "p5": 0.0, "p50": 0.001, "p95": 0.003}}}, "rp_sent": {"pigs": {"mean": 0.921, "p5": 0.732, "p50": 0.966, "p95": 0.99}, "cows": {"mean": 0.901, "p5": 0.703, "p50": 0.931, "p95": 0.99}, "chickens": {"mean": 0.865, "p5": 0.616, "p50": 0.888, "p95": 0.99}, "octopuses": {"mean": 0.769, "p5": 0.431, "p50": 0.758, "p95": 0.99}, "bees": {"mean": 0.452, "p5": 0.037, "p50": 0.409, "p95": 0.877}, "carp": {"mean": 0.452, "p5": 0.08, "p50": 0.327, "p95": 0.907}, "fruit_flies": {"mean": 0.445, "p5": 0.067, "p50": 0.326, "p95": 0.907}, "salmon": {"mean": 0.446, "p5": 0.076, "p50": 0.323, "p95": 0.897}, "crayfish": {"mean": 0.445, "p5": 0.081, "p50": 0.321, "p95": 0.894}, "crabs": {"mean": 0.424, "p5": 0.077, "p50": 0.306, "p95": 0.848}, "bsf": {"mean": 0.289, "p5": 0.083, "p50": 0.219, "p95": 0.575}, "ants": {"mean": 0.268, "p5": 0.029, "p50": 0.209, "p95": 0.519}, "spiders": {"mean": 0.238, "p5": 0.015, "p50": 0.194, "p95": 0.49}, "cockroaches": {"mean": 0.259, "p5": 0.017, "p50": 0.18, "p95": 0.558}, "earthworms": {"mean": 0.085, "p5": 0.002, "p50": 0.042, "p95": 0.249}, "sea_hares": {"mean": 0.133, "p5": 0.002, "p50": 0.042, "p95": 0.398}, "silkworms": {"mean": 0.081, "p5": 0.002, "p50": 0.039, "p95": 0.235}, "c_elegans": {"mean": 0.069, "p5": 0.0, "p50": 0.004, "p95": 0.272}}, "wr_models": ["mixture", "neuron_count", "cubic", "qualitative", "undiluted", "higher_lower", "pleasure_pain", "hc_cubic"], "offset": {"charities": [{"name": "Shrimp Welfare Project", "url": "https://www.shrimpwelfareproject.org/donate", "per_dollar": "~1,500 shrimp given a less painful death / $", "note": "Highest raw leverage; targets the exact animals this calculator ranks worst.", "sd_per_dollar_low": 80, "sd_per_dollar_high": 300}, {"name": "The Humane League", "url": "https://thehumaneleague.org/take-action/ways-to-give", "per_dollar": "~10 hen-years shifted cage-free / $", "note": "Proven corporate campaigns; closest lever to your own egg & chicken footprint.", "sd_per_dollar_low": 150, "sd_per_dollar_high": 600}, {"name": "EA Animal Welfare Fund", "url": "https://www.givingwhatwecan.org/charities/ea-animal-welfare-fund", "per_dollar": "expert-allocated across the best opportunities", "note": "Hands the allocation to specialists; good default if you don't want to choose.", "sd_per_dollar_low": 100, "sd_per_dollar_high": 500}], "default_sd_per_dollar": 150}, "dens": {"Shrimp": {"rp": {"p5": 226.91468800000004, "p50": 10040.974944000001, "p95": 171774.41881600002, "xs": [113.457, 133.918, 158.068, 186.573, 220.218, 259.931, 306.806, 362.134, 427.439, 504.522, 595.504, 702.895, 829.651, 979.266, 1155.862, 1364.304, 1610.335, 1900.735, 2243.504, 2648.085, 3125.628, 3689.287, 4354.594, 5139.879, 6066.779, 7160.83, 8452.178, 9976.4, 11775.493, 13899.024, 16405.503, 19363.987, 22855.988, 26977.72, 31842.743, 37585.099, 44363.002, 52363.198, 61806.107, 72951.903, 86107.673, 101635.888, 119964.38, 141598.139, 167133.219, 197273.163, 232848.39, 274839.07], "ys": [0.084, 0.101, 0.12, 0.141, 0.166, 0.193, 0.223, 0.257, 0.293, 0.332, 0.374, 0.419, 0.465, 0.513, 0.562, 0.612, 0.662, 0.711, 0.758, 0.804, 0.846, 0.884, 0.918, 0.946, 0.969, 0.986, 0.996, 1.0, 0.997, 0.987, 0.971, 0.948, 0.92, 0.887, 0.849, 0.807, 0.762, 0.715, 0.666, 0.616, 0.566, 0.517, 0.469, 0.422, 0.378, 0.336, 0.296, 0.26]}, "flat": {"p5": 39710.070400000004, "p50": 51055.804800000005, "p95": 62401.539200000014, "xs": [19855.035, 20549.205, 21267.643, 22011.2, 22780.753, 23577.211, 24401.515, 25254.637, 26137.587, 27051.406, 27997.174, 28976.008, 29989.064, 31037.538, 32122.668, 33245.737, 34408.071, 35611.041, 36856.07, 38144.628, 39478.236, 40858.469, 42286.958, 43765.389, 45295.51, 46879.126, 48518.108, 50214.392, 51969.982, 53786.95, 55667.443, 57613.681, 59627.964, 61712.67, 63870.26, 66103.285, 68414.38, 70806.275, 73281.796, 75843.865, 78495.509, 81239.859, 84080.157, 87019.758, 90062.132, 93210.873, 96469.701, 99842.463], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 1e-06, "p50": 8849.672832, "p95": 162527.64528000003, "xs": [0.001, 0.002, 0.002, 0.003, 0.005, 0.008, 0.012, 0.018, 0.027, 0.041, 0.062, 0.093, 0.141, 0.213, 0.321, 0.485, 0.732, 1.106, 1.67, 2.522, 3.81, 5.753, 8.689, 13.122, 19.817, 29.929, 45.199, 68.262, 103.091, 155.691, 235.129, 355.1, 536.283, 809.911, 1223.154, 1847.245, 2789.768, 4213.196, 6362.902, 9609.455, 14512.503, 21917.241, 33100.11, 49988.833, 75494.715, 114014.506, 172188.312, 260044.232], "ys": [0.125, 0.139, 0.154, 0.17, 0.188, 0.207, 0.226, 0.248, 0.27, 0.294, 0.318, 0.344, 0.371, 0.399, 0.428, 0.458, 0.488, 0.519, 0.55, 0.582, 0.614, 0.646, 0.677, 0.709, 0.739, 0.769, 0.798, 0.825, 0.851, 0.876, 0.899, 0.919, 0.938, 0.955, 0.969, 0.98, 0.989, 0.996, 0.999, 1.0, 0.998, 0.993, 0.986, 0.976, 0.963, 0.948, 0.931, 0.911]}}, "Crab/lobster": {"rp": {"p5": 0.05605600000000001, "p50": 2.004002, "p95": 16.662646000000002, "xs": [0.028, 0.032, 0.038, 0.043, 0.05, 0.058, 0.067, 0.078, 0.09, 0.104, 0.121, 0.14, 0.161, 0.187, 0.216, 0.25, 0.289, 0.335, 0.387, 0.448, 0.519, 0.6, 0.695, 0.804, 0.93, 1.076, 1.245, 1.441, 1.667, 1.929, 2.232, 2.582, 2.988, 3.457, 4.0, 4.629, 5.356, 6.197, 7.171, 8.297, 9.6, 11.109, 12.854, 14.873, 17.209, 19.913, 23.041, 26.66], "ys": [0.048, 0.059, 0.071, 0.086, 0.104, 0.124, 0.146, 0.172, 0.201, 0.233, 0.268, 0.306, 0.347, 0.391, 0.437, 0.486, 0.535, 0.586, 0.637, 0.688, 0.737, 0.785, 0.829, 0.87, 0.907, 0.938, 0.963, 0.982, 0.995, 1.0, 0.998, 0.99, 0.974, 0.952, 0.924, 0.89, 0.851, 0.809, 0.763, 0.714, 0.664, 0.613, 0.562, 0.512, 0.462, 0.415, 0.37, 0.327]}, "flat": {"p5": 9.809800000000001, "p50": 12.6126, "p95": 15.415400000000002, "xs": [4.905, 5.076, 5.254, 5.438, 5.628, 5.824, 6.028, 6.239, 6.457, 6.683, 6.916, 7.158, 7.408, 7.667, 7.935, 8.213, 8.5, 8.797, 9.105, 9.423, 9.753, 10.093, 10.446, 10.812, 11.19, 11.581, 11.986, 12.405, 12.838, 13.287, 13.752, 14.233, 14.73, 15.245, 15.778, 16.33, 16.901, 17.492, 18.103, 18.736, 19.391, 20.069, 20.771, 21.497, 22.249, 23.026, 23.831, 24.665], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 1e-06, "p50": 1.8498480000000002, "p95": 16.410394, "xs": [0.001, 0.001, 0.002, 0.002, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.009, 0.011, 0.013, 0.017, 0.021, 0.026, 0.032, 0.04, 0.049, 0.061, 0.076, 0.094, 0.117, 0.145, 0.181, 0.224, 0.278, 0.346, 0.429, 0.533, 0.662, 0.822, 1.021, 1.267, 1.574, 1.954, 2.426, 3.013, 3.741, 4.645, 5.768, 7.163, 8.894, 11.044, 13.714, 17.029, 21.145, 26.257], "ys": [0.33, 0.351, 0.373, 0.396, 0.419, 0.443, 0.468, 0.493, 0.518, 0.544, 0.57, 0.596, 0.622, 0.648, 0.673, 0.699, 0.724, 0.749, 0.773, 0.796, 0.819, 0.841, 0.861, 0.881, 0.899, 0.916, 0.932, 0.946, 0.959, 0.97, 0.98, 0.987, 0.993, 0.997, 1.0, 1.0, 0.999, 0.995, 0.99, 0.984, 0.975, 0.965, 0.953, 0.939, 0.924, 0.908, 0.89, 0.871]}}, "Fish (farmed)": {"rp": {"p5": 11.356072, "p50": 167.35264, "p95": 808.671864, "xs": [5.678, 6.373, 7.154, 8.03, 9.013, 10.116, 11.355, 12.745, 14.306, 16.057, 18.023, 20.23, 22.707, 25.487, 28.608, 32.111, 36.043, 40.456, 45.409, 50.969, 57.21, 64.215, 72.077, 80.903, 90.809, 101.927, 114.407, 128.416, 144.139, 161.788, 181.597, 203.832, 228.79, 256.803, 288.247, 323.54, 363.155, 407.62, 457.529, 513.55, 576.43, 647.009, 726.229, 815.15, 914.958, 1026.987, 1152.733, 1293.875], "ys": [0.033, 0.042, 0.052, 0.064, 0.079, 0.096, 0.116, 0.139, 0.165, 0.195, 0.228, 0.265, 0.305, 0.349, 0.395, 0.445, 0.496, 0.549, 0.603, 0.657, 0.71, 0.761, 0.81, 0.855, 0.895, 0.93, 0.958, 0.98, 0.994, 1.0, 0.998, 0.989, 0.972, 0.947, 0.916, 0.879, 0.837, 0.79, 0.74, 0.688, 0.635, 0.581, 0.527, 0.475, 0.424, 0.376, 0.33, 0.288]}, "flat": {"p5": 418.3816, "p50": 537.9192, "p95": 657.4568, "xs": [209.191, 216.505, 224.074, 231.908, 240.016, 248.407, 257.092, 266.081, 275.383, 285.011, 294.976, 305.289, 315.962, 327.009, 338.441, 350.274, 362.52, 375.195, 388.312, 401.888, 415.939, 430.481, 445.531, 461.108, 477.229, 493.914, 511.182, 529.054, 547.551, 566.694, 586.507, 607.012, 628.235, 650.199, 672.931, 696.458, 720.808, 746.008, 772.09, 799.084, 827.021, 855.936, 885.861, 916.832, 948.886, 982.061, 1016.396, 1051.931], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 1e-06, "p50": 155.39888, "p95": 771.01752, "xs": [0.001, 0.001, 0.002, 0.002, 0.003, 0.004, 0.006, 0.008, 0.011, 0.015, 0.02, 0.027, 0.036, 0.048, 0.065, 0.088, 0.118, 0.16, 0.215, 0.29, 0.391, 0.527, 0.71, 0.957, 1.289, 1.738, 2.342, 3.156, 4.254, 5.733, 7.727, 10.413, 14.034, 18.914, 25.491, 34.355, 46.301, 62.4, 84.098, 113.341, 152.752, 205.867, 277.451, 373.926, 503.947, 679.18, 915.344, 1233.628], "ys": [0.158, 0.173, 0.189, 0.206, 0.224, 0.243, 0.263, 0.284, 0.306, 0.33, 0.354, 0.378, 0.404, 0.431, 0.458, 0.485, 0.514, 0.542, 0.571, 0.6, 0.629, 0.658, 0.687, 0.715, 0.743, 0.77, 0.797, 0.822, 0.846, 0.869, 0.89, 0.91, 0.928, 0.944, 0.959, 0.971, 0.981, 0.989, 0.995, 0.999, 1.0, 0.999, 0.996, 0.99, 0.982, 0.972, 0.96, 0.946]}}, "Chicken": {"rp": {"p5": 21.535404800000006, "p50": 92.83223040000003, "p95": 208.66343680000006, "xs": [10.768, 11.584, 12.462, 13.407, 14.423, 15.516, 16.692, 17.958, 19.319, 20.783, 22.359, 24.054, 25.877, 27.839, 29.949, 32.219, 34.662, 37.289, 40.116, 43.157, 46.428, 49.947, 53.734, 57.807, 62.189, 66.903, 71.974, 77.43, 83.3, 89.614, 96.407, 103.715, 111.577, 120.035, 129.134, 138.922, 149.453, 160.782, 172.97, 186.082, 200.187, 215.362, 231.687, 249.25, 268.144, 288.47, 310.337, 333.861], "ys": [0.008, 0.011, 0.015, 0.02, 0.026, 0.035, 0.046, 0.059, 0.075, 0.095, 0.119, 0.148, 0.181, 0.219, 0.261, 0.309, 0.362, 0.418, 0.478, 0.541, 0.605, 0.669, 0.732, 0.791, 0.846, 0.895, 0.936, 0.967, 0.989, 1.0, 1.0, 0.988, 0.966, 0.934, 0.893, 0.844, 0.789, 0.73, 0.667, 0.603, 0.539, 0.476, 0.416, 0.36, 0.307, 0.26, 0.217, 0.179]}, "flat": {"p5": 146.35712000000004, "p50": 188.17344000000006, "p95": 229.9897600000001, "xs": [73.179, 75.737, 78.385, 81.125, 83.962, 86.897, 89.935, 93.08, 96.334, 99.702, 103.188, 106.795, 110.529, 114.393, 118.393, 122.532, 126.816, 131.25, 135.838, 140.587, 145.503, 150.59, 155.855, 161.304, 166.943, 172.78, 178.82, 185.072, 191.543, 198.239, 205.17, 212.343, 219.767, 227.451, 235.403, 243.633, 252.151, 260.967, 270.09, 279.533, 289.306, 299.421, 309.889, 320.724, 331.937, 343.542, 355.553, 367.984], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.4181632000000001, "p50": 87.18702720000002, "p95": 203.64547840000006, "xs": [0.209, 0.244, 0.286, 0.334, 0.391, 0.457, 0.534, 0.625, 0.731, 0.854, 0.999, 1.168, 1.366, 1.597, 1.868, 2.184, 2.554, 2.986, 3.492, 4.083, 4.774, 5.583, 6.528, 7.633, 8.925, 10.436, 12.203, 14.269, 16.685, 19.51, 22.814, 26.676, 31.193, 36.474, 42.649, 49.87, 58.314, 68.187, 79.732, 93.231, 109.016, 127.473, 149.056, 174.292, 203.801, 238.307, 278.654, 325.833], "ys": [0.006, 0.008, 0.01, 0.013, 0.016, 0.02, 0.026, 0.032, 0.04, 0.049, 0.059, 0.072, 0.087, 0.104, 0.124, 0.147, 0.172, 0.2, 0.232, 0.266, 0.304, 0.344, 0.387, 0.433, 0.48, 0.529, 0.579, 0.63, 0.68, 0.729, 0.776, 0.821, 0.862, 0.899, 0.931, 0.957, 0.978, 0.992, 1.0, 1.0, 0.994, 0.98, 0.961, 0.935, 0.904, 0.867, 0.827, 0.783]}}, "Pork": {"rp": {"p5": 3.5843808000000013, "p50": 10.166607360000004, "p95": 18.638780160000007, "xs": [1.792, 1.903, 2.02, 2.145, 2.277, 2.417, 2.566, 2.724, 2.892, 3.071, 3.26, 3.461, 3.674, 3.901, 4.141, 4.397, 4.668, 4.955, 5.261, 5.585, 5.93, 6.295, 6.683, 7.095, 7.533, 7.997, 8.49, 9.014, 9.569, 10.159, 10.786, 11.451, 12.156, 12.906, 13.702, 14.546, 15.443, 16.395, 17.406, 18.479, 19.618, 20.828, 22.112, 23.475, 24.922, 26.459, 28.09, 29.822], "ys": [0.002, 0.004, 0.006, 0.008, 0.012, 0.016, 0.023, 0.032, 0.043, 0.058, 0.076, 0.099, 0.127, 0.161, 0.201, 0.247, 0.299, 0.358, 0.421, 0.489, 0.561, 0.633, 0.704, 0.773, 0.836, 0.892, 0.937, 0.972, 0.993, 1.0, 0.993, 0.972, 0.938, 0.893, 0.838, 0.775, 0.706, 0.635, 0.562, 0.491, 0.423, 0.359, 0.301, 0.248, 0.202, 0.162, 0.128, 0.1]}, "flat": {"p5": 11.404848000000003, "p50": 14.663376000000005, "p95": 17.92190400000001, "xs": [5.702, 5.902, 6.108, 6.322, 6.543, 6.771, 7.008, 7.253, 7.507, 7.769, 8.041, 8.322, 8.613, 8.914, 9.226, 9.548, 9.882, 10.228, 10.585, 10.955, 11.338, 11.735, 12.145, 12.57, 13.009, 13.464, 13.935, 14.422, 14.926, 15.448, 15.988, 16.547, 17.125, 17.724, 18.344, 18.985, 19.649, 20.336, 21.047, 21.783, 22.544, 23.332, 24.148, 24.992, 25.866, 26.77, 27.706, 28.675], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.08146320000000003, "p50": 9.596364960000002, "p95": 18.18258624000001, "xs": [0.041, 0.047, 0.054, 0.062, 0.071, 0.082, 0.094, 0.108, 0.125, 0.143, 0.165, 0.19, 0.218, 0.251, 0.288, 0.332, 0.381, 0.439, 0.505, 0.58, 0.667, 0.767, 0.883, 1.015, 1.167, 1.343, 1.544, 1.776, 2.042, 2.349, 2.701, 3.106, 3.573, 4.109, 4.725, 5.434, 6.25, 7.187, 8.266, 9.506, 10.933, 12.573, 14.46, 16.63, 19.126, 21.996, 25.296, 29.092], "ys": [0.004, 0.005, 0.007, 0.009, 0.012, 0.015, 0.019, 0.024, 0.03, 0.038, 0.047, 0.058, 0.071, 0.086, 0.103, 0.123, 0.146, 0.172, 0.201, 0.233, 0.268, 0.307, 0.349, 0.393, 0.44, 0.489, 0.539, 0.591, 0.642, 0.693, 0.743, 0.79, 0.835, 0.875, 0.911, 0.942, 0.967, 0.985, 0.996, 1.0, 0.997, 0.987, 0.969, 0.946, 0.916, 0.88, 0.84, 0.796]}}, "Eggs": {"rp": {"p5": 14.980732000000001, "p50": 64.57713600000001, "p95": 145.15311200000002, "xs": [7.49, 8.058, 8.669, 9.326, 10.033, 10.794, 11.612, 12.492, 13.439, 14.458, 15.554, 16.733, 18.001, 19.366, 20.834, 22.413, 24.112, 25.939, 27.906, 30.021, 32.297, 34.745, 37.379, 40.212, 43.26, 46.54, 50.068, 53.863, 57.946, 62.338, 67.064, 72.147, 77.616, 83.5, 89.83, 96.639, 103.965, 111.845, 120.324, 129.445, 139.257, 149.813, 161.169, 173.386, 186.53, 200.669, 215.881, 232.245], "ys": [0.008, 0.011, 0.015, 0.02, 0.026, 0.035, 0.046, 0.059, 0.075, 0.095, 0.119, 0.148, 0.181, 0.219, 0.261, 0.309, 0.362, 0.418, 0.478, 0.541, 0.605, 0.669, 0.732, 0.791, 0.846, 0.895, 0.936, 0.967, 0.989, 1.0, 1.0, 0.988, 0.966, 0.934, 0.893, 0.844, 0.789, 0.73, 0.667, 0.603, 0.539, 0.476, 0.416, 0.36, 0.307, 0.26, 0.217, 0.179]}, "flat": {"p5": 101.8108, "p50": 130.89960000000002, "p95": 159.98840000000004, "xs": [50.905, 52.685, 54.527, 56.433, 58.407, 60.449, 62.562, 64.749, 67.013, 69.356, 71.781, 74.29, 76.888, 79.576, 82.358, 85.237, 88.217, 91.301, 94.494, 97.797, 101.216, 104.755, 108.418, 112.208, 116.131, 120.191, 124.393, 128.742, 133.243, 137.902, 142.723, 147.713, 152.877, 158.222, 163.754, 169.479, 175.404, 181.537, 187.884, 194.453, 201.251, 208.287, 215.569, 223.106, 230.906, 238.979, 247.334, 255.981], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.29088800000000004, "p50": 60.650148, "p95": 141.66245600000002, "xs": [0.145, 0.17, 0.199, 0.233, 0.272, 0.318, 0.372, 0.435, 0.508, 0.594, 0.695, 0.813, 0.95, 1.111, 1.299, 1.519, 1.777, 2.077, 2.429, 2.84, 3.321, 3.883, 4.541, 5.31, 6.209, 7.26, 8.489, 9.926, 11.607, 13.572, 15.87, 18.557, 21.699, 25.373, 29.668, 34.691, 40.565, 47.433, 55.464, 64.854, 75.835, 88.674, 103.688, 121.243, 141.771, 165.774, 193.841, 226.66], "ys": [0.006, 0.008, 0.01, 0.013, 0.016, 0.02, 0.026, 0.032, 0.04, 0.049, 0.059, 0.072, 0.087, 0.104, 0.124, 0.147, 0.172, 0.2, 0.232, 0.266, 0.304, 0.344, 0.387, 0.433, 0.48, 0.529, 0.579, 0.63, 0.68, 0.729, 0.776, 0.821, 0.862, 0.899, 0.931, 0.957, 0.978, 0.992, 1.0, 1.0, 0.994, 0.98, 0.961, 0.935, 0.904, 0.867, 0.827, 0.783]}}, "Turkey": {"rp": {"p5": 8.600664799999999, "p50": 37.0747104, "p95": 83.3345968, "xs": [4.3, 4.626, 4.977, 5.354, 5.76, 6.197, 6.667, 7.172, 7.716, 8.3, 8.93, 9.606, 10.335, 11.118, 11.961, 12.868, 13.843, 14.892, 16.021, 17.236, 18.542, 19.948, 21.46, 23.086, 24.836, 26.719, 28.745, 30.923, 33.268, 35.789, 38.502, 41.421, 44.561, 47.939, 51.573, 55.482, 59.688, 64.212, 69.08, 74.316, 79.949, 86.01, 92.53, 99.544, 107.089, 115.207, 123.94, 133.335], "ys": [0.008, 0.011, 0.015, 0.02, 0.026, 0.035, 0.046, 0.059, 0.075, 0.095, 0.119, 0.148, 0.181, 0.219, 0.261, 0.309, 0.362, 0.418, 0.478, 0.541, 0.605, 0.669, 0.732, 0.791, 0.846, 0.895, 0.936, 0.967, 0.989, 1.0, 1.0, 0.988, 0.966, 0.934, 0.893, 0.844, 0.789, 0.73, 0.667, 0.603, 0.539, 0.476, 0.416, 0.36, 0.307, 0.26, 0.217, 0.179]}, "flat": {"p5": 58.451119999999996, "p50": 75.15144, "p95": 91.85176, "xs": [29.226, 30.247, 31.305, 32.399, 33.532, 34.704, 35.918, 37.173, 38.473, 39.818, 41.21, 42.651, 44.142, 45.686, 47.283, 48.936, 50.647, 52.418, 54.25, 56.147, 58.11, 60.142, 62.244, 64.42, 66.673, 69.004, 71.416, 73.913, 76.497, 79.172, 81.94, 84.804, 87.769, 90.838, 94.014, 97.301, 100.702, 104.223, 107.867, 111.638, 115.541, 119.581, 123.762, 128.088, 132.567, 137.201, 141.998, 146.963], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.1670032, "p50": 34.8201672, "p95": 81.3305584, "xs": [0.084, 0.098, 0.114, 0.134, 0.156, 0.183, 0.213, 0.25, 0.292, 0.341, 0.399, 0.467, 0.546, 0.638, 0.746, 0.872, 1.02, 1.193, 1.395, 1.631, 1.907, 2.23, 2.607, 3.048, 3.565, 4.168, 4.874, 5.699, 6.664, 7.792, 9.111, 10.654, 12.458, 14.567, 17.033, 19.917, 23.289, 27.232, 31.843, 37.234, 43.538, 50.909, 59.529, 69.608, 81.393, 95.173, 111.287, 130.129], "ys": [0.006, 0.008, 0.01, 0.013, 0.016, 0.02, 0.026, 0.032, 0.04, 0.049, 0.059, 0.072, 0.087, 0.104, 0.124, 0.147, 0.172, 0.2, 0.232, 0.266, 0.304, 0.344, 0.387, 0.433, 0.48, 0.529, 0.579, 0.63, 0.68, 0.729, 0.776, 0.821, 0.862, 0.899, 0.931, 0.957, 0.978, 0.992, 1.0, 1.0, 0.994, 0.98, 0.961, 0.935, 0.904, 0.867, 0.827, 0.783]}}, "Beef": {"rp": {"p5": 4.4598153599999995, "p50": 12.649658112, "p95": 23.191039871999998, "xs": [2.23, 2.367, 2.513, 2.668, 2.833, 3.007, 3.193, 3.39, 3.599, 3.821, 4.056, 4.306, 4.572, 4.853, 5.153, 5.47, 5.808, 6.166, 6.546, 6.949, 7.378, 7.833, 8.316, 8.828, 9.372, 9.95, 10.564, 11.215, 11.906, 12.641, 13.42, 14.247, 15.126, 16.058, 17.048, 18.099, 19.215, 20.4, 21.657, 22.992, 24.41, 25.915, 27.513, 29.209, 31.009, 32.921, 34.951, 37.106], "ys": [0.002, 0.004, 0.006, 0.008, 0.012, 0.016, 0.023, 0.032, 0.043, 0.058, 0.076, 0.099, 0.127, 0.161, 0.201, 0.247, 0.299, 0.358, 0.421, 0.489, 0.561, 0.633, 0.704, 0.773, 0.836, 0.892, 0.937, 0.972, 0.993, 1.0, 0.993, 0.972, 0.938, 0.893, 0.838, 0.775, 0.706, 0.635, 0.562, 0.491, 0.423, 0.359, 0.301, 0.248, 0.202, 0.162, 0.128, 0.1]}, "flat": {"p5": 15.767024, "p50": 20.271888, "p95": 24.776752000000002, "xs": [7.884, 8.159, 8.444, 8.74, 9.045, 9.361, 9.689, 10.027, 10.378, 10.741, 11.116, 11.505, 11.907, 12.324, 12.754, 13.2, 13.662, 14.139, 14.634, 15.145, 15.675, 16.223, 16.79, 17.377, 17.985, 18.614, 19.264, 19.938, 20.635, 21.356, 22.103, 22.876, 23.675, 24.503, 25.36, 26.247, 27.164, 28.114, 29.097, 30.114, 31.167, 32.257, 33.384, 34.552, 35.759, 37.01, 38.304, 39.643], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.10135944000000001, "p50": 11.940142031999999, "p95": 22.623427008000004, "xs": [0.051, 0.058, 0.067, 0.077, 0.089, 0.102, 0.117, 0.135, 0.155, 0.178, 0.205, 0.236, 0.271, 0.312, 0.359, 0.413, 0.475, 0.546, 0.628, 0.722, 0.83, 0.955, 1.098, 1.263, 1.453, 1.67, 1.921, 2.209, 2.541, 2.922, 3.361, 3.865, 4.445, 5.112, 5.879, 6.761, 7.776, 8.943, 10.285, 11.828, 13.603, 15.644, 17.992, 20.692, 23.797, 27.368, 31.474, 36.197], "ys": [0.004, 0.005, 0.007, 0.009, 0.012, 0.015, 0.019, 0.024, 0.03, 0.038, 0.047, 0.058, 0.071, 0.086, 0.103, 0.123, 0.146, 0.172, 0.201, 0.233, 0.268, 0.307, 0.349, 0.393, 0.44, 0.489, 0.539, 0.591, 0.642, 0.693, 0.743, 0.79, 0.835, 0.875, 0.911, 0.942, 0.967, 0.985, 0.996, 1.0, 0.997, 0.987, 0.969, 0.946, 0.916, 0.88, 0.84, 0.796]}}, "Dairy": {"rp": {"p5": 0.09340531200000003, "p50": 0.26493143040000006, "p95": 0.48570762240000004, "xs": [0.047, 0.05, 0.053, 0.056, 0.059, 0.063, 0.067, 0.071, 0.075, 0.08, 0.085, 0.09, 0.096, 0.102, 0.108, 0.115, 0.122, 0.129, 0.137, 0.146, 0.155, 0.164, 0.174, 0.185, 0.196, 0.208, 0.221, 0.235, 0.249, 0.265, 0.281, 0.298, 0.317, 0.336, 0.357, 0.379, 0.402, 0.427, 0.454, 0.482, 0.511, 0.543, 0.576, 0.612, 0.649, 0.689, 0.732, 0.777], "ys": [0.002, 0.004, 0.006, 0.008, 0.012, 0.016, 0.023, 0.032, 0.043, 0.058, 0.076, 0.099, 0.127, 0.161, 0.201, 0.247, 0.299, 0.358, 0.421, 0.489, 0.561, 0.633, 0.704, 0.773, 0.836, 0.892, 0.937, 0.972, 0.993, 1.0, 0.993, 0.972, 0.938, 0.893, 0.838, 0.775, 0.706, 0.635, 0.562, 0.491, 0.423, 0.359, 0.301, 0.248, 0.202, 0.162, 0.128, 0.1]}, "flat": {"p5": 0.33022080000000004, "p50": 0.4245696000000001, "p95": 0.5189184000000001, "xs": [0.165, 0.171, 0.177, 0.183, 0.189, 0.196, 0.203, 0.21, 0.217, 0.225, 0.233, 0.241, 0.249, 0.258, 0.267, 0.276, 0.286, 0.296, 0.306, 0.317, 0.328, 0.34, 0.352, 0.364, 0.377, 0.39, 0.403, 0.418, 0.432, 0.447, 0.463, 0.479, 0.496, 0.513, 0.531, 0.55, 0.569, 0.589, 0.609, 0.631, 0.653, 0.676, 0.699, 0.724, 0.749, 0.775, 0.802, 0.83], "ys": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001, 0.001, 0.003, 0.008, 0.016, 0.032, 0.06, 0.106, 0.175, 0.27, 0.393, 0.537, 0.689, 0.831, 0.94, 1.0, 0.999, 0.937, 0.826, 0.684, 0.532, 0.389, 0.267, 0.172, 0.104, 0.059, 0.032, 0.016, 0.007, 0.003, 0.001, 0.001, 0.0, 0.0, 0.0, 0.0]}, "neuron": {"p5": 0.002122848000000001, "p50": 0.2500714944000001, "p95": 0.47381967360000016, "xs": [0.001, 0.001, 0.001, 0.002, 0.002, 0.002, 0.002, 0.003, 0.003, 0.004, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.011, 0.013, 0.015, 0.017, 0.02, 0.023, 0.026, 0.03, 0.035, 0.04, 0.046, 0.053, 0.061, 0.07, 0.081, 0.093, 0.107, 0.123, 0.142, 0.163, 0.187, 0.215, 0.248, 0.285, 0.328, 0.377, 0.433, 0.498, 0.573, 0.659, 0.758], "ys": [0.004, 0.005, 0.007, 0.009, 0.012, 0.015, 0.019, 0.024, 0.03, 0.038, 0.047, 0.058, 0.071, 0.086, 0.103, 0.123, 0.146, 0.172, 0.201, 0.233, 0.268, 0.307, 0.349, 0.393, 0.44, 0.489, 0.539, 0.591, 0.642, 0.693, 0.743, 0.79, 0.835, 0.875, 0.911, 0.942, 0.967, 0.985, 0.996, 1.0, 0.997, 0.987, 0.969, 0.946, 0.916, 0.88, 0.84, 0.796]}}}, "wmult": {"Shrimp": {"rp": 0.177, "flat": 0.9, "neuron": 0.156}, "Crab/lobster": {"rp": 0.143, "flat": 0.9, "neuron": 0.132}, "Fish (farmed)": {"rp": 0.28, "flat": 0.9, "neuron": 0.26}, "Chicken": {"rp": 0.444, "flat": 0.9, "neuron": 0.417}, "Pork": {"rp": 0.624, "flat": 0.9, "neuron": 0.589}, "Eggs": {"rp": 0.444, "flat": 0.9, "neuron": 0.417}, "Turkey": {"rp": 0.444, "flat": 0.9, "neuron": 0.417}, "Beef": {"rp": 0.562, "flat": 0.9, "neuron": 0.53}, "Dairy": {"rp": 0.562, "flat": 0.9, "neuron": 0.53}}}</script>
+<script>
+const D=JSON.parse(document.getElementById('DATA').textContent);
+const F=D.faunalytics, RP=D.rp_wr, OFF=D.offset, DENS=D.dens, WM=D.wmult;
+const foods=Object.keys(F);
+function per100(f){const kg=(100*100/F[f].protein)/1000;return{lives:F[f].lives*kg,days:F[f].days*kg};}
+function perServing(f){const g=F[f].serving_g;const protein=g*(F[f].protein/100);const u=protein/100;const p=per100(f);return{lives:p.lives*u,days:p.days*u};}
+function dens(f,v){return DENS[f][v];}
+function wmult(f,v){return WM[f][v];}
+
+let view='rp', scale='log', selected=null;
+const VEXP={
+  rp:'<b>Best estimate.</b> Rethink Priorities\u2019 considered guess at how much each species can suffer, relative to a human: a pig ~0.6, a chicken ~0.44, a shrimp ~0.18. Use this if you\u2019re unsure.',
+  flat:'<b>All equal.</b> Every sentient animal counts the same. This is the most cautious view about dismissing small minds, and it pushes small animals up the chart.',
+  neuron:'<b>By brain size.</b> Animals with fewer neurons are discounted hardest, the most skeptical published stance. Notice how wide the ranges become.'
+};
+function fmt(n){ if(n>=1e6)return (n/1e6).toFixed(1)+'M'; if(n>=1e4)return Math.round(n/1e3)+'k'; if(n>=100)return Math.round(n).toLocaleString(); if(n>=1)return n.toFixed(0); if(n>0)return n.toFixed(1); return '0';}
+
+function chart(){
+  document.getElementById('vexplain').innerHTML=VEXP[view];
+  const rows=foods.map(f=>{const d=dens(f,view);return{f,p5:d.p5,p50:d.p50,p95:d.p95,xs:d.xs,ys:d.ys};}).sort((a,b)=>b.p50-a.p50);
+  const maxHi=Math.max(...rows.map(r=>r.p95));
+  let X;
+  if(scale==='log'){const lo=Math.log10(0.5),hi=Math.log10(maxHi*1.2);X=v=>{v=Math.max(0.5,v);return (Math.log10(v)-lo)/(hi-lo)*100;};}
+  else{X=v=>Math.max(0,Math.min(100,v/(maxHi*1.02)*100));}
+
+  const C=document.getElementById('hchart');C.innerHTML='';
+  for(const r of rows){
+    // build ridge path from xs/ys in current scale
+    let pts=[];
+    for(let i=0;i<r.xs.length;i++){const x=X(r.xs[i]);const y=18-(r.ys[i]*15);pts.push([x,y]);}
+    // baseline back
+    let d='M '+pts.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L ');
+    d+=' L '+pts[pts.length-1][0].toFixed(2)+' 31 L '+pts[0][0].toFixed(2)+' 31 Z';
+    const xmed=X(r.p50);
+    const el=document.createElement('div');el.className='hrow'+(selected===r.f?' sel':'');el.dataset.f=r.f;
+    el.innerHTML=`<div class="hname" title="${r.f}">${r.f}</div>
+      <div class="htrack">
+        <div class="ridge"><svg viewBox="0 0 100 34" preserveAspectRatio="none">
+          <path d="${d}" fill="var(--teal)" fill-opacity="0.22" stroke="var(--teal)" stroke-width="0.5" stroke-opacity="0.5"/>
+        </svg></div>
+        <div class="hmed" style="left:${xmed}%"></div>
+      </div>
+      <div class="hval">${fmt(r.p50)}<span class="sub2">${fmt(r.p5)}–${fmt(r.p95)}</span></div>`;
+    el.onclick=()=>{selected=selected===r.f?null:r.f;chart();showBreakdown();};
+    C.appendChild(el);
+  }
+  // axis
+  const ax=document.getElementById('haxis');ax.innerHTML='';
+  if(scale==='log'){const lo=Math.log10(0.5),hi=Math.log10(maxHi*1.2);
+    for(let e=0;e<=Math.floor(hi);e++){const v=Math.pow(10,e);ax.innerHTML+=`<span style="left:${(e-lo)/(hi-lo)*100}%">${v>=1000?(v/1000)+'k':v}</span>`;}}
+  else{for(let i=0;i<=4;i++){const v=maxHi*i/4;ax.innerHTML+=`<span style="left:${i/4*100}%">${fmt(v)}</span>`;}}
+}
+
+function showBreakdown(){
+  const B=document.getElementById('breakdown');
+  if(!selected){B.className='breakdown';B.innerHTML='';return;}
+  const f=selected;const p=per100(f);const w=wmult(f,view);const d=dens(f,view);
+  const animals=p.lives.toFixed(p.lives<0.01?4:2);
+  const rawdays=p.days.toFixed(0);
+  B.className='breakdown show';
+  B.innerHTML=`
+    <div class="bkhead">${f} — why it lands where it does</div>
+    <div class="bkbody">
+      <div class="bkcell"><div class="bl">Animals per 100g protein</div><div class="bv">${animals}</div>
+        <div class="bd">${F[f].lives>1?'A small animal, so a serving is many lives.':F[f].rp==='cows'?'A huge animal, so its protein is spread over almost no individuals.':'Mid-sized; one animal yields a moderate amount of protein.'}</div></div>
+      <div class="bkcell"><div class="bl">Welfare weight (this view)</div><div class="bv">${w.toFixed(2)}</div>
+        <div class="bd">How much this species can suffer, relative to a human, under the “${view==='rp'?'best estimate':view==='flat'?'all equal':'by brain size'}” view.</div></div>
+      <div class="bkcell"><div class="bl">Days of farm life / 100g protein</div><div class="bv">${rawdays}</div>
+        <div class="bd">Total days animals spend being farmed to yield this much protein.</div></div>
+    </div>
+    <div class="bkeq">harm = animals × welfare × days-on-farm  →  median ≈ <b>${fmt(d.p50)}</b> weighted animal-days per year of one daily serving</div>`;
+}
+
+document.querySelectorAll('#view button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#view button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');view=b.dataset.v;chart();showBreakdown();recalc();});
+document.querySelectorAll('#scale button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#scale button').forEach(x=>x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');scale=b.dataset.v;chart();});
+
+// diet
+const PRESETS={
+  meat:{Beef:4,Chicken:5,Pork:3,Eggs:5,Dairy:7,'Fish (farmed)':1,Shrimp:1,Turkey:1,'Crab/lobster':0},
+  balanced:{Beef:2,Chicken:4,Pork:2,Eggs:5,Dairy:7,'Fish (farmed)':2,Shrimp:1,Turkey:0,'Crab/lobster':0},
+  pescatarian:{Beef:0,Chicken:0,Pork:0,Eggs:5,Dairy:6,'Fish (farmed)':5,Shrimp:3,Turkey:0,'Crab/lobster':1},
+  light:{Beef:1,Chicken:1,Pork:0,Eggs:3,Dairy:4,'Fish (farmed)':1,Shrimp:0,Turkey:0,'Crab/lobster':0},
+  clear:{}
+};
+let diet={};foods.forEach(f=>diet[f]=0);
+function idf(f){return f.replace(/\W/g,'');}
+function buildDiet(){
+  const G=document.getElementById('dietgrid');G.innerHTML='';
+  ['Beef','Chicken','Eggs','Dairy','Pork','Fish (farmed)','Shrimp','Turkey','Crab/lobster'].forEach(f=>{
+    if(!(f in F))return;
+    const c=document.createElement('div');c.className='dcell';
+    c.innerHTML=`<div class="dn"><span>${f}</span><span class="dc" id="dc-${idf(f)}">${diet[f]} /wk</span></div>
+      <div class="stepper"><button data-f="${f}" data-d="-1">−</button>
+      <span class="cnt" id="cnt-${idf(f)}">${diet[f]}</span>
+      <button data-f="${f}" data-d="1">+</button></div><div class="dunit">servings per week</div>`;
+    G.appendChild(c);
+  });
+  G.querySelectorAll('button').forEach(b=>b.onclick=()=>{const f=b.dataset.f;
+    diet[f]=Math.max(0,diet[f]+parseInt(b.dataset.d));
+    document.getElementById('cnt-'+idf(f)).textContent=diet[f];
+    document.getElementById('dc-'+idf(f)).textContent=diet[f]+' /wk';
+    document.querySelectorAll('.preset').forEach(p=>p.setAttribute('aria-pressed','false'));
+    recalc();});
+}
+function recalc(){
+  let tot=0,topF=null,topV=0;
+  foods.forEach(f=>{const w=diet[f];if(!w)return;const v=perServing(f).days*52*wmult(f,view)*w;tot+=v;if(v>topV){topV=v;topF=f;}});
+  document.getElementById('totDays').textContent=Math.round(tot).toLocaleString();
+  document.getElementById('totB').innerHTML = tot>0
+    ? `Driven mostly by <strong>${topF}</strong>${(topF==='Shrimp'||topF==='Fish (farmed)')?', a small animal eaten in large numbers.':'.'}`
+    : 'Pick a starting point above, or add servings.';
+  updateOffset(tot);
+}
+document.querySelectorAll('.preset').forEach(p=>p.onclick=()=>{
+  document.querySelectorAll('.preset').forEach(x=>x.setAttribute('aria-pressed','false'));
+  p.setAttribute('aria-pressed','true');
+  const pr=PRESETS[p.dataset.preset];foods.forEach(f=>diet[f]=pr[f]||0);buildDiet();recalc();
+});
+
+// offset, two decimals
+const SD_LO=300, SD_HI=60;
+let ambition=1,curr=0;
+function money(x){return '$'+x.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});}
+function updateOffset(tot){
+  curr=tot;const sd=tot*ambition;
+  const cheap=sd/SD_LO/12, dear=sd/SD_HI/12;
+  const lo=Math.min(cheap,dear),hi=Math.max(cheap,dear);
+  const dd=document.getElementById('offsetDollar');
+  if(tot<=0){dd.innerHTML='$0.00<small>/mo</small>';document.getElementById('offsetCap').textContent='Set your diet above to see the cost.';renderCharities(0);return;}
+  dd.innerHTML=`${money(lo)}–${money(hi)}<small>/mo</small>`;
+  document.getElementById('offsetCap').textContent = ambition===1
+    ? 'a conservative-to-generous range to balance this year\u2019s footprint'
+    : `to avert ${ambition}× the suffering your diet causes`;
+  renderCharities((lo+hi)/2);
+}
+document.getElementById('ambition').oninput=e=>{ambition=parseInt(e.target.value);
+  document.getElementById('ambval').textContent=ambition===1?'match your footprint (1×)':`do ${ambition}× more`;updateOffset(curr);};
+// place tick labels at their true positions on the 1..10 track
+(function(){const marks=[[1,'match it'],[2,'2×'],[5,'5×'],[10,'10×']];
+  const el=document.getElementById('ratiomarks');
+  el.innerHTML=marks.map(([v,l])=>`<span style="left:${(v-1)/9*100}%">${l}</span>`).join('');})();
+function renderCharities(mid){
+  const C=document.getElementById('charities');C.innerHTML='';
+  if(mid<=0){C.innerHTML='<p class="small" style="padding:2px">Add servings above to see suggested donations.</p>';return;}
+  const split=[0.5,0.3,0.2];
+  OFF.charities.forEach((ch,i)=>{const m=mid*split[i];
+    C.innerHTML+=`<div class="charity"><div class="ci"><div class="cn">${ch.name}</div>
+      <div class="cd">${ch.note}</div><a class="gobtn" href="${ch.url}" target="_blank" rel="noopener">Donate →</a></div>
+      <div class="camt"><div class="cm">${money(m)}/mo</div><div class="cmsub">${ch.per_dollar}</div></div></div>`;});
+}
+
+chart();buildDiet();recalc();
+</script>
 </body>
 </html>
